@@ -1,0 +1,130 @@
+;Proteus Design Interchange Format
+
+(PDIF
+  (vendor "Labcenter Electronics")
+  (version 1 0)
+  (library
+    (part "TB003500P02BE"
+      (family "CON")
+      (package "CUI_TB003500P02BE")
+      (attribute "PKG_TYPE" "CUI_TB003500P02BE")
+      (attribute "STANDARD" "Manufacturer_Recommendations")
+      (attribute "MANUFACTURER" "CUI")
+      (gate
+        (swap 1)
+        (symbol "TB003500P02BE")
+        (pin "1" 1 (type PS))
+        (pin "2" 2 (type PS))
+      )
+    )
+    (symbol "TB003500P02BE"
+      (units THOU)
+      (graphic
+        (stroke 1)
+        (path (pt -200 200) (pt 200 200) (pt 200 -100) (pt -200 -100) (pt -200 200) (closed))
+      )
+      (terminal
+        (body (symbol "PIN_R0_U_L200") (pt -400.0 100.0) (rot 0) (mir 0) (visible true))
+        (name (pt 239.37 0.0) (rot 0) (just MIDDLE LEFT) (visible true))
+        (number (pt -39.37 0.0) (rot 0) (just MIDDLE LEFT) (visible true))
+      )
+      (terminal
+        (body (symbol "PIN_R0_U_L200") (pt -400.0 0.0) (rot 0) (mir 0) (visible true))
+        (name (pt 239.37 0.0) (rot 0) (just MIDDLE LEFT) (visible true))
+        (number (pt -39.37 0.0) (rot 0) (just MIDDLE LEFT) (visible true))
+      )
+    )
+    (symbol "PIN_R0_U_L200"
+      (units THOU)
+      (graphic
+        (stroke 6.5)
+        (path (pt 0.0 0.0) (pt 200.0 0.0))
+      )
+    )
+    (package "CUI_TB003500P02BE"
+      (units THOU)
+      (layer OCCA
+        (graphic
+          (stroke 1.97)
+          (path (pt -108.27 159.45) (pt 305.12 159.45))
+        )
+        (graphic
+          (stroke 1.97)
+          (path (pt 305.12 -167.32) (pt -108.27 -167.32))
+        )
+        (graphic
+          (stroke 1.97)
+          (path (pt -108.27 -167.32) (pt -108.27 159.45))
+        )
+        (graphic
+          (stroke 1.97)
+          (path (pt 305.12 159.45) (pt 305.12 -167.32))
+        )
+      )
+      (layer TSLK
+        (graphic
+          (stroke 5.0)
+          (path (pt -98.43 -157.48) (pt -98.43 149.61))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt 295.28 149.61) (pt 295.28 -157.48))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt -98.43 149.61) (pt 295.28 149.61))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt 295.28 -157.48) (pt -98.43 -157.48))
+        )
+        (graphic
+          (stroke 7.87)
+          (circle (pt -3.94 188.98) (pt 3.94 188.98))
+        )
+      )
+      (layer TASM
+        (graphic
+          (stroke 5.0)
+          (path (pt -98.43 -157.48) (pt -98.43 149.61))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt -98.43 149.61) (pt 295.28 149.61))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt 295.28 149.61) (pt 295.28 -157.48))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt 295.28 -157.48) (pt -98.43 -157.48))
+        )
+        (graphic
+          (stroke 7.87)
+          (circle (pt -3.94 188.98) (pt 3.94 188.98))
+        )
+      )
+      (leg 1 (pt 0 0) (padstack 1))
+      (leg 2 (pt 196.85 0) (padstack 2))
+      (padstack 1
+        (hole 55)
+        (plated true)
+        (pad (layer TCOP) (square 82.68))
+        (pad (layer INNER) (square 82.68))
+        (pad (layer BCOP) (square 82.68))
+        (pad (layer TRES) (square 82.68))
+        (pad (layer BRES) (square 82.68))
+      )
+      (padstack 2
+        (hole 55)
+        (plated true)
+        (pad (layer TCOP) (round 82.68))
+        (pad (layer INNER) (round 82.68))
+        (pad (layer BCOP) (round 82.68))
+        (pad (layer TRES) (round 41.34))
+        (pad (layer BRES) (round 41.34))
+      )
+    )
+  )
+)
