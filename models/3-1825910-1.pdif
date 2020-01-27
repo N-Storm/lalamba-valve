@@ -1,0 +1,248 @@
+;Proteus Design Interchange Format
+
+(PDIF
+  (vendor "Labcenter Electronics")
+  (version 1 0)
+  (library
+    (part "318259101"
+      (family "ANA")
+      (package "TE_318259101")
+      (description "Switch_Tactile_OFF_(ON)_SPST_Round_Button_PC_Pins_0.05A_24VDC_100000Cycles_1.57N_Thru-Hole_Loose")
+      (attribute "PKG_TYPE" "TE_318259101")
+      (attribute "PARTREV" "C10")
+      (attribute "EU_ROHS_COMPLIANCE" "Compliant")
+      (attribute "METADATA" "Manufacturer_Recommendation")
+      (attribute "COMMENT" "3-1825910-1")
+      (attribute "TE_PURCHASE_URL" "https://www.te.com/usa-en/product-3-1825910-1.html?te_bu=Cor&te_type=disp&te_campaign=seda_glo_cor-seda-global-disp-prtnr-fy19-seda-model-bom-cta_sma-317_1&elqCampaignId=32493")
+      (attribute "MANUFACTURER" "TE_Connectivity")
+      (gate
+        (swap 1)
+        (symbol "318259101")
+        (pin "1" 1 (type PS))
+        (pin "2" 2 (type PS))
+        (pin "3" 3 (type PS))
+        (pin "4" 4 (type PS))
+      )
+    )
+    (symbol "318259101"
+      (units THOU)
+      (graphic
+        (stroke 6.0)
+        (path (pt -200.0 -200.0) (pt -200.0 -100.0))
+      )
+      (graphic
+        (stroke 6.0)
+        (path (pt -200.0 -100.0) (pt -200.0 100.0))
+      )
+      (graphic
+        (stroke 6.0)
+        (path (pt -200.0 100.0) (pt -200.0 200.0))
+      )
+      (graphic
+        (stroke 6.0)
+        (path (pt -200.0 200.0) (pt 200.0 200.0))
+      )
+      (graphic
+        (stroke 6.0)
+        (path (pt 200.0 200.0) (pt 200.0 100.0))
+      )
+      (graphic
+        (stroke 6.0)
+        (path (pt 200.0 100.0) (pt 200.0 -100.0))
+      )
+      (graphic
+        (stroke 6.0)
+        (path (pt 200.0 -100.0) (pt 200.0 -200.0))
+      )
+      (graphic
+        (stroke 6.0)
+        (path (pt 200.0 -200.0) (pt -200.0 -200.0))
+      )
+      (graphic
+        (stroke 6.0)
+        (path (pt -50.0 0.0) (pt 50.0 50.0))
+      )
+      (graphic
+        (stroke 20.0)
+        (fill NONE)
+        (circle (pt -60 0) (pt -40 0))
+      )
+      (graphic
+        (stroke 20.0)
+        (fill NONE)
+        (circle (pt 40 0) (pt 60 0))
+      )
+      (graphic
+        (stroke 5.91)
+        (path (pt -200.0 100.0) (pt -150.0 100.0))
+      )
+      (graphic
+        (stroke 5.91)
+        (path (pt -150.0 100.0) (pt -150.0 0.0))
+      )
+      (graphic
+        (stroke 5.91)
+        (path (pt -150.0 0.0) (pt -150.0 -100.0))
+      )
+      (graphic
+        (stroke 5.91)
+        (path (pt -150.0 -100.0) (pt -200.0 -100.0))
+      )
+      (graphic
+        (stroke 5.91)
+        (path (pt -150.0 0.0) (pt -50.0 0.0))
+      )
+      (graphic
+        (stroke 5.91)
+        (path (pt 50.0 0.0) (pt 150.0 0.0))
+      )
+      (graphic
+        (stroke 5.91)
+        (path (pt 150.0 0.0) (pt 150.0 100.0))
+      )
+      (graphic
+        (stroke 5.91)
+        (path (pt 150.0 100.0) (pt 200.0 100.0))
+      )
+      (graphic
+        (stroke 5.91)
+        (path (pt 150.0 0.0) (pt 150.0 -100.0))
+      )
+      (graphic
+        (stroke 5.91)
+        (path (pt 150.0 -100.0) (pt 200.0 -100.0))
+      )
+      (terminal
+        (body (symbol "PIN_R0_U_L200") (pt -400.0 100.0) (rot 0) (mir 0) (visible false))
+        (name (pt 239.37 0.0) (rot 0) (just MIDDLE LEFT) (visible false))
+        (number (pt -39.37 0.0) (rot 0) (just MIDDLE LEFT) (visible true))
+      )
+      (terminal
+        (body (symbol "PIN_R0_U_L200") (pt -400.0 -100.0) (rot 0) (mir 0) (visible false))
+        (name (pt 239.37 0.0) (rot 0) (just MIDDLE LEFT) (visible false))
+        (number (pt -39.37 0.0) (rot 0) (just MIDDLE LEFT) (visible true))
+      )
+      (terminal
+        (body (symbol "PIN_R180_U_L200") (pt 400.0 100.0) (rot 0) (mir 0) (visible false))
+        (name (pt -239.37 0.0) (rot 0) (just MIDDLE RIGHT) (visible false))
+        (number (pt -39.37 0.0) (rot 0) (just MIDDLE RIGHT) (visible true))
+      )
+      (terminal
+        (body (symbol "PIN_R180_U_L200") (pt 400.0 -100.0) (rot 0) (mir 0) (visible false))
+        (name (pt -239.37 0.0) (rot 0) (just MIDDLE RIGHT) (visible false))
+        (number (pt -39.37 0.0) (rot 0) (just MIDDLE RIGHT) (visible true))
+      )
+    )
+    (symbol "PIN_R0_U_L200"
+      (units THOU)
+      (graphic
+        (stroke 6.5)
+        (path (pt 0.0 0.0) (pt 200.0 0.0))
+      )
+    )
+    (symbol "PIN_R180_U_L200"
+      (units THOU)
+      (graphic
+        (stroke 6.5)
+        (path (pt 0.0 0.0) (pt -200.0 0.0))
+      )
+    )
+    (package "TE_318259101"
+      (units THOU)
+      (layer TSLK
+        (graphic
+          (stroke 5.0)
+          (path (pt -118.11 -29.53) (pt -118.11 29.53))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt -59.06 118.11) (pt 59.06 118.11))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt 118.11 29.53) (pt 118.11 -29.53))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt -59.06 -118.11) (pt 59.06 -118.11))
+        )
+      )
+      (layer TASM
+        (graphic
+          (stroke 5.0)
+          (path (pt -118.11 -118.11) (pt -118.11 118.11))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt -118.11 118.11) (pt 118.11 118.11))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt 118.11 118.11) (pt 118.11 -118.11))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt 118.11 -118.11) (pt -118.11 -118.11))
+        )
+      )
+      (layer OCCA
+        (graphic
+          (stroke 1.97)
+          (path (pt -167.32 127.95) (pt 167.32 127.95))
+        )
+        (graphic
+          (stroke 1.97)
+          (path (pt 167.32 127.95) (pt 167.32 -127.95))
+        )
+        (graphic
+          (stroke 1.97)
+          (path (pt 167.32 -127.95) (pt -167.32 -127.95))
+        )
+        (graphic
+          (stroke 1.97)
+          (path (pt -167.32 -127.95) (pt -167.32 127.95))
+        )
+      )
+      (leg 1 (pt -127.95 88.58) (padstack 1))
+      (leg 2 (pt 127.95 88.58) (padstack 2))
+      (leg 3 (pt -122.05 -88.58) (padstack 3))
+      (leg 4 (pt 127.95 -88.58) (padstack 4))
+      (padstack 1
+        (hole 38)
+        (plated true)
+        (pad (layer TCOP) (square 58.98))
+        (pad (layer INNER) (square 58.98))
+        (pad (layer BCOP) (square 58.98))
+        (pad (layer TRES) (square 58.98))
+        (pad (layer BRES) (square 58.98))
+      )
+      (padstack 2
+        (hole 38)
+        (plated true)
+        (pad (layer TCOP) (round 58.98))
+        (pad (layer INNER) (round 58.98))
+        (pad (layer BCOP) (round 58.98))
+        (pad (layer TRES) (round 29.49))
+        (pad (layer BRES) (round 29.49))
+      )
+      (padstack 3
+        (hole 38)
+        (plated true)
+        (pad (layer TCOP) (round 58.98))
+        (pad (layer INNER) (round 58.98))
+        (pad (layer BCOP) (round 58.98))
+        (pad (layer TRES) (round 29.49))
+        (pad (layer BRES) (round 29.49))
+      )
+      (padstack 4
+        (hole 38)
+        (plated true)
+        (pad (layer TCOP) (round 58.98))
+        (pad (layer INNER) (round 58.98))
+        (pad (layer BCOP) (round 58.98))
+        (pad (layer TRES) (round 29.49))
+        (pad (layer BRES) (round 29.49))
+      )
+    )
+  )
+)

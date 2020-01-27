@@ -1,0 +1,204 @@
+;Proteus Design Interchange Format
+
+(PDIF
+  (vendor "Labcenter Electronics")
+  (version 1 0)
+  (library
+    (part "HC49US16000000ABJB"
+      (family "OSC")
+      (package "XTAL_HC49P488W43L1150T466H350")
+      (description "HC49US_Series_16_MHz_±30_ppm_18_pF_-20_to_+70_°C_Through_Hole_AT-CUT_Crystal")
+      (attribute "PKG_TYPE" "XTAL_HC49P488W43L1150T466H350")
+      (attribute "PARTREV" "1.0")
+      (attribute "STANDARD" "IPC-7351B")
+      (attribute "MANUFACTURER" "CITIZEN")
+      (gate
+        (swap 1)
+        (symbol "HC49US16000000ABJB")
+        (pin "1" 1 (type PS))
+        (pin "2" 2 (type PS))
+      )
+    )
+    (symbol "HC49US16000000ABJB"
+      (units THOU)
+      (graphic
+        (stroke 16.0)
+        (path (pt -50.0 100.0) (pt 55.0 100.0))
+      )
+      (graphic
+        (stroke 16.0)
+        (path (pt 55.0 100.0) (pt 55.0 -100.0))
+      )
+      (graphic
+        (stroke 16.0)
+        (path (pt 55.0 -100.0) (pt -50.0 -100.0))
+      )
+      (graphic
+        (stroke 16.0)
+        (path (pt -50.0 100.0) (pt -50.0 -100.0))
+      )
+      (graphic
+        (stroke 16.0)
+        (path (pt 92.0 100.0) (pt 92.0 -100.0))
+      )
+      (graphic
+        (stroke 16.0)
+        (path (pt -90.0 100.0) (pt -90.0 -100.0))
+      )
+      (terminal
+        (body (symbol "PIN_R0_U_L100") (pt -200.0 0.0) (rot 0) (mir 0) (visible false))
+        (name (pt 139.37 0.0) (rot 0) (just MIDDLE LEFT) (visible false))
+        (number (pt -39.37 0.0) (rot 0) (just MIDDLE LEFT) (visible true))
+      )
+      (terminal
+        (body (symbol "PIN_R180_U_L100") (pt 200.0 0.0) (rot 0) (mir 0) (visible false))
+        (name (pt -139.37 0.0) (rot 0) (just MIDDLE RIGHT) (visible false))
+        (number (pt -39.37 0.0) (rot 0) (just MIDDLE RIGHT) (visible true))
+      )
+    )
+    (symbol "PIN_R0_U_L100"
+      (units THOU)
+      (graphic
+        (stroke 6.5)
+        (path (pt 0.0 0.0) (pt 100.0 0.0))
+      )
+    )
+    (symbol "PIN_R180_U_L100"
+      (units THOU)
+      (graphic
+        (stroke 6.5)
+        (path (pt 0.0 0.0) (pt -100.0 0.0))
+      )
+    )
+    (package "XTAL_HC49P488W43L1150T466H350"
+      (units THOU)
+      (layer TSLK
+        (graphic
+          (stroke 5.0)
+          (path (pt -134.65 91.73) (pt 134.65 91.73))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt -134.65 -91.73) (pt 134.65 -91.73))
+        )
+        (graphic
+          (stroke 5.0)
+          (path
+            (arc (pt -134.65 91.73) (pt -226.38 -91.73) (pt -42.91 91.73) (start 90) (sweep 90))
+            (pt -226.38 0)
+          )
+        )
+        (graphic
+          (stroke 5.0)
+          (path
+            (arc (pt -226.38 0) (pt -226.38 -91.73) (pt -42.91 91.73) (start 90) (sweep 180))
+            (pt -134.65 -91.73)
+          )
+        )
+        (graphic
+          (stroke 5.0)
+          (path
+            (arc (pt 226.38 0) (pt 42.91 -91.73) (pt 226.38 91.73) (start 90) (sweep 0))
+            (pt 134.65 91.73)
+          )
+        )
+        (graphic
+          (stroke 5.0)
+          (path
+            (arc (pt 134.65 -91.73) (pt 42.91 -91.73) (pt 226.38 91.73) (start 90) (sweep 270))
+            (pt 226.38 0)
+          )
+        )
+      )
+      (layer TASM
+        (graphic
+          (stroke 5.0)
+          (path (pt -134.65 91.73) (pt 134.65 91.73))
+        )
+        (graphic
+          (stroke 5.0)
+          (path (pt -134.65 -91.73) (pt 134.65 -91.73))
+        )
+        (graphic
+          (stroke 5.0)
+          (path
+            (arc (pt -134.65 91.73) (pt -226.38 -91.73) (pt -42.91 91.73) (start 90) (sweep 90))
+            (pt -226.38 0)
+          )
+        )
+        (graphic
+          (stroke 5.0)
+          (path
+            (arc (pt -226.38 0) (pt -226.38 -91.73) (pt -42.91 91.73) (start 90) (sweep 180))
+            (pt -134.65 -91.73)
+          )
+        )
+        (graphic
+          (stroke 5.0)
+          (path
+            (arc (pt 226.38 0) (pt 42.91 -91.73) (pt 226.38 91.73) (start 90) (sweep 0))
+            (pt 134.65 91.73)
+          )
+        )
+        (graphic
+          (stroke 5.0)
+          (path
+            (arc (pt 134.65 -91.73) (pt 42.91 -91.73) (pt 226.38 91.73) (start 90) (sweep 270))
+            (pt 226.38 0)
+          )
+        )
+      )
+      (layer OCCA
+        (graphic
+          (stroke 1.97)
+          (path (pt -134.25 101.57) (pt 133.86 101.57))
+        )
+        (graphic
+          (stroke 1.97)
+          (path (pt -129.92 -101.57) (pt 133.86 -101.57))
+        )
+        (graphic
+          (stroke 1.97)
+          (path
+            (arc (pt -134.25 101.57) (pt -236.22 -101.97) (pt -32.68 101.57) (start 90) (sweep 89))
+            (pt -236.22 0)
+          )
+        )
+        (graphic
+          (stroke 1.97)
+          (path
+            (arc (pt -236.22 0) (pt -236.22 -101.67) (pt -32.5 102.05) (start 92) (sweep 181))
+            (pt -129.92 -101.57)
+          )
+        )
+        (graphic
+          (stroke 1.97)
+          (path
+            (arc (pt 133.86 101.57) (pt 32.28 -101.57) (pt 235.43 101.57) (start -180) (sweep 90))
+            (pt 133.86 -101.57)
+          )
+        )
+      )
+      (leg 1 (pt -96.06 0) (padstack 1))
+      (leg 2 (pt 96.06 0) (padstack 2))
+      (padstack 1
+        (hole 26)
+        (plated true)
+        (pad (layer TCOP) (round 42.52))
+        (pad (layer INNER) (round 42.52))
+        (pad (layer BCOP) (round 42.52))
+        (pad (layer TRES) (round 21.26))
+        (pad (layer BRES) (round 21.26))
+      )
+      (padstack 2
+        (hole 26)
+        (plated true)
+        (pad (layer TCOP) (round 42.52))
+        (pad (layer INNER) (round 42.52))
+        (pad (layer BCOP) (round 42.52))
+        (pad (layer TRES) (round 21.26))
+        (pad (layer BRES) (round 21.26))
+      )
+    )
+  )
+)

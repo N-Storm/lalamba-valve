@@ -1,18 +1,14 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <WORKSPACE>
- <FRAME activewindow="1">
-  <PLACEMENT>2c0000000000000001000000ffffffffffffffffffffffffffffffff0e0000000c0000007f030000bd030000</PLACEMENT>
+ <FRAME activewindow="0">
+  <PLACEMENT>2c0000000200000003000000ffffffffffffffffffffffffffffffffa20000000c0000005f060000bd030000</PLACEMENT>
   <WINDOW type="default" module="ISIS"/>
-  <WINDOW type="default" module="ARES"/>
- </FRAME>
- <FRAME activewindow="-1">
-  <PLACEMENT>2c0000000000000001000000ffffffffffffffffffffffffffffffff820300000c000000f3060000bd030000</PLACEMENT>
  </FRAME>
  <MODULE name="VSMDEBUG">
   <PWI>
    <POPUP w="1782" x="5" flags="00000003" y="840" h="100" pid="0" iid="-1">
     <PROPERTIES>
-     <ITEM name="Message Column Width">1540</ITEM>
+     <ITEM name="Message Column Width">1524</ITEM>
      <ITEM name="ShowGrid">No</ITEM>
      <ITEM name="Source Column Width">100</ITEM>
      <ITEM name="Time Column Width">120</ITEM>
@@ -39,10 +35,10 @@
    <POPUP w="610" x="78" flags="00000001" y="169" h="466" pid="0" iid="13">
     <PROPERTIES/>
    </POPUP>
-   <POPUP w="290" x="749" flags="00008001" y="177" h="189" pid="0" iid="14">
+   <POPUP w="290" x="749" flags="00000001" y="177" h="189" pid="0" iid="14">
     <PROPERTIES/>
    </POPUP>
-   <POPUP w="98" x="5" flags="00000008" y="106" h="28" pid="3" iid="1">
+   <POPUP w="226" x="5" flags="00000008" y="106" h="215" pid="3" iid="1">
     <PROPERTIES/>
    </POPUP>
    <POPUP w="1" x="5" flags="0000000a" y="106" h="1" pid="10" iid="1">
@@ -105,7 +101,7 @@
      <ITEM name="TopLineAddress">00000020</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="1778" x="6" flags="0000002b" y="127" h="661" pid="1" iid="1">
+   <POPUP w="1778" x="-292" flags="0000002a" y="196" h="661" pid="1" iid="1">
     <PROPERTIES>
      <ITEM name="CaseSensitive">No</ITEM>
      <ITEM name="DISPADDRS">Yes</ITEM>
@@ -116,7 +112,7 @@
      <ITEM name="nBreakpoints">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="300" x="-797" flags="0000000b" y="-496" h="100" pid="2" iid="1">
+   <POPUP w="300" x="0" flags="0000000a" y="0" h="100" pid="2" iid="1">
     <PROPERTIES>
      <ITEM name="Address Column Width">480</ITEM>
      <ITEM name="AutoResize">No</ITEM>
