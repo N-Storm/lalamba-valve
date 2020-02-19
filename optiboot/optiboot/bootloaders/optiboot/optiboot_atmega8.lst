@@ -21,11 +21,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   8 .debug_frame  0000009c  00000000  00000000  00000ec0  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000001df  00000000  00000000  00000f5c  2**0
+  9 .debug_str    000001fc  00000000  00000000  00000f5c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000002ff  00000000  00000000  0000113b  2**0
+ 10 .debug_loc    000002ff  00000000  00000000  00001158  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000080  00000000  00000000  0000143a  2**0
+ 11 .debug_ranges 00000080  00000000  00000000  00001457  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -131,7 +131,7 @@ void pre_main(void) {
     1c38:	86 e8       	ldi	r24, 0x86	; 134
     1c3a:	80 bd       	out	0x20, r24	; 32
   UBRRL = (uint8_t)BAUD_SETTING;
-    1c3c:	8c e0       	ldi	r24, 0x0C	; 12
+    1c3c:	89 e1       	ldi	r24, 0x19	; 25
     1c3e:	89 b9       	out	0x09, r24	; 9
     #endif // LIN_UART
   #endif // mega8/etc
@@ -153,8 +153,8 @@ void pre_main(void) {
   		#error "LED flash for Tiny43 not yet supported"
 	#else
   		TCNT1 = -(F_CPU/(1024*16));
-    1c48:	28 e1       	ldi	r18, 0x18	; 24
-    1c4a:	3e ef       	ldi	r19, 0xFE	; 254
+    1c48:	20 e3       	ldi	r18, 0x30	; 48
+    1c4a:	3c ef       	ldi	r19, 0xFC	; 252
     	TIFR1 = _BV(TOV1);
     1c4c:	44 e0       	ldi	r20, 0x04	; 4
     

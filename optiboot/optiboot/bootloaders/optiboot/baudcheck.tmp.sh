@@ -1,5 +1,5 @@
 # 1 "baudcheck.c"
-# 1 "/tmp/optiboot/optiboot/bootloaders/optiboot//"
+# 1 "/home/nstorm/mk/avr/lalamba-valve/optiboot/optiboot/bootloaders/optiboot//"
 # 1 "<built-in>"
 # 1 "<command-line>"
 # 1 "baudcheck.c"
@@ -7,7 +7,7 @@
 bpsx=76800
 bps=${bpsx/L/}
 bps=${bps/U/}
-fcpux=8000000L
+fcpux=16000000L
 fcpu=${fcpux/L/}
 fcpu=${fcpu/U/}
 # 38 "baudcheck.c"
