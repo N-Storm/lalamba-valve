@@ -20,6 +20,7 @@
    </camera>
   </WINDOW>
   <WINDOW type="default" module="DXP"/>
+  <WINDOW type="default" module="GVIEW"/>
  </FRAME>
  <MODULE name="VSMDEBUG">
   <PWI>
