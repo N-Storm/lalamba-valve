@@ -14,8 +14,8 @@
   <WINDOW type="default" module="ARES"/>
   <WINDOW type="VIEW3D" module="VIEW3D">
    <camera>
-    <position x="-857949" y="950000" z="8829986"/>
-    <focus x="-857949" y="950000" z="0"/>
+    <position x="-300279" y="950000" z="-7900513"/>
+    <focus x="-300279" y="950000" z="0"/>
     <up x="0" y="1000000" z="0"/>
    </camera>
   </WINDOW>
