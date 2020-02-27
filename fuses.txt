@@ -1,0 +1,2 @@
+Final 16Mhz ext crystal, BODEN, etc: -U lfuse:w:0x3f:m -U hfuse:w:0xcc:m
+Temp 8Mhz int osc.: -U lfuse:w:0xe4:m -U hfuse:w:0xdc:m
