@@ -14,6 +14,7 @@ OBJECTS    = m8-test.o
 CC = avr-gcc
 SIZE = avr-size
 CFLAGS = -Os -g -std=gnu11 -flto -ffunction-sections -fdata-sections -Wl,--gc-sections -Wall -Wl,--warn-common
+# -Wl,-u,vfprintf -lprintf_min
 AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE) -v
 COMPILE = $(CC) $(CFLAGS) -DF_CPU=$(F_CPU) -mmcu=$(DEVICE)
 
