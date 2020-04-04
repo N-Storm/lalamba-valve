@@ -100,23 +100,22 @@ void ws2812_sendarray(uint8_t *data,uint16_t datlen)
 #define w_nop8  w_nop4 w_nop4
 #define w_nop16 w_nop8 w_nop8
 
-void inline ws2812_sendarray_mask(uint8_t *data,uint16_t datlen,uint8_t maskhi)
-{
-  uint8_t curbyte,ctr,masklo;
-  uint8_t sreg_prev;
-  
-  ws2812_DDRREG |= maskhi; // Enable output
-  
-  masklo	=~maskhi&ws2812_PORTREG;
-  maskhi |=        ws2812_PORTREG;
-  
-  sreg_prev=SREG;
-  cli();  
+void inline ws2812_sendarray_mask(uint8_t *data,uint16_t datlen,uint8_t maskhi) {
+    uint8_t curbyte, ctr, masklo;
+    uint8_t sreg_prev;
 
-  while (datlen--) {
-    curbyte=*data++;
-    
-    asm volatile(
+    ws2812_DDRREG |= maskhi; // Enable output
+
+    masklo = ~maskhi&ws2812_PORTREG;
+    maskhi |= ws2812_PORTREG;
+
+    sreg_prev = SREG;
+    cli();
+
+    while (datlen--) {
+        curbyte = *data++;
+
+        asm volatile(
     "       ldi   %0,8  \n\t"
     "loop%=:            \n\t"
     "       out   %2,%3 \n\t"    //  '1' [01] '0' [01] - re
@@ -175,7 +174,7 @@ w_nop16
     :	"=&d" (ctr)
     :	"r" (curbyte), "I" (_SFR_IO_ADDR(ws2812_PORTREG)), "r" (maskhi), "r" (masklo)
     );
-  }
-  
-  SREG=sreg_prev;
+    }
+
+    SREG = sreg_prev;
 }
