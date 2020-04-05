@@ -1,4 +1,5 @@
 /* 
+ * Project: lalamba-valve
  * File:   main.h
  * Author: NStorm
  * Created on 04.04.2020, 21:22
@@ -43,6 +44,7 @@ extern "C" {
 #define BTN_PIN PD2
 #define INT1_PORT PORTD
 #define INT1_PIN PD3
+#define MSW_PORT PORTD
 #define M1SW1_PORT PORTD
 #define M1SW1_PIN PD4
 #define M1SW2_PORT PORTD
@@ -61,10 +63,19 @@ extern "C" {
 #define YELLOW {255, 255, 0}
 #define VIOLET {0, 165, 255}
 
-// Struct types
+// Enums
+typedef enum {VALVE_CLOSED, VALVE_MIDDLE, VALVE_OPEN, VALVE_ERROR} eValveState;
+    
+/* Struct types
+ * valveX_astate - actual state based on switches
+ * valveX_sstate - software defined state
+ */
 typedef struct {
-    uint8_t current_state;
     uint8_t prev_state;
+    uint8_t current_state;
+    uint8_t next_state;
+    eValveState valve1_astate, valve1_sstate;
+    eValveState valve2_astate, valve2_sstate;
 } state_t;
 
 typedef struct {
@@ -77,6 +88,9 @@ typedef struct {
 struct cRGB leda;
 volatile state_t state;
 settings_t settings;
+
+// Function prototypes
+bool inline check_reed();
 
 #ifdef	__cplusplus
 }
