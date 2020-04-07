@@ -12,6 +12,7 @@
 // PORT B
 #define WS2812_PORT PORTB
 #define WS2812_PIN PB0
+#define AIN_2_PORT PORTB
 #define AIN1_2_PORT PORTB
 #define AIN1_2_PIN PB1
 #define AIN2_2_PORT PORTB
@@ -20,6 +21,7 @@
 #define PWMA_PIN PB3
 
 // PORT C
+#define AIN_PORT PORTC
 #define AIN1_PORT PORTC
 #define AIN1_PIN PC0
 #define AIN2_PORT PORTC
@@ -64,8 +66,11 @@
 typedef enum {VALVE_CLOSED, VALVE_MIDDLE, VALVE_OPEN, VALVE_ERROR} eValveState;
 // Valve move direction
 typedef enum {V1_OPEN, V1_CLOSE, V2_OPEN, V2_CLOSE} eValveMove;
-// Return/error codes
-typedef enum {NONE, ALREADY_POSITIONED} eRetCode;
+/* Return/error codes
+ * ALREADY_POSITIONED - was already in place where we requested to move (based on SW)
+ * MOVED - succesfully moved to a new position
+ */
+typedef enum {NONE, ALREADY_POSITIONED, MOVED} eRetCode;
     
 /* Struct types
  * valveX_astate - actual state based on switches
@@ -92,8 +97,6 @@ settings_t settings;
 
 // Function prototypes
 bool inline check_reed();
-void v_move(eValveMove move);
-void v1_move(eValveMove move);
-void v2_move(eValveMove move);
+eRetCode v_move(eValveMove move);
 
 #endif	/* MAIN_H */

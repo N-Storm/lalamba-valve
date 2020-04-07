@@ -11,6 +11,8 @@
  * INT0 attached to MODE BTN active LOW
  * INT1 attached to AC MAINS presence detector active (no AC) LOW (normally HIGH)
  * REED_PIN attached to REED sensor active LOW (normally HIGH)
+ * MxSW1 - Closed, MxSW2 - Opened
+ * AIN1 - Closing direction, AIN2 - opening direction
  */
 
 #include <stdio.h>
@@ -36,7 +38,8 @@ void inline init() {
     // IO settings
     DDRB = _BV(WS2812_PIN) | _BV(AIN1_2_PIN) | _BV(AIN2_2_PIN) | _BV(PWMA_PIN);
     DDRC = _BV(AIN1_PIN) | _BV(AIN2_PIN) | _BV(STBY_PIN) | _BV(NSLEEP_PIN);
-    DDRD = _BV(TX_PIN) | _BV(INT1_PIN) | _BV(M1SW1_PIN) | _BV(M1SW2_PIN) | _BV(M2SW1_PIN) | _BV(M2SW2_PIN);
+    DDRD = _BV(TX_PIN);
+    PORTD |= (1 << M1SW1_PIN) | (1 << M1SW2_PIN) | (1 << M2SW1_PIN) | (1 << M2SW2_PIN); // Enable pull-ups
 
     // Ext interrupt settings
     MCUCR = (1 << ISC11) | (1 << ISC01); // Falling edge mode for INT0, INT1
@@ -47,6 +50,10 @@ void inline init() {
 
 void inline enable_extint() {
     GICR = (1 << INT1) | (1 << INT0); // Enable INT0, INT1    
+}
+
+void inline disable_extint() {
+    GICR = 0; // Disable INT0, INT1    
 }
 
 // Check reed sensor reading. Return true if reed is HIGH (normal).
@@ -71,36 +78,46 @@ void update_valve_astates() {
         state.v2_astate = VALVE_MIDDLE;
 }
 
-void v_move(eValveMove move) {
-    switch(move) {
-        case V1_CLOSE:
-        case V1_OPEN:
-            v1_move(move);
-            break;
-        case V2_CLOSE:
-        case V2_OPEN:
-            v2_move(move);
-            break;
-    }
-
-    if (move == V1_CLOSE || move == V1_OPEN)
-        v1_move(move);
-    else if (move == V2_CLOSE || move == V2_OPEN)
-        v2_move(move);
-}
-
-void v1_move(eValveMove move) {
+eRetCode v_move(eValveMove move) {
     switch(move) {
         case V1_OPEN:
             if (state.v1_astate == VALVE_OPEN)
-                return;
+                return ALREADY_POSITIONED;
+            else if (state.v1_astate == VALVE_CLOSED) {
+                AIN1_PORT &= ~_BV(AIN1_PIN);
+                AIN2_PORT |= _BV(AIN2_PIN);
+                PWMA_PORT |= _BV(PWMA_PIN);
+                STBY_PORT |= _BV(STBY_PIN); // Run motor!
+                // TODO: Add timer0 timeout
+                loop_until_bit_is_set(M1SW1_PORT, M1SW1_PIN); // Wait until SW are hit by motor
+                PWMA_PORT &= ~(_BV(PWMA_PIN)); // Short brake
+                _delay_ms(10);
+                AIN2_PORT &= _BV(AIN2_PIN);
+                STBY_PORT &= ~_BV(STBY_PIN); // Go back to STBY
+            }
             break;
         case V1_CLOSE:
+            if (state.v1_astate == VALVE_CLOSED)
+                return ALREADY_POSITIONED;
+            else if (state.v1_astate == VALVE_OPEN) {
+                AIN2_PORT &= ~_BV(AIN2_PIN);
+                AIN1_PORT |= _BV(AIN1_PIN);
+                PWMA_PORT |= _BV(PWMA_PIN);
+                STBY_PORT |= _BV(STBY_PIN); // Run motor!
+                // TODO: Add timer0 timeout
+                loop_until_bit_is_set(M1SW2_PORT, M1SW2_PIN); // Wait until SW are hit by motor
+                PWMA_PORT &= ~(_BV(PWMA_PIN)); // Short brake
+                _delay_ms(10);
+                AIN1_PORT &= _BV(AIN1_PIN);
+                STBY_PORT &= ~_BV(STBY_PIN); // Go back to STBY
+            }
+            break;
+        case V2_OPEN:
+            break;
+        case V2_CLOSE:
             break;
     }
-}
-
-void v2_move(eValveMove move) {
+    return NONE;
 }
 
 void calibrate() {
@@ -108,7 +125,7 @@ void calibrate() {
     if (state.v1_astate == VALVE_CLOSED)
         state.v1_sstate = state.v1_astate;
     else if (state.v1_astate == VALVE_OPEN) {
-        
+        v_move(V1_CLOSE);
     }
 
     if (state.v2_astate == VALVE_OPEN)
