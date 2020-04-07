@@ -8,10 +8,6 @@
 #ifndef MAIN_H
 #define	MAIN_H
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
-
 // IO Mappings (PIN defines)
 // PORT B
 #define WS2812_PORT PORTB
@@ -64,7 +60,12 @@ extern "C" {
 #define VIOLET {0, 165, 255}
 
 // Enums
+// Current status of the valve
 typedef enum {VALVE_CLOSED, VALVE_MIDDLE, VALVE_OPEN, VALVE_ERROR} eValveState;
+// Valve move direction
+typedef enum {V1_OPEN, V1_CLOSE, V2_OPEN, V2_CLOSE} eValveMove;
+// Return/error codes
+typedef enum {NONE, ALREADY_POSITIONED} eRetCode;
     
 /* Struct types
  * valveX_astate - actual state based on switches
@@ -74,8 +75,8 @@ typedef struct {
     uint8_t prev_state;
     uint8_t current_state;
     uint8_t next_state;
-    eValveState valve1_astate, valve1_sstate;
-    eValveState valve2_astate, valve2_sstate;
+    eValveState v1_astate, v1_sstate;
+    eValveState v2_astate, v2_sstate;
 } state_t;
 
 typedef struct {
@@ -91,10 +92,8 @@ settings_t settings;
 
 // Function prototypes
 bool inline check_reed();
-
-#ifdef	__cplusplus
-}
-#endif
+void v_move(eValveMove move);
+void v1_move(eValveMove move);
+void v2_move(eValveMove move);
 
 #endif	/* MAIN_H */
-

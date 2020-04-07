@@ -37,13 +37,16 @@ void inline init() {
     DDRB = _BV(WS2812_PIN) | _BV(AIN1_2_PIN) | _BV(AIN2_2_PIN) | _BV(PWMA_PIN);
     DDRC = _BV(AIN1_PIN) | _BV(AIN2_PIN) | _BV(STBY_PIN) | _BV(NSLEEP_PIN);
     DDRD = _BV(TX_PIN) | _BV(INT1_PIN) | _BV(M1SW1_PIN) | _BV(M1SW2_PIN) | _BV(M2SW1_PIN) | _BV(M2SW2_PIN);
-    
+
     // Ext interrupt settings
     MCUCR = (1 << ISC11) | (1 << ISC01); // Falling edge mode for INT0, INT1
-    GICR = (1 << INT1) | (1 << INT0); // Enable INT0, INT1
     
     ws2812_setleds(&leda, 1); // Turn on white LED
     sei();
+}
+
+void inline enable_extint() {
+    GICR = (1 << INT1) | (1 << INT0); // Enable INT0, INT1    
 }
 
 // Check reed sensor reading. Return true if reed is HIGH (normal).
@@ -54,28 +57,72 @@ bool inline check_reed() {
 // Updates actual (based on switches) valve states
 void update_valve_astates() {
     if (bit_is_set(M1SW1_PORT, M1SW1_PIN) && bit_is_clear(M1SW2_PORT, M1SW2_PIN))
-        state.valve1_astate = VALVE_CLOSED;
+        state.v1_astate = VALVE_CLOSED;
     else if (bit_is_clear(M1SW1_PORT, M1SW1_PIN) && bit_is_set(M1SW2_PORT, M1SW2_PIN))
-        state.valve1_astate = VALVE_OPEN;
+        state.v1_astate = VALVE_OPEN;
     else
-        state.valve1_astate = VALVE_MIDDLE;
+        state.v1_astate = VALVE_MIDDLE;
     
     if (bit_is_set(M2SW1_PORT, M2SW1_PIN) && bit_is_clear(M2SW2_PORT, M2SW2_PIN))
-        state.valve2_astate = VALVE_CLOSED;
+        state.v2_astate = VALVE_CLOSED;
     else if (bit_is_clear(M2SW1_PORT, M2SW1_PIN) && bit_is_set(M2SW2_PORT, M2SW2_PIN))
-        state.valve2_astate = VALVE_OPEN;
+        state.v2_astate = VALVE_OPEN;
     else
-        state.valve2_astate = VALVE_MIDDLE;
+        state.v2_astate = VALVE_MIDDLE;
+}
+
+void v_move(eValveMove move) {
+    switch(move) {
+        case V1_CLOSE:
+        case V1_OPEN:
+            v1_move(move);
+            break;
+        case V2_CLOSE:
+        case V2_OPEN:
+            v2_move(move);
+            break;
+    }
+
+    if (move == V1_CLOSE || move == V1_OPEN)
+        v1_move(move);
+    else if (move == V2_CLOSE || move == V2_OPEN)
+        v2_move(move);
+}
+
+void v1_move(eValveMove move) {
+    switch(move) {
+        case V1_OPEN:
+            if (state.v1_astate == VALVE_OPEN)
+                return;
+            break;
+        case V1_CLOSE:
+            break;
+    }
+}
+
+void v2_move(eValveMove move) {
 }
 
 void calibrate() {
     update_valve_astates();
+    if (state.v1_astate == VALVE_CLOSED)
+        state.v1_sstate = state.v1_astate;
+    else if (state.v1_astate == VALVE_OPEN) {
+        
+    }
+
+    if (state.v2_astate == VALVE_OPEN)
+        state.v2_sstate = state.v2_astate;
+    else {
+        
+    }
 }
 
 int main(void)
 {
     init();
     calibrate();
+    enable_extint();
     
     while (1) 
     {
