@@ -8,6 +8,10 @@
 #ifndef MAIN_H
 #define	MAIN_H
 
+// Settings
+// Delay for valve motor short break in ms
+#define V_SHORT_DELAY 100
+
 // IO Mappings (PIN defines)
 // PORT B
 #define WS2812_PORT PORTB

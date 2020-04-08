@@ -86,7 +86,7 @@ eRetCode v_move(eValveMove move) {
                 V_STOP_TIMEOUT();
                 timeout_flag = false;
                 PWMA_PORT &= ~(_BV(PWMA)); // Short brake
-                _delay_ms(10);
+                _delay_ms(V_SHORT_DELAY);
                 AIN2_PORT &= _BV(AIN2);
                 STBY_PORT &= ~_BV(STBY); // Go back to STBY
                 state.v1_astate = VALVE_OPEN;
@@ -107,7 +107,7 @@ eRetCode v_move(eValveMove move) {
                 V_STOP_TIMEOUT();
                 timeout_flag = false;
                 PWMA_PORT &= ~(_BV(PWMA)); // Short brake
-                _delay_ms(10);
+                _delay_ms(V_SHORT_DELAY);
                 AIN1_PORT &= _BV(AIN1);
                 STBY_PORT &= ~_BV(STBY); // Go back to STBY
                 state.v1_astate = VALVE_CLOSED;
