@@ -10,7 +10,7 @@
  * Valve2 - entry valve, controlled by DRV8833 (5V)
  * INT0 attached to MODE BTN active LOW
  * INT1 attached to AC MAINS presence detector active (no AC) LOW (normally HIGH)
- * REED_PIN attached to REED sensor active LOW (normally HIGH)
+ * REED attached to REED sensor active LOW (normally HIGH)
  * MxSW1 - Closed, MxSW2 - Opened
  * AIN1 - Closing direction, AIN2 - opening direction
  */
@@ -39,10 +39,10 @@ settings_t settings;
 void inline init() {
     cli();
     // IO settings
-    DDRB = _BV(WS2812_PIN) | _BV(AIN1_2_PIN) | _BV(AIN2_2_PIN) | _BV(PWMA_PIN);
-    DDRC = _BV(AIN1_PIN) | _BV(AIN2_PIN) | _BV(STBY_PIN) | _BV(NSLEEP_PIN);
-    DDRD = _BV(TX_PIN);
-    PORTD |= (1 << M1SW1_PIN) | (1 << M1SW2_PIN) | (1 << M2SW1_PIN) | (1 << M2SW2_PIN); // Enable pull-ups
+    DDRB = _BV(WS2812) | _BV(AIN1_2) | _BV(AIN2_2) | _BV(PWMA);
+    DDRC = _BV(AIN1) | _BV(AIN2) | _BV(STBY) | _BV(NSLEEP);
+    DDRD = _BV(TX);
+    MSW_PORT |= (1 << M1SW1) | (1 << M1SW2) | (1 << M2SW1) | (1 << M2SW2); // Enable pull-ups
 
     // Ext interrupt settings
     MCUCR = (1 << ISC11) | (1 << ISC01); // Falling edge mode for INT0, INT1
@@ -53,16 +53,16 @@ void inline init() {
 
 // Updates actual (based on switches) valve states
 void update_valve_astates() {
-    if (bit_is_set(M1SW1_PORT, M1SW1_PIN) && bit_is_clear(M1SW2_PORT, M1SW2_PIN))
+    if (bit_is_set(MSW_PIN, M1SW1) && bit_is_clear(MSW_PIN, M1SW2))
         state.v1_astate = VALVE_CLOSED;
-    else if (bit_is_clear(M1SW1_PORT, M1SW1_PIN) && bit_is_set(M1SW2_PORT, M1SW2_PIN))
+    else if (bit_is_clear(MSW_PIN, M1SW1) && bit_is_set(MSW_PIN, M1SW2))
         state.v1_astate = VALVE_OPEN;
     else
         state.v1_astate = VALVE_MIDDLE;
     
-    if (bit_is_set(M2SW1_PORT, M2SW1_PIN) && bit_is_clear(M2SW2_PORT, M2SW2_PIN))
+    if (bit_is_set(MSW_PIN, M2SW1) && bit_is_clear(MSW_PIN, M2SW2))
         state.v2_astate = VALVE_CLOSED;
-    else if (bit_is_clear(M2SW1_PORT, M2SW1_PIN) && bit_is_set(M2SW2_PORT, M2SW2_PIN))
+    else if (bit_is_clear(MSW_PIN, M2SW1) && bit_is_set(MSW_PIN, M2SW2))
         state.v2_astate = VALVE_OPEN;
     else
         state.v2_astate = VALVE_MIDDLE;
@@ -75,16 +75,16 @@ eRetCode v_move(eValveMove move) {
                 return ALREADY_POSITIONED;
             else if (state.v1_astate == VALVE_CLOSED) {
                 state.v1_astate = VALVE_MIDDLE;
-                AIN1_PORT &= ~_BV(AIN1_PIN);
-                AIN2_PORT |= _BV(AIN2_PIN);
-                PWMA_PORT |= _BV(PWMA_PIN);
-                STBY_PORT |= _BV(STBY_PIN); // Run motor!
+                AIN1_PORT &= ~_BV(AIN1);
+                AIN2_PORT |= _BV(AIN2);
+                PWMA_PORT |= _BV(PWMA);
+                STBY_PORT |= _BV(STBY); // Run motor!
                 // TODO: Add timer0 timeout
-                loop_until_bit_is_set(M1SW1_PORT, M1SW1_PIN); // Wait until SW are hit by motor
-                PWMA_PORT &= ~(_BV(PWMA_PIN)); // Short brake
+                loop_until_bit_is_set(MSW_PIN, M1SW1); // Wait until SW are hit by motor
+                PWMA_PORT &= ~(_BV(PWMA)); // Short brake
                 _delay_ms(10);
-                AIN2_PORT &= _BV(AIN2_PIN);
-                STBY_PORT &= ~_BV(STBY_PIN); // Go back to STBY
+                AIN2_PORT &= _BV(AIN2);
+                STBY_PORT &= ~_BV(STBY); // Go back to STBY
                 state.v1_astate = VALVE_OPEN;
                 return MOVED;
             }
@@ -94,16 +94,16 @@ eRetCode v_move(eValveMove move) {
                 return ALREADY_POSITIONED;
             else if (state.v1_astate == VALVE_OPEN) {
                 state.v1_astate = VALVE_MIDDLE;
-                AIN2_PORT &= ~_BV(AIN2_PIN);
-                AIN1_PORT |= _BV(AIN1_PIN);
-                PWMA_PORT |= _BV(PWMA_PIN);
-                STBY_PORT |= _BV(STBY_PIN); // Run motor!
+                AIN2_PORT &= ~_BV(AIN2);
+                AIN1_PORT |= _BV(AIN1);
+                PWMA_PORT |= _BV(PWMA);
+                STBY_PORT |= _BV(STBY); // Run motor!
                 // TODO: Add timer0 timeout
-                loop_until_bit_is_set(M1SW2_PORT, M1SW2_PIN); // Wait until SW are hit by motor
-                PWMA_PORT &= ~(_BV(PWMA_PIN)); // Short brake
+                loop_until_bit_is_set(MSW_PIN, M1SW2); // Wait until SW are hit by motor
+                PWMA_PORT &= ~(_BV(PWMA)); // Short brake
                 _delay_ms(10);
-                AIN1_PORT &= _BV(AIN1_PIN);
-                STBY_PORT &= ~_BV(STBY_PIN); // Go back to STBY
+                AIN1_PORT &= _BV(AIN1);
+                STBY_PORT &= ~_BV(STBY); // Go back to STBY
                 state.v1_astate = VALVE_CLOSED;
                 return MOVED;
             }

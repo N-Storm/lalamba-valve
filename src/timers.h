@@ -10,6 +10,6 @@
 // Timeout for full valve rotation in ms
 #define V_ROT_TIMEOUT 5000 // 5s
 #define V_ROT_TICKS (V_ROT_TIMEOUT/(1/(F_CPU/1024))/1000) // total timer ticks for rotation with 1/1024 prescaler
+// volatile uint32_t test = V_ROT_TICKS;
 
 #endif	/* TIMERS_H */
-

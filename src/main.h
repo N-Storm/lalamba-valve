@@ -11,46 +11,47 @@
 // IO Mappings (PIN defines)
 // PORT B
 #define WS2812_PORT PORTB
-#define WS2812_PIN PB0
+#define WS2812 PB0
 #define AIN_2_PORT PORTB
 #define AIN1_2_PORT PORTB
-#define AIN1_2_PIN PB1
+#define AIN1_2 PB1
 #define AIN2_2_PORT PORTB
-#define AIN2_2_PIN PB2
+#define AIN2_2 PB2
 #define PWMA_PORT PORTB
-#define PWMA_PIN PB3
+#define PWMA PB3
 
 // PORT C
 #define AIN_PORT PORTC
 #define AIN1_PORT PORTC
-#define AIN1_PIN PC0
+#define AIN1 PC0
 #define AIN2_PORT PORTC
-#define AIN2_PIN PC2
+#define AIN2 PC2
 #define STBY_PORT PORTC
-#define STBY_PIN PC3
+#define STBY PC3
 #define NSLEEP_PORT PORTC
-#define NSLEEP_PIN PC4
+#define NSLEEP PC4
 #define REED_PORT PORTC
-#define REED_PIN PC5
+#define REED_PIN PINC
+#define REED PC5
 
 // PORT D
 #define RX_PORT PORTD
-#define RX_PIN PD0
+#define RX_PIN PIND
+#define RX PD0
 #define TX_PORT PORTD
-#define TX_PIN PD1
+#define TX PD1
 #define BTN_PORT PORTD
-#define BTN_PIN PD2
-#define INT1_PORT PORTD
-#define INT1_PIN PD3
+#define BTN_PIN PIND
+#define BTN PD2
+#define ACDET_PORT PORTD
+#define ACDET_PIN PIND
+#define ACDET PD3
 #define MSW_PORT PORTD
-#define M1SW1_PORT PORTD
-#define M1SW1_PIN PD4
-#define M1SW2_PORT PORTD
-#define M1SW2_PIN PD5
-#define M2SW1_PORT PORTD
-#define M2SW1_PIN PD6
-#define M2SW2_PORT PORTD
-#define M2SW2_PIN PD7
+#define MSW_PIN PIND
+#define M1SW1 PD4
+#define M1SW2 PD5
+#define M2SW1 PD6
+#define M2SW2 PD7
 
 // LED colors
 #define WHITE {255, 255, 255}
@@ -104,6 +105,6 @@ eRetCode v_move(eValveMove move);
 // Disable INT0, INT1 
 #define EINT_DISABLE() do { GICR = 0; } while (0);
 // Check reed sensor reading. Return true if reed is HIGH (normal).
-#define GET_REED() bit_is_set(REED_PORT, REED_PIN);
+#define GET_REED() bit_is_set(REED_PIN, REED);
 
 #endif	/* MAIN_H */
