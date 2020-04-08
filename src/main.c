@@ -29,6 +29,7 @@
 #include "main.h"
 #include "ws2812_config.h"
 #include "light_ws2812.h"
+#include "timers.h"
 
 // Globals
 // Array for WS2818 LED colors
@@ -137,6 +138,7 @@ int main(void)
     init();
     calibrate();
     EINT_ENABLE();
+    testf();
     
     while (1) 
     {
