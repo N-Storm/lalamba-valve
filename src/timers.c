@@ -18,12 +18,3 @@
 #include "main.h"
 #include "timers.h"
 
-volatile uint32_t test;
-
-int testf() {
-    test = V_ROT_TICKS;
-    test = V_ROT_OVF;
-    test = V_ROT_REM;
-    if (test > 0xAA) return 1;
-    return 0;
-}

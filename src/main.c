@@ -138,7 +138,6 @@ int main(void)
     init();
     calibrate();
     EINT_ENABLE();
-    testf();
     
     while (1) 
     {

@@ -15,6 +15,4 @@
 #define V_ROT_OVF (uint16_t)(V_ROT_TICKS/256) // Total timer overflow count
 #define V_ROT_REM (uint8_t)(V_ROT_TICKS-((uint32_t)V_ROT_OVF*256)) // Timer ticks remaining
 
-extern int testf();
-
 #endif	/* TIMERS_H */
