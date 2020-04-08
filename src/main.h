@@ -91,12 +91,19 @@ typedef struct {
 } settings_t;
 
 // Globals
-struct cRGB leda;
-volatile state_t state;
-settings_t settings;
+extern struct cRGB leda;
+extern volatile state_t state;
+extern settings_t settings;
 
 // Function prototypes
-bool inline check_reed();
 eRetCode v_move(eValveMove move);
+
+// Macro "functions"
+// Enable INT0, INT1
+#define EINT_ENABLE() do { GICR = (1 << INT1) | (1 << INT0); } while (0);
+// Disable INT0, INT1 
+#define EINT_DISABLE() do { GICR = 0; } while (0);
+// Check reed sensor reading. Return true if reed is HIGH (normal).
+#define GET_REED() bit_is_set(REED_PORT, REED_PIN);
 
 #endif	/* MAIN_H */

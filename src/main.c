@@ -30,8 +30,11 @@
 #include "ws2812_config.h"
 #include "light_ws2812.h"
 
+// Globals
 // Array for WS2818 LED colors
 struct cRGB leda = WHITE;
+volatile state_t state;
+settings_t settings;
 
 void inline init() {
     cli();
@@ -46,19 +49,6 @@ void inline init() {
     
     ws2812_setleds(&leda, 1); // Turn on white LED
     sei();
-}
-
-void inline enable_extint() {
-    GICR = (1 << INT1) | (1 << INT0); // Enable INT0, INT1    
-}
-
-void inline disable_extint() {
-    GICR = 0; // Disable INT0, INT1    
-}
-
-// Check reed sensor reading. Return true if reed is HIGH (normal).
-bool inline check_reed() {
-    return bit_is_set(REED_PORT, REED_PIN);
 }
 
 // Updates actual (based on switches) valve states
@@ -84,6 +74,7 @@ eRetCode v_move(eValveMove move) {
             if (state.v1_astate == VALVE_OPEN)
                 return ALREADY_POSITIONED;
             else if (state.v1_astate == VALVE_CLOSED) {
+                state.v1_astate = VALVE_MIDDLE;
                 AIN1_PORT &= ~_BV(AIN1_PIN);
                 AIN2_PORT |= _BV(AIN2_PIN);
                 PWMA_PORT |= _BV(PWMA_PIN);
@@ -94,12 +85,15 @@ eRetCode v_move(eValveMove move) {
                 _delay_ms(10);
                 AIN2_PORT &= _BV(AIN2_PIN);
                 STBY_PORT &= ~_BV(STBY_PIN); // Go back to STBY
+                state.v1_astate = VALVE_OPEN;
+                return MOVED;
             }
             break;
         case V1_CLOSE:
             if (state.v1_astate == VALVE_CLOSED)
                 return ALREADY_POSITIONED;
             else if (state.v1_astate == VALVE_OPEN) {
+                state.v1_astate = VALVE_MIDDLE;
                 AIN2_PORT &= ~_BV(AIN2_PIN);
                 AIN1_PORT |= _BV(AIN1_PIN);
                 PWMA_PORT |= _BV(PWMA_PIN);
@@ -110,6 +104,8 @@ eRetCode v_move(eValveMove move) {
                 _delay_ms(10);
                 AIN1_PORT &= _BV(AIN1_PIN);
                 STBY_PORT &= ~_BV(STBY_PIN); // Go back to STBY
+                state.v1_astate = VALVE_CLOSED;
+                return MOVED;
             }
             break;
         case V2_OPEN:
@@ -122,6 +118,7 @@ eRetCode v_move(eValveMove move) {
 
 void calibrate() {
     update_valve_astates();
+
     if (state.v1_astate == VALVE_CLOSED)
         state.v1_sstate = state.v1_astate;
     else if (state.v1_astate == VALVE_OPEN) {
@@ -131,7 +128,7 @@ void calibrate() {
     if (state.v2_astate == VALVE_OPEN)
         state.v2_sstate = state.v2_astate;
     else {
-        
+        v_move(V2_OPEN);
     }
 }
 
@@ -139,7 +136,7 @@ int main(void)
 {
     init();
     calibrate();
-    enable_extint();
+    EINT_ENABLE();
     
     while (1) 
     {
