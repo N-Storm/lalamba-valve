@@ -32,8 +32,6 @@
 #include "timers.h"
 
 // Globals
-// Array for WS2818 LED colors
-struct cRGB leda = WHITE;
 volatile state_t state;
 settings_t settings;
 
@@ -51,7 +49,7 @@ void inline init() {
     // Timer interrupt settings
     TIMSK = _BV(TOIE0); // Enable T0 overflow interrupts (timer is still disabled)
     
-    ws2812_setleds(&leda, 1); // Turn on white LED
+    SET_LED(WHITE); // Turn on white LED
     sei();
 }
 
@@ -84,7 +82,7 @@ eRetCode v_move(eValveMove move) {
                 PWMA_PORT |= _BV(PWMA);
                 STBY_PORT |= _BV(STBY); // Run motor
                 V_RUN_TIMEOUT();
-                while (bit_is_set(MSW_PIN, M1SW1) || !timeout_flag); // Wait until SW are hit by motor
+                while (bit_is_set(MSW_PIN, M1SW1) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
                 timeout_flag = false;
                 PWMA_PORT &= ~(_BV(PWMA)); // Short brake
@@ -105,7 +103,7 @@ eRetCode v_move(eValveMove move) {
                 PWMA_PORT |= _BV(PWMA);
                 STBY_PORT |= _BV(STBY); // Run motor
                 V_RUN_TIMEOUT();
-                while (bit_is_set(MSW_PIN, M1SW2) || !timeout_flag); // Wait until SW are hit by motor
+                while (bit_is_set(MSW_PIN, M1SW2) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
                 timeout_flag = false;
                 PWMA_PORT &= ~(_BV(PWMA)); // Short brake
@@ -138,6 +136,8 @@ void calibrate() {
     else {
         v_move(V2_OPEN);
     }
+    
+    SET_LED(GREEN);
 }
 
 int main(void)

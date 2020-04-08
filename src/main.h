@@ -25,14 +25,14 @@
 #define AIN1_PORT PORTC
 #define AIN1 PC0
 #define AIN2_PORT PORTC
-#define AIN2 PC2
+#define AIN2 PC1
 #define STBY_PORT PORTC
-#define STBY PC3
+#define STBY PC2
 #define NSLEEP_PORT PORTC
-#define NSLEEP PC4
+#define NSLEEP PC3
 #define REED_PORT PORTC
 #define REED_PIN PINC
-#define REED PC5
+#define REED PC4
 
 // PORT D
 #define RX_PORT PORTD
@@ -53,7 +53,7 @@
 #define M2SW1 PD6
 #define M2SW2 PD7
 
-// LED colors
+// LED colors GBR
 #define WHITE {255, 255, 255}
 #define BLACK {0, 0, 0}
 #define RED {0, 255, 0}
@@ -92,7 +92,7 @@ typedef struct {
 } settings_t;
 
 // Globals
-extern struct cRGB leda;
+// extern struct cRGB leda;
 extern volatile state_t state;
 extern settings_t settings;
 
@@ -106,5 +106,6 @@ eRetCode v_move(eValveMove move);
 #define EINT_DISABLE() do { GICR = 0; } while (0);
 // Check reed sensor reading. Return true if reed is HIGH (normal).
 #define GET_REED() bit_is_set(REED_PIN, REED);
+#define SET_LED(COLOR) do { struct cRGB leda = COLOR; ws2812_setleds(&leda, 1); } while (0);
 
 #endif	/* MAIN_H */

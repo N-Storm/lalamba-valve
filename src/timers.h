@@ -16,8 +16,8 @@
 #define V_ROT_REM (uint8_t)(V_ROT_TICKS-((uint32_t)V_ROT_OVF*256)) // Timer ticks remaining
 
 // Run timer with /1024 PS
-#define V_RUN_TIMEOUT() do { TCNT0 = 0; TCCR0 = _BV(CS02) | _BV(CS00); } while (0)
+#define V_RUN_TIMEOUT() do { TCNT0 = 0; SFIOR |= _BV(PSR10); TCCR0 = _BV(CS02) | _BV(CS00); } while (0)
 #define V_STOP_TIMEOUT() do { TCCR0 = 0; TCNT0 = 0; } while (0)
-extern bool timeout_flag;
+extern volatile bool timeout_flag;
 
 #endif	/* TIMERS_H */

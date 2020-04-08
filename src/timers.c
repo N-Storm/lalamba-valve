@@ -18,7 +18,7 @@
 #include "main.h"
 #include "timers.h"
 
-bool timeout_flag = false;
+volatile bool timeout_flag = false;
 
 ISR(TIMER0_OVF_vect) {
     static uint16_t ovf;
@@ -28,6 +28,7 @@ ISR(TIMER0_OVF_vect) {
     else if (ovf == V_ROT_OVF) {
         TCCR0 = 0;
         TCNT0 = 255-V_ROT_REM;
+        SFIOR |= _BV(PSR10);
         TCCR0 = _BV(CS02) | _BV(CS00);
     }
     else {
