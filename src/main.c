@@ -43,10 +43,13 @@ void inline init() {
     DDRB = _BV(WS2812) | _BV(AIN1_2) | _BV(AIN2_2) | _BV(PWMA);
     DDRC = _BV(AIN1) | _BV(AIN2) | _BV(STBY) | _BV(NSLEEP);
     DDRD = _BV(TX);
-    MSW_PORT |= (1 << M1SW1) | (1 << M1SW2) | (1 << M2SW1) | (1 << M2SW2); // Enable pull-ups
+    MSW_PORT |= _BV(M1SW1) | _BV(M1SW2) | _BV(M2SW1) | _BV(M2SW2); // Enable pull-ups
 
     // Ext interrupt settings
-    MCUCR = (1 << ISC11) | (1 << ISC01); // Falling edge mode for INT0, INT1
+    MCUCR = _BV(ISC11) | _BV(ISC01); // Falling edge mode for INT0, INT1
+    
+    // Timer interrupt settings
+    TIMSK = _BV(TOIE0); // Enable T0 overflow interrupts (timer is still disabled)
     
     ws2812_setleds(&leda, 1); // Turn on white LED
     sei();
@@ -79,9 +82,11 @@ eRetCode v_move(eValveMove move) {
                 AIN1_PORT &= ~_BV(AIN1);
                 AIN2_PORT |= _BV(AIN2);
                 PWMA_PORT |= _BV(PWMA);
-                STBY_PORT |= _BV(STBY); // Run motor!
-                // TODO: Add timer0 timeout
-                loop_until_bit_is_set(MSW_PIN, M1SW1); // Wait until SW are hit by motor
+                STBY_PORT |= _BV(STBY); // Run motor
+                V_RUN_TIMEOUT();
+                while (bit_is_set(MSW_PIN, M1SW1) || !timeout_flag); // Wait until SW are hit by motor
+                V_STOP_TIMEOUT();
+                timeout_flag = false;
                 PWMA_PORT &= ~(_BV(PWMA)); // Short brake
                 _delay_ms(10);
                 AIN2_PORT &= _BV(AIN2);
@@ -98,9 +103,11 @@ eRetCode v_move(eValveMove move) {
                 AIN2_PORT &= ~_BV(AIN2);
                 AIN1_PORT |= _BV(AIN1);
                 PWMA_PORT |= _BV(PWMA);
-                STBY_PORT |= _BV(STBY); // Run motor!
-                // TODO: Add timer0 timeout
-                loop_until_bit_is_set(MSW_PIN, M1SW2); // Wait until SW are hit by motor
+                STBY_PORT |= _BV(STBY); // Run motor
+                V_RUN_TIMEOUT();
+                while (bit_is_set(MSW_PIN, M1SW2) || !timeout_flag); // Wait until SW are hit by motor
+                V_STOP_TIMEOUT();
+                timeout_flag = false;
                 PWMA_PORT &= ~(_BV(PWMA)); // Short brake
                 _delay_ms(10);
                 AIN1_PORT &= _BV(AIN1);
