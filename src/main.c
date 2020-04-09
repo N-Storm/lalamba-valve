@@ -101,23 +101,19 @@ void v2_setdir(eValveDir dir) {
         case CLOSE:
             AIN1_2_PORT |= _BV(AIN1_2);
             AIN2_2_PORT &= ~_BV(AIN2_2);
-            NSLEEP_PORT |= _BV(NSLEEP);
             break;
         case OPEN:
             AIN1_2_PORT &= ~_BV(AIN1_2);
             AIN2_2_PORT |= _BV(AIN2_2);
-            NSLEEP_PORT |= _BV(NSLEEP);
             break;
         case BREAK:
             AIN1_2_PORT |= _BV(AIN1_2);
             AIN2_2_PORT |= _BV(AIN2_2);
-            NSLEEP_PORT |= _BV(NSLEEP);
             _delay_ms(V_SHORT_DELAY);
             break;
         case STOP:
             AIN1_2_PORT &= ~_BV(AIN1_2);
             AIN2_2_PORT &= ~_BV(AIN2_2);
-            NSLEEP_PORT &= _BV(NSLEEP);
             break;
     }
 }
@@ -154,6 +150,7 @@ eRetCode v_move(eValveMove move) {
                 v1_setdir(BREAK);                
                 state.v1_astate = VALVE_OPEN;
                 v1_setdir(STOP);
+                STBY_PORT &= ~_BV(STBY); // Go back to STBY
                 return MOVED;
             }
             return ERROR;
@@ -188,14 +185,80 @@ eRetCode v_move(eValveMove move) {
                 v1_setdir(BREAK);                
                 state.v1_astate = VALVE_CLOSED;
                 v1_setdir(STOP);
+                STBY_PORT &= ~_BV(STBY); // Go back to STBY
                 return MOVED;
             }
             return ERROR;
             break;
         case V2_OPEN:
-            
+            if (state.v2_astate == VALVE_OPEN)
+                return ALREADY_POSITIONED;
+            else if (state.v2_astate == VALVE_CLOSED) {
+                state.v2_astate = VALVE_MIDDLE;
+                v2_setdir(OPEN);
+                NSLEEP_PORT |= _BV(NSLEEP); // Run motor
+                V_RUN_TIMEOUT();
+                while (bit_is_set(MSW_PIN, M2SW2) && !timeout_flag); // Wait until SW are hit by motor
+                V_STOP_TIMEOUT();
+                timeout_flag = false;
+                v2_setdir(BREAK);
+                state.v2_astate = VALVE_OPEN;
+                v2_setdir(STOP);
+                NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
+                return MOVED;
+            }
+            else if (state.v2_astate == VALVE_MIDDLE) {
+                v2_setdir(CLOSE);
+                NSLEEP_PORT |= _BV(NSLEEP); // Run motor
+                _delay_ms(V_BF_DELAY);
+                v2_setdir(BREAK);
+                v2_setdir(OPEN);
+                V_RUN_TIMEOUT();
+                while (bit_is_set(MSW_PIN, M2SW2) && !timeout_flag); // Wait until SW are hit by motor
+                V_STOP_TIMEOUT();
+                timeout_flag = false;
+                v2_setdir(BREAK);
+                state.v2_astate = VALVE_OPEN;
+                v2_setdir(STOP);
+                NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
+                return MOVED;
+            }
+            return ERROR;
             break;
         case V2_CLOSE:
+            if (state.v2_astate == VALVE_CLOSED)
+                return ALREADY_POSITIONED;
+            else if (state.v2_astate == VALVE_OPEN) {
+                state.v2_astate = VALVE_MIDDLE;
+                v2_setdir(CLOSE);
+                NSLEEP_PORT |= _BV(NSLEEP); // Run motor
+                V_RUN_TIMEOUT();
+                while (bit_is_set(MSW_PIN, M2SW1) && !timeout_flag); // Wait until SW are hit by motor
+                V_STOP_TIMEOUT();
+                timeout_flag = false;
+                v2_setdir(BREAK);
+                state.v2_astate = VALVE_CLOSED;
+                v2_setdir(STOP);
+                NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
+                return MOVED;
+            }
+            else if (state.v2_astate == VALVE_MIDDLE) {
+                v2_setdir(OPEN);
+                NSLEEP_PORT |= _BV(NSLEEP); // Run motor
+                _delay_ms(V_BF_DELAY);
+                v2_setdir(BREAK);
+                v2_setdir(CLOSE);
+                V_RUN_TIMEOUT();
+                while (bit_is_set(MSW_PIN, M2SW1) && !timeout_flag); // Wait until SW are hit by motor
+                V_STOP_TIMEOUT();
+                timeout_flag = false;
+                v2_setdir(BREAK);
+                state.v2_astate = VALVE_CLOSED;
+                v2_setdir(STOP);
+                NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
+                return MOVED;
+            }
+            return ERROR;
             break;
     }
     return NONE;
