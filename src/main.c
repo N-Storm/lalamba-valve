@@ -70,51 +70,104 @@ void update_valve_astates() {
         state.v2_astate = VALVE_MIDDLE;
 }
 
+void v1_setdir(eValveDir dir) {
+    switch (dir) {
+        case CLOSE:
+            AIN1_PORT |= _BV(AIN1);
+            AIN2_PORT &= ~_BV(AIN2);
+            PWMA_PORT |= _BV(PWMA);
+            break;
+        case OPEN:
+            AIN1_PORT &= ~_BV(AIN1);
+            AIN2_PORT |= _BV(AIN2);
+            PWMA_PORT |= _BV(PWMA);
+            break;
+        case BREAK:
+            PWMA_PORT &= ~_BV(PWMA);
+            AIN1_PORT |= _BV(AIN1);
+            AIN2_PORT |= _BV(AIN2);
+            _delay_ms(V_SHORT_DELAY);
+            break;
+        case STOP:
+            PWMA_PORT &= ~_BV(PWMA);
+            AIN1_PORT &= ~_BV(AIN1);
+            AIN2_PORT &= ~_BV(AIN2);
+            break;
+    }
+}
+
 eRetCode v_move(eValveMove move) {
-    switch(move) {
+    switch (move) {
         case V1_OPEN:
             if (state.v1_astate == VALVE_OPEN)
                 return ALREADY_POSITIONED;
             else if (state.v1_astate == VALVE_CLOSED) {
                 state.v1_astate = VALVE_MIDDLE;
-                AIN1_PORT &= ~_BV(AIN1);
-                AIN2_PORT |= _BV(AIN2);
-                PWMA_PORT |= _BV(PWMA);
+                v1_setdir(OPEN);
                 STBY_PORT |= _BV(STBY); // Run motor
                 V_RUN_TIMEOUT();
-                while (bit_is_set(MSW_PIN, M1SW1) && !timeout_flag); // Wait until SW are hit by motor
+                while (bit_is_set(MSW_PIN, M1SW2) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
                 timeout_flag = false;
-                PWMA_PORT &= ~(_BV(PWMA)); // Short brake
-                _delay_ms(V_SHORT_DELAY);
-                AIN2_PORT &= _BV(AIN2);
-                STBY_PORT &= ~_BV(STBY); // Go back to STBY
+                v1_setdir(BREAK);
                 state.v1_astate = VALVE_OPEN;
+                v1_setdir(STOP);
+                STBY_PORT &= ~_BV(STBY); // Go back to STBY
                 return MOVED;
             }
+            else if (state.v1_astate == VALVE_MIDDLE) {
+                v1_setdir(CLOSE);
+                STBY_PORT |= _BV(STBY); // Run motor
+                _delay_ms(V_BF_DELAY);
+                v1_setdir(BREAK);
+                v1_setdir(OPEN);
+                V_RUN_TIMEOUT();
+                while (bit_is_set(MSW_PIN, M1SW2) && !timeout_flag); // Wait until SW are hit by motor
+                V_STOP_TIMEOUT();
+                timeout_flag = false;
+                v1_setdir(BREAK);                
+                state.v1_astate = VALVE_OPEN;
+                v1_setdir(STOP);
+                return MOVED;
+            }
+            return ERROR;
             break;
         case V1_CLOSE:
             if (state.v1_astate == VALVE_CLOSED)
                 return ALREADY_POSITIONED;
             else if (state.v1_astate == VALVE_OPEN) {
                 state.v1_astate = VALVE_MIDDLE;
-                AIN2_PORT &= ~_BV(AIN2);
-                AIN1_PORT |= _BV(AIN1);
-                PWMA_PORT |= _BV(PWMA);
+                v1_setdir(CLOSE);
                 STBY_PORT |= _BV(STBY); // Run motor
                 V_RUN_TIMEOUT();
                 while (bit_is_set(MSW_PIN, M1SW2) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
                 timeout_flag = false;
-                PWMA_PORT &= ~(_BV(PWMA)); // Short brake
-                _delay_ms(V_SHORT_DELAY);
-                AIN1_PORT &= _BV(AIN1);
-                STBY_PORT &= ~_BV(STBY); // Go back to STBY
+                v1_setdir(BREAK);
                 state.v1_astate = VALVE_CLOSED;
+                v1_setdir(STOP);
+                STBY_PORT &= ~_BV(STBY); // Go back to STBY
                 return MOVED;
             }
+            else if (state.v1_astate == VALVE_MIDDLE) {
+                v1_setdir(OPEN);
+                STBY_PORT |= _BV(STBY); // Run motor
+                _delay_ms(V_BF_DELAY);
+                v1_setdir(BREAK);
+                v1_setdir(CLOSE);
+                V_RUN_TIMEOUT();
+                while (bit_is_set(MSW_PIN, M1SW2) && !timeout_flag); // Wait until SW are hit by motor
+                V_STOP_TIMEOUT();
+                timeout_flag = false;
+                v1_setdir(BREAK);                
+                state.v1_astate = VALVE_CLOSED;
+                v1_setdir(STOP);
+                return MOVED;
+            }
+            return ERROR;
             break;
         case V2_OPEN:
+            
             break;
         case V2_CLOSE:
             break;

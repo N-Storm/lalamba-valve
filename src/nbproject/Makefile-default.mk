@@ -114,50 +114,50 @@ ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
-	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -gdwarf-2  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/main.o.d" -MT "${OBJECTDIR}/main.o.d" -MT ${OBJECTDIR}/main.o  -o ${OBJECTDIR}/main.o main.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
+	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -gdwarf-2  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/main.o.d" -MT "${OBJECTDIR}/main.o.d" -MT ${OBJECTDIR}/main.o  -o ${OBJECTDIR}/main.o main.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
 	
 ${OBJECTDIR}/light_ws2812.o: light_ws2812.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/light_ws2812.o.d 
 	@${RM} ${OBJECTDIR}/light_ws2812.o 
-	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -gdwarf-2  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/light_ws2812.o.d" -MT "${OBJECTDIR}/light_ws2812.o.d" -MT ${OBJECTDIR}/light_ws2812.o  -o ${OBJECTDIR}/light_ws2812.o light_ws2812.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
+	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -gdwarf-2  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/light_ws2812.o.d" -MT "${OBJECTDIR}/light_ws2812.o.d" -MT ${OBJECTDIR}/light_ws2812.o  -o ${OBJECTDIR}/light_ws2812.o light_ws2812.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
 	
 ${OBJECTDIR}/interrupts.o: interrupts.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/interrupts.o.d 
 	@${RM} ${OBJECTDIR}/interrupts.o 
-	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -gdwarf-2  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/interrupts.o.d" -MT "${OBJECTDIR}/interrupts.o.d" -MT ${OBJECTDIR}/interrupts.o  -o ${OBJECTDIR}/interrupts.o interrupts.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
+	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -gdwarf-2  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/interrupts.o.d" -MT "${OBJECTDIR}/interrupts.o.d" -MT ${OBJECTDIR}/interrupts.o  -o ${OBJECTDIR}/interrupts.o interrupts.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
 	
 ${OBJECTDIR}/timers.o: timers.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/timers.o.d 
 	@${RM} ${OBJECTDIR}/timers.o 
-	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -gdwarf-2  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/timers.o.d" -MT "${OBJECTDIR}/timers.o.d" -MT ${OBJECTDIR}/timers.o  -o ${OBJECTDIR}/timers.o timers.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
+	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -gdwarf-2  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/timers.o.d" -MT "${OBJECTDIR}/timers.o.d" -MT ${OBJECTDIR}/timers.o  -o ${OBJECTDIR}/timers.o timers.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
 	
 else
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
-	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/main.o.d" -MT "${OBJECTDIR}/main.o.d" -MT ${OBJECTDIR}/main.o  -o ${OBJECTDIR}/main.o main.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
+	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/main.o.d" -MT "${OBJECTDIR}/main.o.d" -MT ${OBJECTDIR}/main.o  -o ${OBJECTDIR}/main.o main.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
 	
 ${OBJECTDIR}/light_ws2812.o: light_ws2812.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/light_ws2812.o.d 
 	@${RM} ${OBJECTDIR}/light_ws2812.o 
-	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/light_ws2812.o.d" -MT "${OBJECTDIR}/light_ws2812.o.d" -MT ${OBJECTDIR}/light_ws2812.o  -o ${OBJECTDIR}/light_ws2812.o light_ws2812.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
+	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/light_ws2812.o.d" -MT "${OBJECTDIR}/light_ws2812.o.d" -MT ${OBJECTDIR}/light_ws2812.o  -o ${OBJECTDIR}/light_ws2812.o light_ws2812.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
 	
 ${OBJECTDIR}/interrupts.o: interrupts.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/interrupts.o.d 
 	@${RM} ${OBJECTDIR}/interrupts.o 
-	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/interrupts.o.d" -MT "${OBJECTDIR}/interrupts.o.d" -MT ${OBJECTDIR}/interrupts.o  -o ${OBJECTDIR}/interrupts.o interrupts.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
+	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/interrupts.o.d" -MT "${OBJECTDIR}/interrupts.o.d" -MT ${OBJECTDIR}/interrupts.o  -o ${OBJECTDIR}/interrupts.o interrupts.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
 	
 ${OBJECTDIR}/timers.o: timers.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/timers.o.d 
 	@${RM} ${OBJECTDIR}/timers.o 
-	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/timers.o.d" -MT "${OBJECTDIR}/timers.o.d" -MT ${OBJECTDIR}/timers.o  -o ${OBJECTDIR}/timers.o timers.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
+	 ${MP_CC}  $(MP_EXTRA_CC_PRE) -mmcu=atmega8 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c -c -D__$(MP_PROCESSOR_OPTION)__  -funsigned-char -funsigned-bitfields -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DDEBUG -DF_CPU=16000000 -Wall -MD -MP -MF "${OBJECTDIR}/timers.o.d" -MT "${OBJECTDIR}/timers.o.d" -MT ${OBJECTDIR}/timers.o  -o ${OBJECTDIR}/timers.o timers.c  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -flto -g -std=gnu11
 	
 endif
 

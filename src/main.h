@@ -10,7 +10,9 @@
 
 // Settings
 // Delay for valve motor short break in ms
-#define V_SHORT_DELAY 100
+#define V_SHORT_DELAY 50
+// Delay for back-and-forth calibration
+#define V_BF_DELAY 200
 
 // IO Mappings (PIN defines)
 // PORT B
@@ -75,7 +77,9 @@ typedef enum {V1_OPEN, V1_CLOSE, V2_OPEN, V2_CLOSE} eValveMove;
  * ALREADY_POSITIONED - was already in place where we requested to move (based on SW)
  * MOVED - succesfully moved to a new position
  */
-typedef enum {NONE, ALREADY_POSITIONED, MOVED} eRetCode;
+typedef enum {NONE, ALREADY_POSITIONED, MOVED, ERROR} eRetCode;
+
+typedef enum {CLOSE, OPEN, BREAK, STOP} eValveDir;
     
 /* Struct types
  * valveX_astate - actual state based on switches
@@ -96,7 +100,6 @@ typedef struct {
 } settings_t;
 
 // Globals
-// extern struct cRGB leda;
 extern volatile state_t state;
 extern settings_t settings;
 
