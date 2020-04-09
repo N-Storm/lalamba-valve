@@ -166,7 +166,7 @@ eRetCode v_move(eValveMove move) {
                 v1_setdir(CLOSE);
                 STBY_PORT |= _BV(STBY); // Run motor
                 V_RUN_TIMEOUT();
-                while (bit_is_set(MSW_PIN, M1SW2) && !timeout_flag); // Wait until SW are hit by motor
+                while (bit_is_set(MSW_PIN, M1SW1) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
                 timeout_flag = false;
                 v1_setdir(BREAK);
@@ -182,7 +182,7 @@ eRetCode v_move(eValveMove move) {
                 v1_setdir(BREAK);
                 v1_setdir(CLOSE);
                 V_RUN_TIMEOUT();
-                while (bit_is_set(MSW_PIN, M1SW2) && !timeout_flag); // Wait until SW are hit by motor
+                while (bit_is_set(MSW_PIN, M1SW1) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
                 timeout_flag = false;
                 v1_setdir(BREAK);                
@@ -206,15 +206,13 @@ void calibrate() {
 
     if (state.v1_astate == VALVE_CLOSED)
         state.v1_sstate = state.v1_astate;
-    else if (state.v1_astate == VALVE_OPEN) {
+    else
         v_move(V1_CLOSE);
-    }
 
     if (state.v2_astate == VALVE_OPEN)
         state.v2_sstate = state.v2_astate;
-    else {
+    else
         v_move(V2_OPEN);
-    }
     
     SET_LED(GREEN);
 }
