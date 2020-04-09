@@ -55,16 +55,16 @@ void inline init() {
 
 // Updates actual (based on switches) valve states
 void update_valve_astates() {
-    if (bit_is_set(MSW_PIN, M1SW1) && bit_is_clear(MSW_PIN, M1SW2))
+    if (bit_is_clear(MSW_PIN, M1SW1) && bit_is_set(MSW_PIN, M1SW2))
         state.v1_astate = VALVE_CLOSED;
-    else if (bit_is_clear(MSW_PIN, M1SW1) && bit_is_set(MSW_PIN, M1SW2))
+    else if (bit_is_set(MSW_PIN, M1SW1) && bit_is_clear(MSW_PIN, M1SW2))
         state.v1_astate = VALVE_OPEN;
     else
         state.v1_astate = VALVE_MIDDLE;
     
-    if (bit_is_set(MSW_PIN, M2SW1) && bit_is_clear(MSW_PIN, M2SW2))
+    if (bit_is_clear(MSW_PIN, M2SW1) && bit_is_set(MSW_PIN, M2SW2))
         state.v2_astate = VALVE_CLOSED;
-    else if (bit_is_clear(MSW_PIN, M2SW1) && bit_is_set(MSW_PIN, M2SW2))
+    else if (bit_is_set(MSW_PIN, M2SW1) && bit_is_clear(MSW_PIN, M2SW2))
         state.v2_astate = VALVE_OPEN;
     else
         state.v2_astate = VALVE_MIDDLE;
@@ -92,6 +92,32 @@ void v1_setdir(eValveDir dir) {
             PWMA_PORT &= ~_BV(PWMA);
             AIN1_PORT &= ~_BV(AIN1);
             AIN2_PORT &= ~_BV(AIN2);
+            break;
+    }
+}
+
+void v2_setdir(eValveDir dir) {
+    switch (dir) {
+        case CLOSE:
+            AIN1_2_PORT |= _BV(AIN1_2);
+            AIN2_2_PORT &= ~_BV(AIN2_2);
+            NSLEEP_PORT |= _BV(NSLEEP);
+            break;
+        case OPEN:
+            AIN1_2_PORT &= ~_BV(AIN1_2);
+            AIN2_2_PORT |= _BV(AIN2_2);
+            NSLEEP_PORT |= _BV(NSLEEP);
+            break;
+        case BREAK:
+            AIN1_2_PORT |= _BV(AIN1_2);
+            AIN2_2_PORT |= _BV(AIN2_2);
+            NSLEEP_PORT |= _BV(NSLEEP);
+            _delay_ms(V_SHORT_DELAY);
+            break;
+        case STOP:
+            AIN1_2_PORT &= ~_BV(AIN1_2);
+            AIN2_2_PORT &= ~_BV(AIN2_2);
+            NSLEEP_PORT &= _BV(NSLEEP);
             break;
     }
 }
