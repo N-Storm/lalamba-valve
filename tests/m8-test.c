@@ -1,7 +1,11 @@
 #include <avr/io.h>
 #include <stdint.h>
 #include <util/delay.h>
+#include <stdio.h>
 
+int uart_putchar(char c, FILE *stream);
+static FILE mystdout = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
+ 
 void USART_Init()
 {
   /* Set baud rate to 57600 */
@@ -21,10 +25,17 @@ void USART_Transmit( unsigned char data )
   UDR = data;
 }
 
+int uart_putchar(char c, FILE *stream)
+{
+  USART_Transmit((unsigned char)c);
+  return 0;
+}
 
 int main() {
   DDRB = 1 << PB5;
   USART_Init();
+  stdout = &mystdout;
+  printf("Hello, world (test digit = %d)!\r\n", 123);
   USART_Transmit('A');
   while (1) {
     PORTB ^= 1 << PB5;
