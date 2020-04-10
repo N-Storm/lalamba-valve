@@ -7,17 +7,20 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdbool.h>
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <avr/cpufunc.h>
+#include <avr/pgmspace.h>
 #include <util/delay.h>
 
 #include "main.h"
 #include "valve.h"
 #include "timers.h"
+#include "saveload.h"
 
 // Updates actual (based on switches) valve states
 void update_valve_astates() {
@@ -85,12 +88,16 @@ void v2_setdir(eValveAction dir) {
 }
 
 eRetCode v_move(eValveMove move) {
+    stdout = &mystdout;
+    LOG("Moving valve");
     switch (move) {
         case V1_OPEN:
+            LOG("1 to OPEN ");
             if (state.v1_astate == VALVE_OPEN)
                 return ALREADY_POSITIONED;
             else if (state.v1_astate == VALVE_CLOSED) {
                 state.v1_astate = VALVE_MIDDLE;
+                LOG("from CLOSED... ");
                 v1_setdir(OPEN);
                 STBY_PORT |= _BV(STBY); // Run motor
                 V_RUN_TIMEOUT();
@@ -101,9 +108,11 @@ eRetCode v_move(eValveMove move) {
                 state.v1_astate = VALVE_OPEN;
                 v1_setdir(STOP);
                 STBY_PORT &= ~_BV(STBY); // Go back to STBY
+                LOG("done.\r\n");
                 return MOVED;
             }
             else if (state.v1_astate == VALVE_MIDDLE) {
+                LOG("from MIDDLE... ");
                 v1_setdir(CLOSE);
                 STBY_PORT |= _BV(STBY); // Run motor
                 _delay_ms(V_BF_DELAY);
@@ -117,14 +126,17 @@ eRetCode v_move(eValveMove move) {
                 state.v1_astate = VALVE_OPEN;
                 v1_setdir(STOP);
                 STBY_PORT &= ~_BV(STBY); // Go back to STBY
+                LOG("done.\r\n");
                 return MOVED;
             }
             return ERROR;
             break;
         case V1_CLOSE:
+            LOG("1 to CLOSED ");
             if (state.v1_astate == VALVE_CLOSED)
                 return ALREADY_POSITIONED;
             else if (state.v1_astate == VALVE_OPEN) {
+                LOG("from OPEN... ");
                 state.v1_astate = VALVE_MIDDLE;
                 v1_setdir(CLOSE);
                 STBY_PORT |= _BV(STBY); // Run motor
@@ -136,9 +148,11 @@ eRetCode v_move(eValveMove move) {
                 state.v1_astate = VALVE_CLOSED;
                 v1_setdir(STOP);
                 STBY_PORT &= ~_BV(STBY); // Go back to STBY
+                LOG("done.\r\n");
                 return MOVED;
             }
             else if (state.v1_astate == VALVE_MIDDLE) {
+                LOG("from MIDDLE... ");
                 v1_setdir(OPEN);
                 STBY_PORT |= _BV(STBY); // Run motor
                 _delay_ms(V_BF_DELAY);
@@ -152,6 +166,7 @@ eRetCode v_move(eValveMove move) {
                 state.v1_astate = VALVE_CLOSED;
                 v1_setdir(STOP);
                 STBY_PORT &= ~_BV(STBY); // Go back to STBY
+                LOG("done.\r\n");
                 return MOVED;
             }
             return ERROR;

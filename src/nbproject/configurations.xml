@@ -174,7 +174,7 @@
         <property key="rodata-writable" value="false"/>
         <property key="sram-segment" value=""/>
         <property key="v-printf" value="false"/>
-        <appendMe value="-Wl,--warn-common"/>
+        <appendMe value="-Wl,--warn-common -Wl,-u,vfprintf -lprintf_min"/>
       </AVR-LD>
       <Simulator>
         <property key="codecoverage.enabled" value="Disable"/>

@@ -33,6 +33,5 @@ void v1_setdir(eValveAction dir);
 void v2_setdir(eValveAction dir);
 eRetCode v_move(eValveMove move);
 
-
 #endif	/* VALVE_H */
 

@@ -15,6 +15,8 @@
 #define V_SHORT_DELAY 100
 // Delay for back-and-forth calibration
 #define V_BF_DELAY 100
+// Set to enable printf() debug messages on UART
+#define LOGS
 
 // IO Mappings (PIN defines)
 // PORT B
@@ -91,6 +93,7 @@ typedef struct {
 // Globals
 extern volatile state_t state;
 extern settings_t settings;
+extern FILE mystdout;
 
 // Function prototypes
 eRetCode v_move(eValveMove move);
@@ -103,5 +106,11 @@ eRetCode v_move(eValveMove move);
 // Check reed sensor reading. Return true if reed is HIGH (normal).
 #define GET_REED() bit_is_set(REED_PIN, REED);
 #define SET_LED(COLOR) do { struct cRGB leda = COLOR; ws2812_setleds(&leda, 1); } while (0);
+// Logging via UART
+#ifdef LOGS
+#define LOG(MSG) do { printf_P(PSTR(MSG)); } while(0)
+#else
+#define LOG(MSG) do { } while(0)
+#endif
 
 #endif	/* MAIN_H */

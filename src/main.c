@@ -24,6 +24,7 @@
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <avr/cpufunc.h>
+#include <avr/pgmspace.h>
 #include <util/delay.h>
 
 #include "main.h"
@@ -36,7 +37,34 @@
 volatile state_t state;
 settings_t settings;
 
-void inline init() {
+#ifdef LOGS
+int uart_putchar(char c, FILE *stream);
+FILE mystdout = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
+
+void USART_Init() {
+    /* Set baud rate to 57600 */
+    UBRRL = 34;
+    UCSRA = 1 << U2X;
+    /* Enable receiver and transmitter */
+    UCSRB = (1 << RXEN) | (1 << TXEN);
+    /* Set frame format: 8N1 */
+    UCSRC = (1 << URSEL) | (1 << UCSZ1) | (1 << UCSZ0);
+}
+
+void USART_Transmit(unsigned char data) {
+    /* Wait for empty transmit buffer */
+    while (!(UCSRA & (1 << UDRE)));
+    /* Put data into buffer, sends the data */
+    UDR = data;
+}
+
+int uart_putchar(char c, FILE *stream) {
+    USART_Transmit((unsigned char)c);
+    return 0;
+}
+#endif
+
+void init() {
     cli();
     // IO settings
     DDRB = _BV(WS2812) | _BV(AIN1_2) | _BV(AIN2_2) | _BV(PWMA);
@@ -49,6 +77,11 @@ void inline init() {
     
     // Timer interrupt settings
     TIMSK = _BV(TOIE0); // Enable T0 overflow interrupts (timer is still disabled)
+    
+#ifdef LOGS
+    USART_Init();
+    stdout = &mystdout;
+#endif
     
     SET_LED(WHITE); // Turn on white LED
     sei();
@@ -73,6 +106,7 @@ void calibrate() {
 int main(void)
 {
     init();
+    LOG("Init done.\r\n");
     calibrate();
     EINT_ENABLE();
     
