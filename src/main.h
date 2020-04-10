@@ -8,6 +8,8 @@
 #ifndef MAIN_H
 #define	MAIN_H
 
+#include "valve.h"
+
 // Settings
 // Delay for valve motor short break in ms
 #define V_SHORT_DELAY 100
@@ -68,19 +70,6 @@
 #define YELLOW {255, 255, 0}
 #define VIOLET {0, 165, 255}
 
-// Enums
-// Current status of the valve
-typedef enum {VALVE_CLOSED, VALVE_MIDDLE, VALVE_OPEN, VALVE_ERROR} eValveState;
-// Valve move direction
-typedef enum {V1_OPEN, V1_CLOSE, V2_OPEN, V2_CLOSE} eValveMove;
-/* Return/error codes
- * ALREADY_POSITIONED - was already in place where we requested to move (based on SW)
- * MOVED - succesfully moved to a new position
- */
-typedef enum {NONE, ALREADY_POSITIONED, MOVED, ERROR} eRetCode;
-
-typedef enum {CLOSE, OPEN, BREAK, STOP} eValveDir;
-    
 /* Struct types
  * valveX_astate - actual state based on switches
  * valveX_sstate - software defined state

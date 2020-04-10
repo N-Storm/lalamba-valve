@@ -17,6 +17,7 @@
 
 #include "main.h"
 #include "timers.h"
+#include "valve.h"
 
 volatile bool timeout_flag = false;
 

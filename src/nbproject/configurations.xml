@@ -8,6 +8,8 @@
       <itemPath>light_ws2812.h</itemPath>
       <itemPath>ws2812_config.h</itemPath>
       <itemPath>timers.h</itemPath>
+      <itemPath>saveload.h</itemPath>
+      <itemPath>valve.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -20,6 +22,8 @@
       <itemPath>light_ws2812.c</itemPath>
       <itemPath>interrupts.c</itemPath>
       <itemPath>timers.c</itemPath>
+      <itemPath>saveload.c</itemPath>
+      <itemPath>valve.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -125,7 +129,7 @@
         <property key="make-warnings-into-errors" value="false"/>
         <property key="no-interrupts" value="false"/>
         <property key="no-system-directories" value="false"/>
-        <property key="optimization-level" value="-O1"/>
+        <property key="optimization-level" value="-Os"/>
         <property key="pack-struct" value="true"/>
         <property key="preprocessor-macros" value="DEBUG;F_CPU=16000000"/>
         <property key="preprocessor-macros-undefined" value=""/>
