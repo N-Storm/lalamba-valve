@@ -106,6 +106,8 @@ eRetCode v_move(eValveMove move) {
                 V_RUN_TIMEOUT();
                 while (bit_is_set(MSW_PIN, M1SW2) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
+                if (timeout_flag)
+                    LOGP(STR_TIMEOUT);
                 timeout_flag = false;
                 v1_setdir(BREAK);
                 state.v1_astate = VALVE_OPEN;
@@ -124,6 +126,8 @@ eRetCode v_move(eValveMove move) {
                 V_RUN_TIMEOUT();
                 while (bit_is_set(MSW_PIN, M1SW2) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
+                if (timeout_flag)
+                    LOGP(STR_TIMEOUT);
                 timeout_flag = false;
                 v1_setdir(BREAK);                
                 state.v1_astate = VALVE_OPEN;
@@ -149,6 +153,8 @@ eRetCode v_move(eValveMove move) {
                 V_RUN_TIMEOUT();
                 while (bit_is_set(MSW_PIN, M1SW1) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
+                if (timeout_flag)
+                    LOGP(STR_TIMEOUT);
                 timeout_flag = false;
                 v1_setdir(BREAK);
                 state.v1_astate = VALVE_CLOSED;
@@ -167,6 +173,8 @@ eRetCode v_move(eValveMove move) {
                 V_RUN_TIMEOUT();
                 while (bit_is_set(MSW_PIN, M1SW1) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
+                if (timeout_flag)
+                    LOGP(STR_TIMEOUT);
                 timeout_flag = false;
                 v1_setdir(BREAK);                
                 state.v1_astate = VALVE_CLOSED;
@@ -192,6 +200,8 @@ eRetCode v_move(eValveMove move) {
                 V_RUN_TIMEOUT();
                 while (bit_is_set(MSW_PIN, M2SW2) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
+                if (timeout_flag)
+                    LOGP(STR_TIMEOUT);
                 timeout_flag = false;
                 v2_setdir(BREAK);
                 state.v2_astate = VALVE_OPEN;
@@ -210,6 +220,8 @@ eRetCode v_move(eValveMove move) {
                 V_RUN_TIMEOUT();
                 while (bit_is_set(MSW_PIN, M2SW2) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
+                if (timeout_flag)
+                    LOGP(STR_TIMEOUT);
                 timeout_flag = false;
                 v2_setdir(BREAK);
                 state.v2_astate = VALVE_OPEN;
@@ -235,6 +247,8 @@ eRetCode v_move(eValveMove move) {
                 V_RUN_TIMEOUT();
                 while (bit_is_set(MSW_PIN, M2SW1) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
+                if (timeout_flag)
+                    LOGP(STR_TIMEOUT);
                 timeout_flag = false;
                 v2_setdir(BREAK);
                 state.v2_astate = VALVE_CLOSED;
@@ -253,6 +267,8 @@ eRetCode v_move(eValveMove move) {
                 V_RUN_TIMEOUT();
                 while (bit_is_set(MSW_PIN, M2SW1) && !timeout_flag); // Wait until SW are hit by motor
                 V_STOP_TIMEOUT();
+                if (timeout_flag)
+                    LOGP(STR_TIMEOUT);
                 timeout_flag = false;
                 v2_setdir(BREAK);
                 state.v2_astate = VALVE_CLOSED;
@@ -261,6 +277,7 @@ eRetCode v_move(eValveMove move) {
                 LOGP(STR_DONE);
                 return MOVED;
             }
+            LOGP(STR_ERROR);
             return ERROR;
             break;
     }

@@ -36,6 +36,7 @@ eRetCode v_move(eValveMove move);
 
 // Strings for logging
 #define FLASHSTR static PROGMEM const char
+FLASHSTR STR_ERROR[] = "ERROR!\r\n";
 FLASHSTR STR_DONE[] = "done.\r\n";
 FLASHSTR STR_TO_OPEN[] =  " to OPEN ";
 FLASHSTR STR_TO_CLOSED[] =  " to CLOSED ";
@@ -43,5 +44,6 @@ FLASHSTR STR_APOS[] = "already positioned!\r\n";
 FLASHSTR STR_FROM_CLOSED[] = "from CLOSED... ";
 FLASHSTR STR_FROM_OPEN[] = "from OPEN... ";
 FLASHSTR STR_FROM_MIDDLE[] = "from MIDDLE... ";
+FLASHSTR STR_TIMEOUT[] = " TIMEOUT hit ";
 
 #endif	/* VALVE_H */
