@@ -30,6 +30,7 @@ uint16_t crc16(uint8_t *dataptr, size_t sz) {
 }
 
 void save_settings() {
+    LOG("Saving settings.\r\n");
     settings.state = &state;
     settings.crc8 = 0;
     settings.crc16 = 0;
