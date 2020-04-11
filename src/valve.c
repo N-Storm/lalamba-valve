@@ -24,6 +24,7 @@
 
 // Updates actual (based on switches) valve states
 void update_valve_astates() {
+    LOG("Checking valve states.\r\n");
     if (bit_is_clear(MSW_PIN, M1SW1) && bit_is_set(MSW_PIN, M1SW2))
         state.v1_astate = VALVE_CLOSED;
     else if (bit_is_set(MSW_PIN, M1SW1) && bit_is_clear(MSW_PIN, M1SW2))
@@ -88,13 +89,14 @@ void v2_setdir(eValveAction dir) {
 }
 
 eRetCode v_move(eValveMove move) {
-    stdout = &mystdout;
     LOG("Moving valve");
     switch (move) {
         case V1_OPEN:
             LOG("1 to OPEN ");
-            if (state.v1_astate == VALVE_OPEN)
+            if (state.v1_astate == VALVE_OPEN) {
                 return ALREADY_POSITIONED;
+                LOG("APOS!\r\n");
+            }
             else if (state.v1_astate == VALVE_CLOSED) {
                 state.v1_astate = VALVE_MIDDLE;
                 LOG("from CLOSED... ");
@@ -109,6 +111,7 @@ eRetCode v_move(eValveMove move) {
                 v1_setdir(STOP);
                 STBY_PORT &= ~_BV(STBY); // Go back to STBY
                 LOG("done.\r\n");
+                // LOG(STR_DONE);
                 return MOVED;
             }
             else if (state.v1_astate == VALVE_MIDDLE) {
@@ -133,8 +136,10 @@ eRetCode v_move(eValveMove move) {
             break;
         case V1_CLOSE:
             LOG("1 to CLOSED ");
-            if (state.v1_astate == VALVE_CLOSED)
+            if (state.v1_astate == VALVE_CLOSED) {
                 return ALREADY_POSITIONED;
+                LOG("APOS!\r\n");
+            }
             else if (state.v1_astate == VALVE_OPEN) {
                 LOG("from OPEN... ");
                 state.v1_astate = VALVE_MIDDLE;
@@ -172,9 +177,13 @@ eRetCode v_move(eValveMove move) {
             return ERROR;
             break;
         case V2_OPEN:
-            if (state.v2_astate == VALVE_OPEN)
+            LOG("2 to OPEN ");
+            if (state.v2_astate == VALVE_OPEN) {
                 return ALREADY_POSITIONED;
+                LOG("APOS!\r\n");
+            }
             else if (state.v2_astate == VALVE_CLOSED) {
+                LOG("from CLOSED... ");
                 state.v2_astate = VALVE_MIDDLE;
                 v2_setdir(OPEN);
                 NSLEEP_PORT |= _BV(NSLEEP); // Run motor
@@ -186,9 +195,11 @@ eRetCode v_move(eValveMove move) {
                 state.v2_astate = VALVE_OPEN;
                 v2_setdir(STOP);
                 NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
+                LOG("done.\r\n");
                 return MOVED;
             }
             else if (state.v2_astate == VALVE_MIDDLE) {
+                LOG("from MIDDLE... ");
                 v2_setdir(CLOSE);
                 NSLEEP_PORT |= _BV(NSLEEP); // Run motor
                 _delay_ms(V_BF_DELAY);
@@ -202,15 +213,20 @@ eRetCode v_move(eValveMove move) {
                 state.v2_astate = VALVE_OPEN;
                 v2_setdir(STOP);
                 NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
+                LOG("done.\r\n");                
                 return MOVED;
             }
             return ERROR;
             break;
         case V2_CLOSE:
-            if (state.v2_astate == VALVE_CLOSED)
+            LOG("2 to CLOSED ");
+            if (state.v2_astate == VALVE_CLOSED) {
                 return ALREADY_POSITIONED;
+                LOG("APOS!\r\n");
+            }
             else if (state.v2_astate == VALVE_OPEN) {
                 state.v2_astate = VALVE_MIDDLE;
+                LOG("from OPEN... ");
                 v2_setdir(CLOSE);
                 NSLEEP_PORT |= _BV(NSLEEP); // Run motor
                 V_RUN_TIMEOUT();
@@ -221,9 +237,11 @@ eRetCode v_move(eValveMove move) {
                 state.v2_astate = VALVE_CLOSED;
                 v2_setdir(STOP);
                 NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
+                LOG("done.\r\n");
                 return MOVED;
             }
             else if (state.v2_astate == VALVE_MIDDLE) {
+                LOG("from MIDDLE... ");
                 v2_setdir(OPEN);
                 NSLEEP_PORT |= _BV(NSLEEP); // Run motor
                 _delay_ms(V_BF_DELAY);
@@ -237,6 +255,7 @@ eRetCode v_move(eValveMove move) {
                 state.v2_astate = VALVE_CLOSED;
                 v2_setdir(STOP);
                 NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
+                LOG("done.\r\n");
                 return MOVED;
             }
             return ERROR;

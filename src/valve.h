@@ -12,6 +12,7 @@
 #include <avr/sleep.h>
 #include <avr/cpufunc.h>
 #include <util/delay.h>
+#include <avr/pgmspace.h>
 #include "main.h"
 
 // Enums
@@ -32,6 +33,9 @@ void update_valve_astates();
 void v1_setdir(eValveAction dir);
 void v2_setdir(eValveAction dir);
 eRetCode v_move(eValveMove move);
+
+// Strings for logging
+static __flash const char STR_DONE[] = "done.\r\n";
 
 #endif	/* VALVE_H */
 
