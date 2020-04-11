@@ -110,6 +110,7 @@ int main(void)
     init();
     LOG("Init done.\r\n");
     calibrate();
+    save_settings();
     EINT_ENABLE();
     
     while (1) 

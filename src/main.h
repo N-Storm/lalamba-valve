@@ -4,11 +4,8 @@
  * Author: NStorm
  * Created on 04.04.2020, 21:22
  */
-
 #ifndef MAIN_H
 #define	MAIN_H
-
-#include "valve.h"
 
 // Settings
 // Delay for valve motor short break in ms
@@ -72,6 +69,8 @@
 #define YELLOW {255, 255, 0}
 #define VIOLET {0, 165, 255}
 
+#include "valve.h"
+
 /* Struct types
  * valveX_astate - actual state based on switches
  * valveX_sstate - software defined state
@@ -109,7 +108,7 @@ eRetCode v_move(eValveMove move);
 
 // Logging via UART
 #ifdef LOGS
-#define LOG(MSG) do { printf_P(PSTR(MSG)); } while(0)
+#define LOG(MSG, ...) do { printf_P(PSTR(MSG), ##__VA_ARGS__); } while(0)
 #define LOGP(MSG) do { printf_P(MSG); } while(0)
 #else
 #define LOG(MSG) do { } while(0)
