@@ -35,7 +35,13 @@ void v2_setdir(eValveAction dir);
 eRetCode v_move(eValveMove move);
 
 // Strings for logging
-static __flash const char STR_DONE[] = "done.\r\n";
+#define FLASHSTR static PROGMEM const char
+FLASHSTR STR_DONE[] = "done.\r\n";
+FLASHSTR STR_TO_OPEN[] =  " to OPEN ";
+FLASHSTR STR_TO_CLOSED[] =  " to CLOSED ";
+FLASHSTR STR_APOS[] = "already positioned!\r\n";
+FLASHSTR STR_FROM_CLOSED[] = "from CLOSED... ";
+FLASHSTR STR_FROM_OPEN[] = "from OPEN... ";
+FLASHSTR STR_FROM_MIDDLE[] = "from MIDDLE... ";
 
 #endif	/* VALVE_H */
-

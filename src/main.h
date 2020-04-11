@@ -109,8 +109,8 @@ eRetCode v_move(eValveMove move);
 
 // Logging via UART
 #ifdef LOGS
-#define LOG(MSG) do { printf_P(MSG); } while(0)
-#define LOGP(MSG) do { printf_P(PSTR(MSG)); } while(0)
+#define LOG(MSG) do { printf_P(PSTR(MSG)); } while(0)
+#define LOGP(MSG) do { printf_P(MSG); } while(0)
 #else
 #define LOG(MSG) do { } while(0)
 #define LOGP(MSG) do { } while(0)

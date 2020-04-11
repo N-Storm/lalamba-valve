@@ -92,14 +92,15 @@ eRetCode v_move(eValveMove move) {
     LOG("Moving valve");
     switch (move) {
         case V1_OPEN:
-            LOG("1 to OPEN ");
+            LOG("1");
+            LOGP(STR_TO_OPEN);
             if (state.v1_astate == VALVE_OPEN) {
                 return ALREADY_POSITIONED;
-                LOG("APOS!\r\n");
+                LOGP(STR_APOS);
             }
             else if (state.v1_astate == VALVE_CLOSED) {
                 state.v1_astate = VALVE_MIDDLE;
-                LOG("from CLOSED... ");
+                LOGP(STR_FROM_CLOSED);
                 v1_setdir(OPEN);
                 STBY_PORT |= _BV(STBY); // Run motor
                 V_RUN_TIMEOUT();
@@ -110,12 +111,11 @@ eRetCode v_move(eValveMove move) {
                 state.v1_astate = VALVE_OPEN;
                 v1_setdir(STOP);
                 STBY_PORT &= ~_BV(STBY); // Go back to STBY
-                LOG("done.\r\n");
-                // LOG(STR_DONE);
+                LOGP(STR_DONE);
                 return MOVED;
             }
             else if (state.v1_astate == VALVE_MIDDLE) {
-                LOG("from MIDDLE... ");
+                LOGP(STR_FROM_MIDDLE);
                 v1_setdir(CLOSE);
                 STBY_PORT |= _BV(STBY); // Run motor
                 _delay_ms(V_BF_DELAY);
@@ -129,19 +129,20 @@ eRetCode v_move(eValveMove move) {
                 state.v1_astate = VALVE_OPEN;
                 v1_setdir(STOP);
                 STBY_PORT &= ~_BV(STBY); // Go back to STBY
-                LOG("done.\r\n");
+                LOGP(STR_DONE);
                 return MOVED;
             }
             return ERROR;
             break;
         case V1_CLOSE:
-            LOG("1 to CLOSED ");
+            LOG("1");
+            LOGP(STR_TO_CLOSED);
             if (state.v1_astate == VALVE_CLOSED) {
                 return ALREADY_POSITIONED;
-                LOG("APOS!\r\n");
+                LOGP(STR_APOS);
             }
             else if (state.v1_astate == VALVE_OPEN) {
-                LOG("from OPEN... ");
+                LOGP(STR_FROM_OPEN);
                 state.v1_astate = VALVE_MIDDLE;
                 v1_setdir(CLOSE);
                 STBY_PORT |= _BV(STBY); // Run motor
@@ -153,11 +154,11 @@ eRetCode v_move(eValveMove move) {
                 state.v1_astate = VALVE_CLOSED;
                 v1_setdir(STOP);
                 STBY_PORT &= ~_BV(STBY); // Go back to STBY
-                LOG("done.\r\n");
+                LOGP(STR_DONE);
                 return MOVED;
             }
             else if (state.v1_astate == VALVE_MIDDLE) {
-                LOG("from MIDDLE... ");
+                LOGP(STR_FROM_MIDDLE);
                 v1_setdir(OPEN);
                 STBY_PORT |= _BV(STBY); // Run motor
                 _delay_ms(V_BF_DELAY);
@@ -171,19 +172,20 @@ eRetCode v_move(eValveMove move) {
                 state.v1_astate = VALVE_CLOSED;
                 v1_setdir(STOP);
                 STBY_PORT &= ~_BV(STBY); // Go back to STBY
-                LOG("done.\r\n");
+                LOGP(STR_DONE);
                 return MOVED;
             }
             return ERROR;
             break;
         case V2_OPEN:
-            LOG("2 to OPEN ");
+            LOG("2");
+            LOGP(STR_TO_OPEN);
             if (state.v2_astate == VALVE_OPEN) {
                 return ALREADY_POSITIONED;
-                LOG("APOS!\r\n");
+                LOGP(STR_APOS);
             }
             else if (state.v2_astate == VALVE_CLOSED) {
-                LOG("from CLOSED... ");
+                LOGP(STR_FROM_CLOSED);
                 state.v2_astate = VALVE_MIDDLE;
                 v2_setdir(OPEN);
                 NSLEEP_PORT |= _BV(NSLEEP); // Run motor
@@ -195,11 +197,11 @@ eRetCode v_move(eValveMove move) {
                 state.v2_astate = VALVE_OPEN;
                 v2_setdir(STOP);
                 NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
-                LOG("done.\r\n");
+                LOGP(STR_DONE);
                 return MOVED;
             }
             else if (state.v2_astate == VALVE_MIDDLE) {
-                LOG("from MIDDLE... ");
+                LOGP(STR_FROM_MIDDLE);
                 v2_setdir(CLOSE);
                 NSLEEP_PORT |= _BV(NSLEEP); // Run motor
                 _delay_ms(V_BF_DELAY);
@@ -213,20 +215,21 @@ eRetCode v_move(eValveMove move) {
                 state.v2_astate = VALVE_OPEN;
                 v2_setdir(STOP);
                 NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
-                LOG("done.\r\n");                
+                LOGP(STR_DONE);                
                 return MOVED;
             }
             return ERROR;
             break;
         case V2_CLOSE:
-            LOG("2 to CLOSED ");
+            LOG("2");
+            LOGP(STR_TO_CLOSED);
             if (state.v2_astate == VALVE_CLOSED) {
                 return ALREADY_POSITIONED;
-                LOG("APOS!\r\n");
+                LOGP(STR_APOS);
             }
             else if (state.v2_astate == VALVE_OPEN) {
                 state.v2_astate = VALVE_MIDDLE;
-                LOG("from OPEN... ");
+                LOGP(STR_FROM_OPEN);
                 v2_setdir(CLOSE);
                 NSLEEP_PORT |= _BV(NSLEEP); // Run motor
                 V_RUN_TIMEOUT();
@@ -237,11 +240,11 @@ eRetCode v_move(eValveMove move) {
                 state.v2_astate = VALVE_CLOSED;
                 v2_setdir(STOP);
                 NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
-                LOG("done.\r\n");
+                LOGP(STR_DONE);
                 return MOVED;
             }
             else if (state.v2_astate == VALVE_MIDDLE) {
-                LOG("from MIDDLE... ");
+                LOGP(STR_FROM_MIDDLE);
                 v2_setdir(OPEN);
                 NSLEEP_PORT |= _BV(NSLEEP); // Run motor
                 _delay_ms(V_BF_DELAY);
@@ -255,7 +258,7 @@ eRetCode v_move(eValveMove move) {
                 state.v2_astate = VALVE_CLOSED;
                 v2_setdir(STOP);
                 NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
-                LOG("done.\r\n");
+                LOGP(STR_DONE);
                 return MOVED;
             }
             return ERROR;

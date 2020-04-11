@@ -88,7 +88,7 @@ void init() {
 }
 
 void calibrate() {
-    LOG("Calibration.\r\n");
+    LOG("Calibration begin.\r\n");
     update_valve_astates();
 
     if (state.v1_astate == VALVE_CLOSED)
@@ -102,6 +102,7 @@ void calibrate() {
         v_move(V2_OPEN);
     
     SET_LED(GREEN);
+    LOG("Calibration done.\r\n");
 }
 
 int main(void)
