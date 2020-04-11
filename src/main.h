@@ -13,7 +13,9 @@
 // Delay for back-and-forth calibration
 #define V_BF_DELAY 100
 // Set to enable printf() debug messages on UART
+#ifdef DEBUG
 #define LOGS
+#endif
 
 // IO Mappings (PIN defines)
 // PORT B
@@ -70,6 +72,7 @@
 #define VIOLET {0, 165, 255}
 
 #include "valve.h"
+#include <stdio.h>
 
 /* Struct types
  * valveX_astate - actual state based on switches
@@ -111,8 +114,8 @@ eRetCode v_move(eValveMove move);
 #define LOG(MSG, ...) do { printf_P(PSTR(MSG), ##__VA_ARGS__); } while(0)
 #define LOGP(MSG) do { printf_P(MSG); } while(0)
 #else
-#define LOG(MSG) do { } while(0)
-#define LOGP(MSG) do { } while(0)
+#define LOG(...) do { } while(0)
+#define LOGP(...) do { } while(0)
 #endif
 
 #endif	/* MAIN_H */
