@@ -9,7 +9,7 @@
  * Valve1 - bypass valve, controlled by TB6612FNG (12V)
  * Valve2 - entry valve, controlled by DRV8833 (5V)
  * INT0 attached to MODE BTN active LOW
- * INT1 attached to AC MAINS presence detector active (no AC) LOW (normally HIGH)
+ * INT1 attached to AC MAINS presence detector active (no AC) HIGH (normally LOW)
  * REED attached to REED sensor active LOW (normally HIGH)
  * MxSW1 - Closed, MxSW2 - Opened
  * AIN1 - Closing direction, AIN2 - opening direction
@@ -75,7 +75,7 @@ void init() {
     MSW_PORT |= _BV(M1SW1) | _BV(M1SW2) | _BV(M2SW1) | _BV(M2SW2); // Enable pull-ups
 
     // Ext interrupt settings
-    MCUCR = _BV(ISC11) | _BV(ISC01); // Falling edge mode for INT0, INT1
+    MCUCR = _BV(ISC11) | _BV(ISC10) | _BV(ISC01); // Falling edge mode for INT0, rising edge for INT1
     
     // Timer interrupt settings
     TIMSK = _BV(TOIE0); // Enable T0 overflow interrupts (timer is still disabled)
@@ -123,12 +123,12 @@ int main(void)
     save_settings();
     EINT_ENABLE();
     
-    while (1) 
+    while(1)
     {
         state.event = fsGetEvent();        
         if (state.event != EV_NONE) {
             fsTransition();
-            state.event = EV_NONE; // reset event
+            // state.event = EV_NONE; // reset event
         }
     }
 }

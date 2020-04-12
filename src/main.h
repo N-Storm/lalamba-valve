@@ -119,7 +119,7 @@ void calibrate();
 // Disable INT0, INT1 
 #define EINT_DISABLE() do { GICR = 0; } while (0);
 // Check reed sensor reading. Return true if reed is HIGH (normal).
-#define GET_REED() bit_is_set(REED_PIN, REED);
+#define GET_REED() bit_is_set(REED_PIN, REED)
 #define SET_LED(COLOR) do { struct cRGB leda = COLOR; ws2812_setleds(&leda, 1); } while (0);
 
 // Logging via UART

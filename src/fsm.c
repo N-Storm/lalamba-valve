@@ -52,12 +52,15 @@ trans_t trans = {
 // Get event in order of priority
 eEvent fsGetEvent() {
     eEvent ret = EV_NONE;
-    if (state.btn_state == BTN_SHORT)
+    
+    if (!GET_REED()) // FIXME cont running
+        ret = EV_REED;
+    else if (state.btn_state == BTN_SHORT)
         ret = EV_BTN_SHORT;
     else if (state.btn_state == BTN_LONG)
         ret = EV_BTN_LONG;
     
-    if (ret != EV_NONE)
+    if (ret == EV_BTN_SHORT || ret == EV_BTN_LONG || ret == EV_BTN_EXTRA_LONG)
         state.btn_state = BTN_NONE;
 
     return ret;
