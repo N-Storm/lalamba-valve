@@ -12,9 +12,13 @@
 #define V_SHORT_DELAY 100
 // Delay for back-and-forth calibration
 #define V_BF_DELAY 100
-// Set to enable printf() debug messages on UART
+
+// Debugging options
 #ifdef DEBUG
+// Set to enable printf() debug messages on UART
 #define LOGS
+// Set to enable even more log messages.
+#define VERBOSE_LOGS
 #endif
 
 // IO Mappings (PIN defines)
@@ -122,5 +126,9 @@ extern FILE mystdout;
 #define LOG(...) do { } while(0)
 #define LOGP(...) do { } while(0)
 #endif
+
+// Pseudo-function to jump to a bootloader
+typedef void (*ptr_t)(void);
+extern const ptr_t bootloader_start;
 
 #endif	/* MAIN_H */

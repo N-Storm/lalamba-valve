@@ -36,6 +36,7 @@
 // Globals
 volatile state_t state;
 settings_t settings;
+const ptr_t bootloader_start = (ptr_t)((FLASHEND - 511) >> 1);
 
 #ifdef LOGS
 int uart_putchar(char c, FILE *stream);
@@ -84,6 +85,7 @@ void init() {
 #endif
     
     SET_LED(WHITE); // Turn on white LED
+    
     sei();
 }
 
@@ -109,8 +111,11 @@ int main(void)
 {
     init();
     LOG("Init done.\r\n");
-    // LOG("BTN_SHORT_TICKS = %d, BTN_LONG_TICKS = %d.\r\n", BTN_SHORT_TICKS, BTN_LONG_TICKS);
-    // LOG("BTN_SHORT_OVF = %d, BTN_LONG_OVF = %d.\r\n", BTN_SHORT_OVF, BTN_LONG_OVF);
+#ifdef VERBOSE_LOGS
+    LOG("BTN_SHORT_TICKS = %d, BTN_LONG_TICKS = %d.\r\n", BTN_SHORT_TICKS, BTN_LONG_TICKS);
+    LOG("BTN_SHORT_OVF = %d, BTN_LONG_OVF = %d.\r\n", BTN_SHORT_OVF, BTN_LONG_OVF);
+    LOG("Bootloader start = 0x%X\r\n", bootloader_start);
+#endif
     calibrate();
     save_settings();
     EINT_ENABLE();
