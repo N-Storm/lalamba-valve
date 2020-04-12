@@ -32,6 +32,7 @@
 #include "light_ws2812.h"
 #include "timers.h"
 #include "saveload.h"
+#include "fsm.h"
 
 // Globals
 volatile state_t state;
@@ -103,6 +104,7 @@ void calibrate() {
     else
         v_move(MV_V2_OPEN);
     
+    state.cur_state = ST_NORMAL;
     SET_LED(GREEN);
     LOG("Calibration done.\r\n");
 }
@@ -115,6 +117,7 @@ int main(void)
     LOG("BTN_SHORT_TICKS = %d, BTN_LONG_TICKS = %d.\r\n", BTN_SHORT_TICKS, BTN_LONG_TICKS);
     LOG("BTN_SHORT_OVF = %d, BTN_LONG_OVF = %d.\r\n", BTN_SHORT_OVF, BTN_LONG_OVF);
     LOG("Bootloader start = 0x%X\r\n", bootloader_start);
+    LOG("Transition table size = %d, count = %d.\r\n", sizeof(trans), (sizeof(trans)/sizeof(*trans)));
 #endif
     calibrate();
     save_settings();
@@ -122,5 +125,10 @@ int main(void)
     
     while (1) 
     {
+        state.event = fsGetEvent();        
+        if (state.event != EV_NONE) {
+            fsTransition();
+            state.event = EV_NONE; // reset event
+        }
     }
 }

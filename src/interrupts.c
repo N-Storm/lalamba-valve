@@ -13,6 +13,7 @@
 #include "main.h"
 
 ISR(INT0_vect) {
+    state.btn_state = BTN_SHORT;
     LOG("BTN press\r\n");    
 }
 

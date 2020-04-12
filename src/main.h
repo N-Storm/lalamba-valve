@@ -21,6 +21,8 @@
 #define VERBOSE_LOGS
 #endif
 
+#define FLASHSTR static PROGMEM const char
+
 // IO Mappings (PIN defines)
 // PORT B
 #define WS2812_PORT PORTB
@@ -79,8 +81,8 @@
 #include <stdio.h>
 
 // Enums
-typedef enum {ST_NONE, ST_IDLE, ST_CALIBRATION, ST_NORMAL, ST_BYPASS, ST_OVERFLOW, ST_RESTORATION, ST_MAINTAINCE, ST_WATER_CLOSED} eState;
-typedef enum {EV_NONE, EV_BTN_SHORT, EV_BTN_LONG, EV_BTN_EXTRA_LONG, EV_REED, EV_AC_SHORTAGE, EV_VALVE_TIMEOUT} eEvent;
+typedef enum {ST_NONE, ST_IDLE, ST_CALIBRATION, ST_NORMAL, ST_BYPASS, ST_OVERFLOW, ST_RESTORATION, ST_MAINTAINCE, ST_WATER_CLOSED, ST_LAST} eState;
+typedef enum {EV_NONE, EV_BTN_SHORT, EV_BTN_LONG, EV_BTN_EXTRA_LONG, EV_REED, EV_AC_SHORTAGE, EV_VALVE_TIMEOUT, EV_LAST} eEvent;
 typedef enum {BTN_NONE, BTN_BOUNCE, BTN_PRESSED, BTN_SHORT, BTN_LONG, BTN_EXTRA_LONG} eBtnState;
 
 /* Struct types
@@ -89,9 +91,10 @@ typedef enum {BTN_NONE, BTN_BOUNCE, BTN_PRESSED, BTN_SHORT, BTN_LONG, BTN_EXTRA_
  */
 typedef struct {
     eState prev_state;
-    eState state;
+    eState cur_state;
     eState next_state;
     eEvent event;
+    eBtnState btn_state;
     eValveState v1_astate, v1_sstate;
     eValveState v2_astate, v2_sstate;
 } state_t;
@@ -108,6 +111,7 @@ extern settings_t settings;
 extern FILE mystdout;
 
 // Function prototypes
+void calibrate();
 
 // Macro "functions"
 // Enable INT0, INT1

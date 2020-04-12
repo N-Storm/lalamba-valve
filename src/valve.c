@@ -90,6 +90,7 @@ void v2_setdir(eValveAction dir) {
 
 eRetCode v_move(eValveMove move) {
     LOG("Moving valve");
+    EINT_DISABLE();
     switch (move) {
         case MV_V1_OPEN:
             LOG("1");
@@ -281,5 +282,6 @@ eRetCode v_move(eValveMove move) {
             return RET_ERROR;
             break;
     }
+    EINT_ENABLE();
     return RET_NONE;
 }
