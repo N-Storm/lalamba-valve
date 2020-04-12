@@ -91,15 +91,15 @@ void calibrate() {
     LOG("Calibration begin.\r\n");
     update_valve_astates();
 
-    if (state.v1_astate == VALVE_CLOSED)
+    if (state.v1_astate == VST_CLOSED)
         state.v1_sstate = state.v1_astate;
     else
-        v_move(V1_CLOSE);
+        v_move(MV_V1_CLOSE);
 
-    if (state.v2_astate == VALVE_OPEN)
+    if (state.v2_astate == VST_OPEN)
         state.v2_sstate = state.v2_astate;
     else
-        v_move(V2_OPEN);
+        v_move(MV_V2_OPEN);
     
     SET_LED(GREEN);
     LOG("Calibration done.\r\n");
@@ -109,6 +109,8 @@ int main(void)
 {
     init();
     LOG("Init done.\r\n");
+    // LOG("BTN_SHORT_TICKS = %d, BTN_LONG_TICKS = %d.\r\n", BTN_SHORT_TICKS, BTN_LONG_TICKS);
+    // LOG("BTN_SHORT_OVF = %d, BTN_LONG_OVF = %d.\r\n", BTN_SHORT_OVF, BTN_LONG_OVF);
     calibrate();
     save_settings();
     EINT_ENABLE();

@@ -13,7 +13,7 @@
 #include "main.h"
 
 ISR(INT0_vect) {
-    LOG("BTN pressed\r\n");
+    LOG("BTN press\r\n");
 }
 
 ISR(INT1_vect) {

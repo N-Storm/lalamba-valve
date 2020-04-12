@@ -17,16 +17,16 @@
 
 // Enums
 // Current status of the valve
-typedef enum {VALVE_CLOSED, VALVE_MIDDLE, VALVE_OPEN, VALVE_ERROR} eValveState;
+typedef enum {VST_CLOSED, VST_MIDDLE, VST_OPEN, VST_ERROR} eValveState;
 // Valve move direction
-typedef enum {V1_OPEN, V1_CLOSE, V2_OPEN, V2_CLOSE} eValveMove;
+typedef enum {MV_V1_OPEN, MV_V1_CLOSE, MV_V2_OPEN, MV_V2_CLOSE} eValveMove;
 /* Return/error codes
  * ALREADY_POSITIONED - was already in place where we requested to move (based on SW)
  * MOVED - succesfully moved to a new position
  */
-typedef enum {NONE, ALREADY_POSITIONED, MOVED, ERROR} eRetCode;
+typedef enum {RET_NONE, RET_ALREADY_POSITIONED, RET_MOVED, RET_ERROR} eRetCode;
 // Valve action for vX_setdir() functions
-typedef enum {CLOSE, OPEN, BREAK, STOP} eValveAction;
+typedef enum {ACT_CLOSE, ACT_OPEN, ACT_BREAK, ACT_STOP} eValveAction;
 
 // Function prototypes
 void update_valve_astates();
