@@ -11,7 +11,7 @@
 // Delay for valve motor short break in ms
 #define V_SHORT_DELAY 100
 // Delay for back-and-forth calibration
-#define V_BF_DELAY 100
+#define V_BF_DELAY 200
 
 // Debugging options
 #ifdef DEBUG
@@ -79,15 +79,23 @@
 
 #include "valve.h"
 #include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 // Enums
 typedef enum {ST_NONE, ST_IDLE, ST_CALIBRATION, ST_NORMAL, ST_BYPASS, ST_OVERFLOW, ST_RESTORATION, ST_MAINTAINCE, ST_WATER_CLOSED, ST_LAST} eState;
 typedef enum {EV_NONE, EV_BTN_SHORT, EV_BTN_LONG, EV_BTN_EXTRA_LONG, EV_REED, EV_AC_SHORTAGE, EV_VALVE_TIMEOUT, EV_LAST} eEvent;
 typedef enum {BTN_NONE, BTN_BOUNCE, BTN_PRESSED, BTN_SHORT, BTN_LONG, BTN_EXTRA_LONG} eBtnState;
 
-/* Struct types
- * valveX_astate - actual state based on switches
- * valveX_sstate - software defined state
+// Struct types
+typedef struct {
+    bool timeout : 1;
+    bool reed : 1;
+    bool ac_shortage : 1;
+} flags_t;
+
+/*  valveX_astate - actual state based on switches
+ *  valveX_sstate - software defined state
  */
 typedef struct {
     eState prev_state;
@@ -95,6 +103,7 @@ typedef struct {
     eState next_state;
     eEvent event;
     eBtnState btn_state;
+    flags_t flags;
     eValveState v1_astate, v1_sstate;
     eValveState v2_astate, v2_sstate;
 } state_t;

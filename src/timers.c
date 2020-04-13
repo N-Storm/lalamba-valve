@@ -20,7 +20,7 @@
 #include "timers.h"
 #include "valve.h"
 
-volatile bool timeout_flag = false;
+volatile bool t0_timeout_flag = false;
 volatile uint16_t t0_ovf_cnt;
 
 ISR(TIMER0_OVF_vect) {
@@ -37,6 +37,6 @@ ISR(TIMER0_OVF_vect) {
         TCCR0 = 0;
         TCNT0 = 0;
         t0_ovf_cnt = 0;
-        timeout_flag = true;
+        t0_timeout_flag = true;
     }
 }

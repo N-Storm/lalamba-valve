@@ -27,7 +27,7 @@ typedef enum {ACT_CLOSE, ACT_OPEN, ACT_BREAK, ACT_STOP} eValveAction;
  * RET_MOVED - succesfully moved to a new position
  * RET_OK - generic OK
  */
-typedef enum {RET_NONE, RET_ALREADY_POSITIONED, RET_MOVED, RET_OK, RET_ERROR} eRetCode;
+typedef enum {RET_NONE, RET_ALREADY_POSITIONED, RET_MOVED, RET_TIMEOUT, RET_OK, RET_ERROR} eRetCode;
 
 // Function prototypes
 void update_valve_astates();
@@ -45,7 +45,7 @@ FLASHSTR STR_APOS[] = "already positioned!\r\n";
 FLASHSTR STR_FROM_CLOSED[] = "from CLOSED... ";
 FLASHSTR STR_FROM_OPEN[] = "from OPEN... ";
 FLASHSTR STR_FROM_MIDDLE[] = "from MIDDLE... ";
-FLASHSTR STR_TIMEOUT[] = " TIMEOUT hit ";
+FLASHSTR STR_TIMEOUT[] = " TIMEOUT hit.\r\n";
 #endif
 
 #endif	/* VALVE_H */

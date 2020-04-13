@@ -28,7 +28,7 @@
 #define BTN_LONG_REM (uint8_t)(BTN_LONG_TICKS-((uint32_t)BTN_LONG_OVF*256)) // Timer ticks remaining
 
 // Globals
-extern volatile bool timeout_flag;
+extern volatile bool t0_timeout_flag;
 extern volatile uint16_t t0_ovf_cnt;
 
 // Run timer with /1024 PS
