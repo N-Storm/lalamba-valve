@@ -130,5 +130,7 @@ int main(void)
             fsTransition();
             // state.event = EV_NONE; // reset event
         }
+        if (!state.flags.reed && !GET_REED() && (state.cur_state == ST_NORMAL || state.cur_state == ST_BYPASS)) // Poll reed sensor
+            state.flags.reed = true;
     }
 }

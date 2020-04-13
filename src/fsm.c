@@ -42,19 +42,38 @@ eState fsBypassNormal() {
     }
 }
 
+eState fsTimeout() {
+    SET_LED(RED);
+    state.flags.timeout = false;
+    return ST_VALVE_TIMEOUT;
+}
+
+eState fsReed() {
+    SET_LED(RED);
+    state.flags.reed = false;
+    return ST_REED_OVERFLOW;
+}
+
 // Transition table
 trans_t trans = { 
     [ST_NORMAL][EV_BTN_SHORT] = fsNormalBypass,
     [ST_NORMAL][EV_BTN_LONG] = fsNormalWaterClosed,
-    [ST_BYPASS][EV_BTN_SHORT] = fsBypassNormal
+    [ST_NORMAL][EV_REED] = fsReed,
+    [ST_BYPASS][EV_REED] = fsReed,
+    [ST_BYPASS][EV_BTN_SHORT] = fsBypassNormal,
+    [ST_ANY][EV_VALVE_TIMEOUT] = fsTimeout
 };
 
 // Get event in order of priority
 eEvent fsGetEvent() {
     eEvent ret = EV_NONE;
     
-    if (!GET_REED()) // FIXME cont running
+    if (state.flags.reed) // FIXME cont running
         ret = EV_REED;
+    else if (state.flags.timeout)
+        ret = EV_VALVE_TIMEOUT;
+    else if (state.flags.ac_shortage)
+        ret = EV_AC_SHORTAGE;
     else if (state.btn_state == BTN_SHORT)
         ret = EV_BTN_SHORT;
     else if (state.btn_state == BTN_LONG)
@@ -69,12 +88,21 @@ eEvent fsGetEvent() {
 // Run the transition based on event
 eRetCode fsTransition() {
 #ifdef VERBOSE_LOGS
-    LOG("Transition: st %d, ev %d\r\n", state.cur_state, state.event);
+    LOG("Transition: st %d, ev %d ", state.cur_state, state.event);
 #endif
-    if ((state.event < EV_LAST) && trans[state.cur_state][state.event] != NULL) {
+    if ((state.event < EV_ANY) && (trans[state.cur_state][state.event] != NULL || trans[ST_ANY][state.event] != NULL)) {
+//    if ((state.event < EV_LAST) && (trans[state.cur_state][state.event] != NULL)) {
         state.prev_state = state.cur_state; // save previous state
-        state.cur_state = trans[state.cur_state][state.event](); // run the transition
+        if (trans[state.cur_state][state.event] != NULL) {
+            LOG("found.\r\n");
+            state.cur_state = trans[state.cur_state][state.event](); // run the transition
+        }
+        else if (trans[ST_ANY][state.event] != NULL) { // Catch all handler
+            LOG("ST_ANY.\r\n");
+            state.cur_state = trans[ST_ANY][state.event]();
+        }
         return RET_OK;
     }
+    LOG("not found.\r\n");
     return RET_ERROR;
 }
