@@ -91,18 +91,23 @@ eRetCode fsTransition() {
     LOG("Transition: st %d, ev %d ", state.cur_state, state.event);
 #endif
     if ((state.event < EV_ANY) && (trans[state.cur_state][state.event] != NULL || trans[ST_ANY][state.event] != NULL)) {
-//    if ((state.event < EV_LAST) && (trans[state.cur_state][state.event] != NULL)) {
         state.prev_state = state.cur_state; // save previous state
         if (trans[state.cur_state][state.event] != NULL) {
+#ifdef VERBOSE_LOGS
             LOG("found.\r\n");
+#endif
             state.cur_state = trans[state.cur_state][state.event](); // run the transition
         }
         else if (trans[ST_ANY][state.event] != NULL) { // Catch all handler
+#ifdef VERBOSE_LOGS
             LOG("ST_ANY.\r\n");
+#endif
             state.cur_state = trans[ST_ANY][state.event]();
         }
         return RET_OK;
     }
+#ifdef VERBOSE_LOGS
     LOG("not found.\r\n");
+#endif
     return RET_ERROR;
 }
