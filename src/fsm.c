@@ -26,8 +26,30 @@ eState fsNormalBypass() {
     }
 }
 
-eState fsNormalWaterClosed() {
-    return ST_WATER_CLOSED;
+eState fsWaterClosed() {
+    if (state.v2_astate == VST_OPEN) {
+        v_move(MV_V2_CLOSE);
+        EINT_ENABLE();
+        SET_LED(VIOLET);
+        return ST_WATER_CLOSED;
+    } else {
+        LOGP(STR_VALVE_POS_ERROR);
+        return state.prev_state;
+    }
+}
+
+eState fsWaterClosedNormal() {
+    if (state.v2_astate == VST_CLOSED) {
+        v_move(MV_V2_OPEN);
+        if (state.v1_astate == VST_OPEN)
+            v_move(MV_V1_CLOSE);
+        EINT_ENABLE();
+        SET_LED(GREEN);
+        return ST_NORMAL;
+    } else {
+        LOGP(STR_VALVE_POS_ERROR);
+        return state.prev_state;
+    }
 }
 
 eState fsBypassNormal() {
@@ -57,11 +79,13 @@ eState fsReed() {
 // Transition table
 trans_t trans = { 
     [ST_NORMAL][EV_BTN_SHORT] = fsNormalBypass,
-    [ST_NORMAL][EV_BTN_LONG] = fsNormalWaterClosed,
+    [ST_NORMAL][EV_BTN_LONG] = fsWaterClosed,
     [ST_NORMAL][EV_REED] = fsReed,
     [ST_BYPASS][EV_REED] = fsReed,
     [ST_BYPASS][EV_BTN_SHORT] = fsBypassNormal,
     [ST_BYPASS][EV_AC_RESTORATION] = fsBypassNormal,
+    [ST_BYPASS][EV_BTN_LONG] = fsWaterClosed,
+    [ST_WATER_CLOSED][EV_BTN_LONG] = fsWaterClosedNormal,
     [ST_ANY][EV_VALVE_TIMEOUT] = fsTimeout
 };
 

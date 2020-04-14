@@ -125,6 +125,21 @@ void static inline UART_rx() {
     }
 }
 
+void static inline led_blink() {
+    static uint16_t cnt = 0;
+    
+    cnt++;
+    if (cnt == 32768) {
+        if (state.v1_astate == VST_CLOSED) {
+            SET_LED(GREEN);
+        } else if (state.v1_astate == VST_OPEN) {
+            SET_LED(BLUE);
+        }
+    } else if (cnt == 0) {
+        SET_LED(VIOLET);
+    }
+}
+
 int main(void)
 {
     init();
@@ -150,5 +165,7 @@ int main(void)
             state.flags.reed = true;
         if (bit_is_set(UCSRA, RXC))
             UART_rx();
+        if (state.cur_state == ST_WATER_CLOSED)
+            led_blink();
     }
 }
