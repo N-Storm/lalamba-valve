@@ -163,6 +163,9 @@ int main(void)
         }
         if (!state.flags.reed && !GET_REED() && (state.cur_state == ST_NORMAL || state.cur_state == ST_BYPASS)) // Poll reed sensor
             state.flags.reed = true;
+        else if (state.cur_state == ST_REED_OVERFLOW && GET_REED()) // Poll reed sensor
+            state.flags.restoration = true;        
+
         if (bit_is_set(UCSRA, RXC))
             UART_rx();
         if (state.cur_state == ST_WATER_CLOSED)

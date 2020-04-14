@@ -84,13 +84,14 @@
 
 // Enums
 typedef enum {ST_NONE, ST_IDLE, ST_CALIBRATION, ST_NORMAL, ST_BYPASS, ST_REED_OVERFLOW, ST_RESTORATION, ST_MAINTAINCE, ST_WATER_CLOSED, ST_VALVE_TIMEOUT, ST_ANY, ST_LAST} eState;
-typedef enum {EV_NONE, EV_BTN_SHORT, EV_BTN_LONG, EV_BTN_EXTRA_LONG, EV_REED, EV_AC_RESTORATION, EV_VALVE_TIMEOUT, EV_ANY, EV_LAST} eEvent;
+typedef enum {EV_NONE, EV_BTN_SHORT, EV_BTN_LONG, EV_BTN_EXTRA_LONG, EV_REED, EV_REED_RESTORATION, EV_AC_RESTORATION, EV_VALVE_TIMEOUT, EV_ANY, EV_LAST} eEvent;
 typedef enum {BTN_NONE, BTN_BOUNCE, BTN_PRESSED, BTN_SHORT, BTN_LONG, BTN_EXTRA_LONG} eBtnState;
 
 // Struct types
 typedef struct {
     bool timeout : 1;
     bool reed : 1;
+    bool restoration : 1;
     bool ac_shortage : 1;
     bool ac_restored : 1;
 } flags_t;
@@ -99,9 +100,9 @@ typedef struct {
  *  valveX_sstate - software defined state
  */
 typedef struct {
-    eState prev_state;
     eState cur_state;
-    eState next_state;
+    eState prev_state;
+    eState saved_state;
     eEvent event;
     eBtnState btn_state;
     flags_t flags;
