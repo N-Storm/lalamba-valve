@@ -68,16 +68,24 @@ trans_t trans = {
 eEvent fsGetEvent() {
     eEvent ret = EV_NONE;
     
-    if (state.flags.reed) // FIXME cont running
+    if (state.flags.reed) {
         ret = EV_REED;
-    else if (state.flags.timeout)
+        state.flags.reed = false;
+    }
+    else if (state.flags.timeout) {
         ret = EV_VALVE_TIMEOUT;
-    else if (state.flags.ac_shortage)
+        state.flags.timeout = false;
+    }
+    else if (state.flags.ac_shortage) {
         ret = EV_AC_SHORTAGE;
+        state.flags.ac_shortage = false;
+    }
     else if (state.btn_state == BTN_SHORT)
         ret = EV_BTN_SHORT;
     else if (state.btn_state == BTN_LONG)
         ret = EV_BTN_LONG;
+    else if (state.btn_state == BTN_EXTRA_LONG)
+        ret = EV_BTN_EXTRA_LONG;
     
     if (ret == EV_BTN_SHORT || ret == EV_BTN_LONG || ret == EV_BTN_EXTRA_LONG)
         state.btn_state = BTN_NONE;

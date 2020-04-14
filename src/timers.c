@@ -21,22 +21,13 @@
 #include "valve.h"
 
 volatile bool t0_timeout_flag = false;
-volatile uint16_t t0_ovf_cnt;
+volatile uint8_t t0_ovf_cnt;
 
 ISR(TIMER0_OVF_vect) {
-    t0_ovf_cnt++;
-    if (t0_ovf_cnt < V_ROT_OVF)
-        return;
-    else if (t0_ovf_cnt == V_ROT_OVF) {
-        TCCR0 = 0;
-        TCNT0 = 255-V_ROT_REM;
-        SFIOR |= _BV(PSR10);
-        TCCR0 = _BV(CS02) | _BV(CS00);
-    }
-    else {
+    t0_ovf_cnt--;
+    if (t0_ovf_cnt == 0) {
         TCCR0 = 0;
         TCNT0 = 0;
-        t0_ovf_cnt = 0;
         t0_timeout_flag = true;
     }
 }
