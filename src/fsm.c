@@ -96,9 +96,9 @@ eRetCode fsTransition() {
 #ifdef VERBOSE_LOGS
             LOG("found.\r\n");
 #endif
-            state.cur_state = trans[state.cur_state][state.event](); // run the transition
+            state.cur_state = trans[state.cur_state][state.event](); // Run the transition
         }
-        else if (trans[ST_ANY][state.event] != NULL) { // Catch all handler
+        else if (trans[ST_ANY][state.event] != NULL) { // Catch on any state handler
 #ifdef VERBOSE_LOGS
             LOG("ST_ANY.\r\n");
 #endif

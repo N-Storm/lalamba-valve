@@ -18,5 +18,6 @@ ISR(INT0_vect) {
 }
 
 ISR(INT1_vect) {
+    state.flags.ac_shortage = true;
     LOG("PWR outage\r\n");
 }
