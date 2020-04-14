@@ -61,6 +61,7 @@ trans_t trans = {
     [ST_NORMAL][EV_REED] = fsReed,
     [ST_BYPASS][EV_REED] = fsReed,
     [ST_BYPASS][EV_BTN_SHORT] = fsBypassNormal,
+    [ST_BYPASS][EV_AC_RESTORATION] = fsBypassNormal,
     [ST_ANY][EV_VALVE_TIMEOUT] = fsTimeout
 };
 
@@ -69,16 +70,14 @@ eEvent fsGetEvent() {
     eEvent ret = EV_NONE;
     
     if (state.flags.reed) {
-        ret = EV_REED;
         state.flags.reed = false;
-    }
-    else if (state.flags.timeout) {
-        ret = EV_VALVE_TIMEOUT;
+        ret = EV_REED;
+    } else if (state.flags.timeout) {
         state.flags.timeout = false;
-    }
-    else if (state.flags.ac_shortage) {
-        ret = EV_AC_SHORTAGE;
-        state.flags.ac_shortage = false;
+        ret = EV_VALVE_TIMEOUT;
+    } else if (state.flags.ac_restored) {
+        state.flags.ac_restored = false;
+        ret = EV_AC_RESTORATION;
     }
     else if (state.btn_state == BTN_SHORT)
         ret = EV_BTN_SHORT;

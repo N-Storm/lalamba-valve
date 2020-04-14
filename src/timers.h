@@ -33,7 +33,7 @@ extern volatile bool t0_timeout_flag;
 extern volatile uint8_t t0_ovf_cnt;
 
 // Run timer with /1024 PS
-#define V_RUN_TIMEOUT(OVF) do { TCNT0 = 0; t0_ovf_cnt = OVF; SFIOR |= _BV(PSR10); TCCR0 = _BV(CS02) | _BV(CS00); } while (0)
-#define V_STOP_TIMEOUT() do { TCCR0 = 0; TCNT0 = 0; t0_ovf_cnt = 0; } while (0)
+#define RUN_TIMEOUT(OVF) do { TCNT0 = 0; t0_ovf_cnt = OVF; SFIOR |= _BV(PSR10); TCCR0 = _BV(CS02) | _BV(CS00); } while (0)
+#define STOP_TIMEOUT() do { TCCR0 = 0; TCNT0 = 0; t0_ovf_cnt = 0; } while (0)
 
 #endif	/* TIMERS_H */

@@ -112,9 +112,9 @@ eRetCode v_move(eValveMove move) {
                 }
                 v1_setdir(ACT_OPEN);
                 STBY_PORT |= _BV(STBY); // Run motor
-                V_RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
+                RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
                 while (bit_is_set(MSW_PIN, M1SW2) && !t0_timeout_flag); // Wait until SW are hit by motor
-                V_STOP_TIMEOUT();
+                STOP_TIMEOUT();
                 v1_setdir(ACT_BREAK);
                 v1_setdir(ACT_STOP);
                 STBY_PORT &= ~_BV(STBY); // Go back to STBY
@@ -153,9 +153,9 @@ eRetCode v_move(eValveMove move) {
                 }
                 v1_setdir(ACT_CLOSE);
                 STBY_PORT |= _BV(STBY); // Run motor
-                V_RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
+                RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
                 while (bit_is_set(MSW_PIN, M1SW1) && !t0_timeout_flag); // Wait until SW are hit by motor
-                V_STOP_TIMEOUT();
+                STOP_TIMEOUT();
                 v1_setdir(ACT_BREAK);
                 v1_setdir(ACT_STOP);
                 STBY_PORT &= ~_BV(STBY); // Go back to STBY
@@ -194,9 +194,9 @@ eRetCode v_move(eValveMove move) {
                 }
                 v2_setdir(ACT_OPEN);
                 NSLEEP_PORT |= _BV(NSLEEP); // Run motor
-                V_RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
+                RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
                 while (bit_is_set(MSW_PIN, M2SW2) && !t0_timeout_flag); // Wait until SW are hit by motor
-                V_STOP_TIMEOUT();
+                STOP_TIMEOUT();
                 v2_setdir(ACT_BREAK);
                 v2_setdir(ACT_STOP);
                 NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
@@ -235,9 +235,9 @@ eRetCode v_move(eValveMove move) {
                 }
                 v2_setdir(ACT_CLOSE);
                 NSLEEP_PORT |= _BV(NSLEEP); // Run motor
-                V_RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
+                RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
                 while (bit_is_set(MSW_PIN, M2SW1) && !t0_timeout_flag); // Wait until SW are hit by motor
-                V_STOP_TIMEOUT();
+                STOP_TIMEOUT();
                 v2_setdir(ACT_BREAK);
                 v2_setdir(ACT_STOP);
                 NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY

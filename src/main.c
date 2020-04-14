@@ -75,7 +75,7 @@ void init() {
     MSW_PORT |= _BV(M1SW1) | _BV(M1SW2) | _BV(M2SW1) | _BV(M2SW2); // Enable pull-ups
 
     // Ext interrupt settings
-    MCUCR = _BV(ISC11) | _BV(ISC10) | _BV(ISC01); // Falling edge mode for INT0, rising edge for INT1
+    MCUCR = _BV(ISC10) | _BV(ISC00); // Any logic change in INT0, INT1 cause interrupt
     
     // Timer interrupt settings
     TIMSK = _BV(TOIE0); // Enable T0 overflow interrupts (timer is still disabled)
