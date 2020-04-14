@@ -109,6 +109,22 @@ void calibrate() {
     LOG("Calibration done.\r\n");
 }
 
+void static inline UART_rx() {
+    static char uart_buf[3];
+    
+    if (!uart_buf[0])
+        uart_buf[0] = UDR;
+    else {
+        uart_buf[1] = UDR;
+        if (uart_buf[0] == 'B' && uart_buf[1] == 'L')
+            bootloader_start();
+        else {
+            uart_buf[0] = 0;
+            uart_buf[1] = 0;
+        }
+    }
+}
+
 int main(void)
 {
     init();
@@ -132,5 +148,7 @@ int main(void)
         }
         if (!state.flags.reed && !GET_REED() && (state.cur_state == ST_NORMAL || state.cur_state == ST_BYPASS)) // Poll reed sensor
             state.flags.reed = true;
+        if (bit_is_set(UCSRA, RXC))
+            UART_rx();
     }
 }
