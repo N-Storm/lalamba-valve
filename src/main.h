@@ -102,7 +102,6 @@ typedef struct {
 typedef struct {
     eState cur_state;
     eState prev_state;
-    eState saved_state;
     eEvent event;
     eBtnState btn_state;
     flags_t flags;

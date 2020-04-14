@@ -136,7 +136,18 @@ void static inline led_blink() {
             SET_LED(BLUE);
         }
     } else if (cnt == 0) {
-        SET_LED(VIOLET);
+        switch (state.cur_state) {
+            case ST_WATER_CLOSED:
+                SET_LED(VIOLET);
+                break;
+            case ST_REED_OVERFLOW:
+                SET_LED(RED);
+                break;
+            case ST_RESTORATION:
+                SET_LED(BLACK)
+                break;
+        }
+        
     }
 }
 
@@ -166,9 +177,10 @@ int main(void)
         else if (state.cur_state == ST_REED_OVERFLOW && GET_REED()) // Poll reed sensor
             state.flags.restoration = true;        
 
-        if (bit_is_set(UCSRA, RXC))
+        if (bit_is_set(UCSRA, RXC)) // Poll UART for incoming bytes;
             UART_rx();
-        if (state.cur_state == ST_WATER_CLOSED)
+
+        if (state.cur_state == ST_WATER_CLOSED || state.cur_state == ST_REED_OVERFLOW || state.cur_state == ST_RESTORATION) // Work on LED blinking modes
             led_blink();
     }
 }

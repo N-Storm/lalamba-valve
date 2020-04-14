@@ -40,6 +40,7 @@ eState fsWaterClosed() {
 
 eState fsWaterClosedNormal() {
     if (state.v2_astate == VST_CLOSED) {
+        SET_LED(VIOLET);
         v_move(MV_V2_OPEN);
         if (state.v1_astate == VST_OPEN)
             v_move(MV_V1_CLOSE);
@@ -78,7 +79,6 @@ eState fsReed() {
 }
 
 eState fsRestoration() {
-    SET_LED(YELLOW);
     return ST_RESTORATION;
 }
 
