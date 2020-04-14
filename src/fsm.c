@@ -14,18 +14,6 @@
 #include "ws2812_config.h"
 #include "light_ws2812.h"
 
-eState fsNormalBypass() {
-    if (state.v1_astate == VST_CLOSED) {
-        v_move(MV_V1_OPEN);
-        EINT_ENABLE();
-        SET_LED(BLUE);
-        return ST_BYPASS;
-    } else {
-        LOGP(STR_VALVE_POS_ERROR);
-        return ST_NORMAL;
-    }
-}
-
 eState fsWaterClosed() {
     if (state.v2_astate == VST_OPEN) {
         v_move(MV_V2_CLOSE);
@@ -38,7 +26,7 @@ eState fsWaterClosed() {
     }
 }
 
-eState fsWaterClosedNormal() {
+eState fsWaterClosedToNormal() {
     if (state.v2_astate == VST_CLOSED) {
         SET_LED(VIOLET);
         v_move(MV_V2_OPEN);
@@ -53,7 +41,7 @@ eState fsWaterClosedNormal() {
     }
 }
 
-eState fsBypassNormal() {
+eState fsBypassToNormal() {
     if (state.v1_astate == VST_OPEN) {
         v_move(MV_V1_CLOSE);
         EINT_ENABLE();
@@ -78,6 +66,31 @@ eState fsReed() {
     return ST_REED_OVERFLOW;
 }
 
+eState fsToggleBypass() {
+    if (state.v1_astate == VST_CLOSED)
+        v_move(MV_V1_OPEN);
+    else if (state.v1_astate == VST_OPEN)
+        v_move(MV_V1_CLOSE);
+    else {
+        LOGP(STR_VALVE_POS_ERROR);
+        return state.prev_state;
+    }
+    EINT_ENABLE();
+    switch (state.prev_state) {
+        case ST_NORMAL:
+            SET_LED(BLUE);
+            return ST_BYPASS;
+            break;
+        case ST_BYPASS:
+            SET_LED(GREEN);
+            return ST_NORMAL;
+            break;
+        default:
+            return state.prev_state;
+            break;
+    }
+}
+
 eState fsRestoration() {
     return ST_RESTORATION;
 }
@@ -100,19 +113,31 @@ eState fsBackFromRestoration() {
     }
 }
 
+eState fsMaintenance() {
+    return ST_NORMAL;
+}
+
+eState fsReset() {
+    return ST_NORMAL;
+}
+
 // Transition table
 trans_t trans = { 
-    [ST_NORMAL][EV_BTN_SHORT] = fsNormalBypass,
+    [ST_NORMAL][EV_BTN_SHORT] = fsToggleBypass,
     [ST_NORMAL][EV_BTN_LONG] = fsWaterClosed,
+    [ST_NORMAL][EV_BTN_EXTRA_LONG] = fsMaintenance,
     [ST_NORMAL][EV_REED] = fsReed,
     [ST_BYPASS][EV_REED] = fsReed,
-    [ST_BYPASS][EV_BTN_SHORT] = fsBypassNormal,
-    [ST_BYPASS][EV_AC_RESTORATION] = fsBypassNormal,
+    [ST_BYPASS][EV_BTN_SHORT] = fsBypassToNormal,
+    [ST_BYPASS][EV_AC_RESTORATION] = fsBypassToNormal,
     [ST_BYPASS][EV_BTN_LONG] = fsWaterClosed,
-    [ST_WATER_CLOSED][EV_BTN_LONG] = fsWaterClosedNormal,
-    [ST_WATER_CLOSED][EV_BTN_EXTRA_LONG] = fsWaterClosedNormal,
+    [ST_WATER_CLOSED][EV_BTN_SHORT] = fsToggleBypass,
+    [ST_WATER_CLOSED][EV_BTN_LONG] = fsWaterClosedToNormal,
+    [ST_WATER_CLOSED][EV_BTN_EXTRA_LONG] = fsWaterClosedToNormal,
     [ST_REED_OVERFLOW][EV_REED_RESTORATION] = fsRestoration,
+    [ST_REED_OVERFLOW][EV_BTN_SHORT] = fsToggleBypass,
     [ST_RESTORATION][EV_BTN_LONG] = fsBackFromRestoration,
+    [ST_VALVE_TIMEOUT][EV_BTN_EXTRA_LONG] = fsReset,
     [ST_ANY][EV_VALVE_TIMEOUT] = fsTimeout
 };
 
