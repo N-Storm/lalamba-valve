@@ -8,7 +8,7 @@
  *
  * License: GNU GPL v2+ (see License.txt)
  +
- */ 
+ */
 
 #ifndef LIGHT_WS2812_H_
 #define LIGHT_WS2812_H_

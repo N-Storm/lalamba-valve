@@ -1,8 +1,8 @@
-/* 
+/*
  * Project: lalamba-valve
  * File:   main.c
  * Author: NStorm
- * Created: 04.04.2020 21:06
+ * Created: 04.04.2020
  */
 
 /*
@@ -76,17 +76,17 @@ void init() {
 
     // Ext interrupt settings
     MCUCR = _BV(ISC10) | _BV(ISC00); // Any logic change in INT0, INT1 cause interrupt
-    
+
     // Timer interrupt settings
     TIMSK = _BV(TOIE0); // Enable T0 overflow interrupts (timer is still disabled)
-    
+
 #ifdef LOGS
     USART_Init();
     stdout = &mystdout;
 #endif
-    
+
     SET_LED(WHITE); // Turn on white LED
-    
+
     sei();
 }
 
@@ -103,7 +103,7 @@ void calibrate() {
         state.v2_sstate = state.v2_astate;
     else
         v_move(MV_V2_OPEN);
-    
+
     state.cur_state = ST_NORMAL;
     SET_LED(GREEN);
     LOG("Calibration done.\r\n");
@@ -111,7 +111,7 @@ void calibrate() {
 
 void static inline UART_rx() {
     static char uart_buf[3];
-    
+
     if (!uart_buf[0])
         uart_buf[0] = UDR;
     else {
@@ -127,7 +127,7 @@ void static inline UART_rx() {
 
 void static inline led_blink() {
     static uint16_t cnt = 0;
-    
+
     cnt++;
     if (cnt == 32768) {
         if (state.v1_astate == VST_CLOSED) {
@@ -149,7 +149,6 @@ void static inline led_blink() {
             default:
                 break;
         }
-        
     }
 }
 
@@ -166,10 +165,10 @@ int main(void)
     calibrate();
     save_settings();
     EINT_ENABLE();
-    
+
     while(1)
     {
-        state.event = fsGetEvent();        
+        state.event = fsGetEvent();
         if (state.event != EV_NONE) {
             fsTransition();
             // state.event = EV_NONE; // reset event
@@ -177,7 +176,7 @@ int main(void)
         if (!state.flags.reed && !GET_REED() && (state.cur_state == ST_NORMAL || state.cur_state == ST_BYPASS)) // Poll reed sensor
             state.flags.reed = true;
         else if (state.cur_state == ST_REED_OVERFLOW && GET_REED()) // Poll reed sensor
-            state.flags.restoration = true;        
+            state.flags.restoration = true;
 
         if (bit_is_set(UCSRA, RXC)) // Poll UART for incoming bytes;
             UART_rx();

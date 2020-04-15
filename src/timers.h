@@ -1,4 +1,4 @@
-/* 
+/*
  * Project: lalamba-valve
  * File:   timers.h
  * Author: NStorm

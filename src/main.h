@@ -2,7 +2,7 @@
  * Project: lalamba-valve
  * File:   main.h
  * Author: NStorm
- * Created on 04.04.2020, 21:22
+ * Created on 04.04.2020
  */
 #ifndef MAIN_H
 #define	MAIN_H

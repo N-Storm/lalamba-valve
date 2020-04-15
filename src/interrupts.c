@@ -1,8 +1,8 @@
-/* 
+/*
  * Project: lalamba-valve
  * File:   interrupts.c
  * Author: NStorm
- * Created: 04.04.2020 21:06
+ * Created: 04.04.2020
  */
 #include <stdint.h>
 #include <stdbool.h>

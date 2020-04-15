@@ -1,4 +1,4 @@
-/* 
+/*
  * Project: lalamba-valve
  * File:   fsm.c
  * Author: NStorm
@@ -144,7 +144,7 @@ trans_t trans = {
 // Get event in order of priority
 eEvent fsGetEvent() {
     eEvent ret = EV_NONE;
-    
+
     if (state.flags.reed) {
         state.flags.reed = false;
         ret = EV_REED;
@@ -163,7 +163,7 @@ eEvent fsGetEvent() {
         ret = EV_BTN_LONG;
     else if (state.btn_state == BTN_EXTRA_LONG)
         ret = EV_BTN_EXTRA_LONG;
-    
+
     if (ret == EV_BTN_SHORT || ret == EV_BTN_LONG || ret == EV_BTN_EXTRA_LONG)
         state.btn_state = BTN_NONE;
 

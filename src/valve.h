@@ -1,4 +1,4 @@
-/* 
+/*
  * Project: lalamba-valve
  * File:   valve.h
  * Author: NStorm

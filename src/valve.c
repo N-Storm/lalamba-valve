@@ -1,4 +1,4 @@
-/* 
+/*
  * Project: lalamba-valve
  * File:   valve.c
  * Author: NStorm
@@ -31,7 +31,7 @@ void update_valve_astates() {
         state.v1_astate = VST_OPEN;
     else
         state.v1_astate = VST_MIDDLE;
-    
+
     if (bit_is_clear(MSW_PIN, M2SW1) && bit_is_set(MSW_PIN, M2SW2))
         state.v2_astate = VST_CLOSED;
     else if (bit_is_set(MSW_PIN, M2SW1) && bit_is_clear(MSW_PIN, M2SW2))
@@ -205,7 +205,7 @@ eRetCode v_move(eValveMove move) {
                     t0_timeout_flag = false;
                     state.flags.timeout = true;
                     state.v2_astate = VST_MIDDLE;
-                    return RET_TIMEOUT;                    
+                    return RET_TIMEOUT;
                 } else {
                     state.v2_astate = VST_OPEN;
                     LOGP(STR_DONE);
@@ -246,12 +246,12 @@ eRetCode v_move(eValveMove move) {
                     t0_timeout_flag = false;
                     state.flags.timeout = true;
                     state.v2_astate = VST_MIDDLE;
-                    return RET_TIMEOUT;                              
+                    return RET_TIMEOUT;
                 } else {
                     state.v2_astate = VST_CLOSED;
                     LOGP(STR_DONE);
                     return RET_MOVED;
-                }                
+                }
             }
             LOGP(STR_ERROR);
             return RET_ERROR;
