@@ -5,8 +5,14 @@
         <group>
             <file>file:/C:/mk/lalamba-valve/src/main.h</file>
             <file>file:/C:/mk/lalamba-valve/src/timers.h</file>
+            <file>file:/C:/mk/lalamba-valve/src/valve.c</file>
+            <file>file:/C:/mk/lalamba-valve/src/saveload.h</file>
+            <file>file:/C:/mk/lalamba-valve/src/fsm.c</file>
             <file>file:/C:/mk/lalamba-valve/src/timers.c</file>
+            <file>file:/C:/mk/lalamba-valve/src/valve.h</file>
+            <file>file:/C:/mk/lalamba-valve/src/fsm.h</file>
             <file>file:/C:/mk/lalamba-valve/src/interrupts.c</file>
+            <file>file:/C:/mk/lalamba-valve/src/saveload.c</file>
             <file>file:/C:/mk/lalamba-valve/src/main.c</file>
         </group>
     </open-files>
