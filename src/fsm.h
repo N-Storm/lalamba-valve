@@ -23,4 +23,3 @@ FLASHSTR STR_VALVE_POS_ERROR[] = "Valve position error!\r\n";
 #endif
 
 #endif	/* FSM_H */
-

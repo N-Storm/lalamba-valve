@@ -116,8 +116,10 @@ void static inline UART_rx() {
         uart_buf[0] = UDR;
     else {
         uart_buf[1] = UDR;
-        if (uart_buf[0] == 'B' && uart_buf[1] == 'L')
+        if (uart_buf[0] == 'B' && uart_buf[1] == 'L') {
+            cli();
             bootloader_start();
+        }
         else {
             uart_buf[0] = 0;
             uart_buf[1] = 0;

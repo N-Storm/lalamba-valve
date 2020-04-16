@@ -157,7 +157,7 @@
         <property key="user-pack-device-support" value=""/>
         <property key="user-pack-include" value=""/>
         <property key="usersig" value="false"/>
-        <appendMe value="-flto -g -std=gnu11"/>
+        <appendMe value="-g -std=gnu11"/>
       </AVR-Global>
       <AVR-LD>
         <property key="eeprom-segment" value=""/>
@@ -716,7 +716,6 @@
         <property key="syntax-only" value="false"/>
         <property key="undefined-identifier" value="false"/>
         <property key="verbose" value="false"/>
-        <appendMe value="-flto"/>
       </AVR-GCC>
       <AVR-Global>
         <property key="common-include-directories" value=""/>
@@ -730,6 +729,7 @@
         <property key="user-pack-device-support" value=""/>
         <property key="user-pack-include" value=""/>
         <property key="usersig" value="false"/>
+        <appendMe value="-flto -std=gnu11"/>
       </AVR-Global>
       <AVR-LD>
         <property key="eeprom-segment" value=""/>
@@ -748,7 +748,7 @@
         <property key="rodata-writable" value="false"/>
         <property key="sram-segment" value=""/>
         <property key="v-printf" value="false"/>
-        <appendMe value="-flto -Wl,--warn-common "/>
+        <appendMe value="-Wl,--warn-common "/>
       </AVR-LD>
       <Simulator>
         <property key="codecoverage.enabled" value="Disable"/>
