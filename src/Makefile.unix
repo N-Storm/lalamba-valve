@@ -14,12 +14,13 @@ OBJECTS := $(patsubst %.c, %.o, $(SOURCES))
 
 CC = avr-gcc
 SIZE = avr-size
-CFLAGS = -Os -std=gnu11 -flto -ffunction-sections -fdata-sections -Wall -Wl,--warn-common -Wl,--gc-sections -Wl,-lm  -Wl,-u,vfprintf -lprintf_min
+CFLAGS = -Os -std=gnu11 -flto -ffunction-sections -fdata-sections -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -Wall -Wl,--warn-common -Wl,--gc-sections -Wl,-lm
 AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE) -v
 COMPILE = $(CC) $(CFLAGS) -DF_CPU=$(F_CPU) -mmcu=$(DEVICE)
+PROJ = lalamba-valve
 
 # symbolic targets:
-all:	lalamba-valve.hex
+all:	$(PROJ).hex
 
 .c.o:
 	$(COMPILE) -c $< -o $@
@@ -35,7 +36,7 @@ all:	lalamba-valve.hex
 	$(COMPILE) -S $< -o $@
 
 flash:	all
-	$(AVRDUDE) -U flash:w:lalamba-valve.hex:i
+	$(AVRDUDE) -U flash:w:$(PROJ).hex:i
 
 fuse:	all flash
 	$(AVRDUDE) -x section_config -e
@@ -44,25 +45,30 @@ fuse:	all flash
 install: flash
 
 clean:
-	rm -f lalamba-valve.hex lalamba-valve.elf lalamba-valve.lss $(OBJECTS)
+	rm -f $(PROJ).hex $(PROJ).elf $(PROJ).lss $(OBJECTS)
 
 # file targets:
-lalamba-valve.elf: $(OBJECTS)
-	$(COMPILE) -o lalamba-valve.elf $(OBJECTS)
+$(PROJ).elf: $(OBJECTS)
+	$(COMPILE) -o $(PROJ).elf $(OBJECTS)
 
-lalamba-valve.hex: lalamba-valve.elf
-	rm -f lalamba-valve.hex
-	avr-objcopy -j .text -j .data -O ihex lalamba-valve.elf lalamba-valve.hex
-	$(SIZE) -C --mcu=$(DEVICE) lalamba-valve.elf
+$(PROJ).hex: $(PROJ).elf
+	rm -f $(PROJ).hex
+	avr-objcopy -j .text -j .data -O ihex $(PROJ).elf $(PROJ).hex
+	$(SIZE) --mcu=$(DEVICE) $(PROJ).elf
+	$(SIZE) -C --mcu=$(DEVICE) $(PROJ).elf
+	avr-objdump -Pmem-usage $(PROJ).elf
 # If you have an EEPROM section, you must also create a hex file for the
 # EEPROM and add it to the "flash" target.
 
 # Targets for code debugging and analysis:
-disasm:	lalamba-valve.elf
-	avr-objdump -d -h -S lalamba-valve.elf > lalamba-valve.lss
+disasm:	$(PROJ).elf
+	avr-objdump -d -h -S $(PROJ).elf > $(PROJ).lss
 
 cpp:
-	$(COMPILE) -E lalamba-valve.c
+	$(COMPILE) -E $(PROJ).c
 
-debug: CFLAGS = -DDEBUG -O1 -g -std=gnu11 -Wall
-debug: clean lalamba-valve.hex disasm
+debug: CFLAGS = -DDEBUG -O1 -g -std=gnu11 -ffunction-sections -fdata-sections -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -Wall -Wl,--warn-common -Wl,--gc-sections -Wl,-lm -Wl,-u,vfprintf -lprintf_min
+debug: clean $(PROJ).hex disasm
+
+with-logs: CFLAGS = -Os -std=gnu11 -flto -ffunction-sections -fdata-sections -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -Wall -Wl,--warn-common -Wl,--gc-sections -Wl,-lm -DLOGS -Wl,-u,vfprintf -lprintf_min
+with-logs: clean $(PROJ).hex
