@@ -1,0 +1,68 @@
+# Project: lalamba-valve
+# Author: NStorm
+
+DEVICE     = atmega8
+F_CPU      = 16000000
+PROGRAMMER = -c arduino -P /dev/ttyUSB* -b 57600 
+SOURCES := $(wildcard *.c)
+OBJECTS := $(patsubst %.c, %.o, $(SOURCES))
+
+######################################################################
+######################################################################
+
+# Tune the lines below only if you know what you are doing:
+
+CC = avr-gcc
+SIZE = avr-size
+CFLAGS = -Os -std=gnu11 -flto -ffunction-sections -fdata-sections -Wall -Wl,--warn-common -Wl,--gc-sections -Wl,-lm  -Wl,-u,vfprintf -lprintf_min
+AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE) -v
+COMPILE = $(CC) $(CFLAGS) -DF_CPU=$(F_CPU) -mmcu=$(DEVICE)
+
+# symbolic targets:
+all:	lalamba-valve.hex
+
+.c.o:
+	$(COMPILE) -c $< -o $@
+
+.S.o:
+	$(COMPILE) -x assembler-with-cpp -c $< -o $@
+# "-x assembler-with-cpp" should not be necessary since this is the default
+# file type for the .S (with capital S) extension. However, upper case
+# characters are not always preserved on Windows. To ensure WinAVR
+# compatibility define the file type manually.
+
+.c.s:
+	$(COMPILE) -S $< -o $@
+
+flash:	all
+	$(AVRDUDE) -U flash:w:lalamba-valve.hex:i
+
+fuse:	all flash
+	$(AVRDUDE) -x section_config -e
+	$(AVRDUDE) -U fuse:w:0xfe:m
+
+install: flash
+
+clean:
+	rm -f lalamba-valve.hex lalamba-valve.elf lalamba-valve.lss $(OBJECTS)
+
+# file targets:
+lalamba-valve.elf: $(OBJECTS)
+	$(COMPILE) -o lalamba-valve.elf $(OBJECTS)
+
+lalamba-valve.hex: lalamba-valve.elf
+	rm -f lalamba-valve.hex
+	avr-objcopy -j .text -j .data -O ihex lalamba-valve.elf lalamba-valve.hex
+	$(SIZE) -C --mcu=$(DEVICE) lalamba-valve.elf
+# If you have an EEPROM section, you must also create a hex file for the
+# EEPROM and add it to the "flash" target.
+
+# Targets for code debugging and analysis:
+disasm:	lalamba-valve.elf
+	avr-objdump -d -h -S lalamba-valve.elf > lalamba-valve.lss
+
+cpp:
+	$(COMPILE) -E lalamba-valve.c
+
+debug: CFLAGS = -DDEBUG -O1 -g -std=gnu11 -Wall
+debug: clean lalamba-valve.hex disasm
