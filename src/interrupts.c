@@ -14,15 +14,17 @@
 #include "timers.h"
 
 ISR(INT0_vect) {
-    if (bit_is_clear(BTN_PIN, BTN)) {
+    if (bit_is_clear(BTN_PIN, BTN)) { // Set button state & run timer on button press
         state.btn_state = BTN_PRESSED;
-        RUN_TIMEOUT(BTN_SHORT_OVF);
+        RUN_TIMEOUT(BTN_LONG_OVF);
         LOG("BTN press\r\n");
-    } else if (bit_is_set(BTN_PIN, BTN) && state.btn_state == BTN_PRESSED) {
-        if (t0_ovf_cnt < BTN_SHORT_OVF - 1 && !t0_timeout_flag)
+    } else if (bit_is_set(BTN_PIN, BTN) && state.btn_state == BTN_PRESSED) { // Things to check on button release
+        if ((t0_ovf_cnt < (BTN_LONG_OVF - 1)) && (t0_ovf_cnt > (BTN_LONG_OVF - BTN_SHORT_OVF)) && !t0_timeout_flag) // if at least 1 overflow period has passed & no timeout yet, but less than short period has passed
             state.btn_state = BTN_SHORT;
-        else if (t0_timeout_flag)
+        else if ((t0_ovf_cnt <= (BTN_LONG_OVF - BTN_SHORT_OVF)) && !t0_timeout_flag)
             state.btn_state = BTN_LONG;
+        else if (t0_timeout_flag)
+            state.btn_state = BTN_EXTRA_LONG;
         else
             state.btn_state = BTN_NONE;
         STOP_TIMEOUT();

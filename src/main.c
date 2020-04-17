@@ -85,7 +85,9 @@ void init() {
     stdout = &mystdout;
 #endif
 
+    _delay_ms(1);
     SET_LED(WHITE); // Turn on white LED
+    _NOP();
 
     sei();
 }

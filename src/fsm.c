@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <avr/wdt.h>
 
 #include "main.h"
 #include "fsm.h"
@@ -118,6 +119,10 @@ eState fsMaintenance() {
 }
 
 eState fsReset() {
+    SET_LED(BLACK);
+    wdt_enable(WDTO_250MS);
+    while(1);
+    calibrate();
     return ST_NORMAL;
 }
 

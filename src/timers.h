@@ -17,13 +17,13 @@
 #define V_ROT_OVF_SIMPLE 255
 
 // Maximum time for short button press
-#define BNT_SHORT_MAX 2000 // 2s
+#define BNT_SHORT_MAX 1000 // 1s
 #define BTN_SHORT_TICKS BNT_SHORT_MAX/(1.0/(F_CPU/1024.0))/1000.0 // Total timer ticks for rotation with /1024 prescaler
 #define BTN_SHORT_OVF (uint8_t)(BTN_SHORT_TICKS/256) // Total timer overflow count
 #define BTN_SHORT_REM (uint8_t)(BTN_SHORT_TICKS-((uint32_t)BTN_SHORT_OVF*256)) // Timer ticks remaining
 
 // Maximum time for long button press
-#define BTN_LONG_MAX 3000 // 3s (+2s short press before)
+#define BTN_LONG_MAX 4000 // 4s (total)
 #define BTN_LONG_TICKS BTN_LONG_MAX/(1.0/(F_CPU/1024.0))/1000.0 // Total timer ticks for rotation with /1024 prescaler
 #define BTN_LONG_OVF (uint8_t)(BTN_LONG_TICKS/256) // Total timer overflow count
 #define BTN_LONG_REM (uint8_t)(BTN_LONG_TICKS-((uint32_t)BTN_LONG_OVF*256)) // Timer ticks remaining
