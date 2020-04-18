@@ -18,7 +18,6 @@ uint8_t crc8(uint8_t *dataptr, size_t sz) {
         crc = _crc8_ccitt_update(crc, dataptr[i]);
     return crc;
 }
-*/
 
 uint16_t crc16(uint8_t *dataptr, size_t sz) {
     uint16_t crc = 0;
@@ -28,6 +27,21 @@ uint16_t crc16(uint8_t *dataptr, size_t sz) {
     for (i = 0; i < sz; i++) {
         crc = _crc16_update(crc, dataptr[i]);
         LOG("0x%X ", dataptr[i]);
+    }
+    LOG("\r\n");
+    return crc;
+}
+*/
+
+uint16_t crc16(uint8_t *dataptr, size_t sz) {
+    uint16_t crc = 0;
+    
+    LOG("Settings dump: ");
+    while(sz) {
+        crc = _crc16_update(crc, *dataptr);
+        dataptr++;
+        sz--;
+        LOG("0x%X ", *dataptr);
     }
     LOG("\r\n");
     return crc;
