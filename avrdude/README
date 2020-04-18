@@ -1,0 +1,3 @@
+Modified avrdude for the project. Programmer type nstorm (-c nstorm) added to support entering bootloader via UART instruction "BL".
+Modified sources are in src, rest are on official avrdude SVN from trunk branch.
+avrdude.exe are compiled binary for win64.
