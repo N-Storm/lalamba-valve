@@ -23,21 +23,21 @@
 #include "saveload.h"
 
 // Updates actual (based on switches) valve states
-void update_valve_astates() {
+void update_valve_states() {
     LOG("Checking valve states.\r\n");
     if (bit_is_clear(MSW_PIN, M1SW1) && bit_is_set(MSW_PIN, M1SW2))
-        state.v1_astate = VST_CLOSED;
+        state.v1_state = VST_CLOSED;
     else if (bit_is_set(MSW_PIN, M1SW1) && bit_is_clear(MSW_PIN, M1SW2))
-        state.v1_astate = VST_OPEN;
+        state.v1_state = VST_OPEN;
     else
-        state.v1_astate = VST_MIDDLE;
+        state.v1_state = VST_MIDDLE;
 
     if (bit_is_clear(MSW_PIN, M2SW1) && bit_is_set(MSW_PIN, M2SW2))
-        state.v2_astate = VST_CLOSED;
+        state.v2_state = VST_CLOSED;
     else if (bit_is_set(MSW_PIN, M2SW1) && bit_is_clear(MSW_PIN, M2SW2))
-        state.v2_astate = VST_OPEN;
+        state.v2_state = VST_OPEN;
     else
-        state.v2_astate = VST_MIDDLE;
+        state.v2_state = VST_MIDDLE;
 }
 
 void v1_setdir(eValveAction dir) {
@@ -95,15 +95,15 @@ eRetCode v_move(eValveMove move) {
         case MV_V1_OPEN:
             LOG("1");
             LOGP(STR_TO_OPEN);
-            if (state.v1_astate == VST_OPEN) {
+            if (state.v1_state == VST_OPEN) {
                 LOGP(STR_APOS);
                 return RET_ALREADY_POSITIONED;
             }
-            else if (state.v1_astate == VST_CLOSED || state.v1_astate == VST_MIDDLE) {
-                if (state.v1_astate == VST_CLOSED) {
-                    state.v1_astate = VST_MIDDLE;
+            else if (state.v1_state == VST_CLOSED || state.v1_state == VST_MIDDLE) {
+                if (state.v1_state == VST_CLOSED) {
+                    state.v1_state = VST_MIDDLE;
                     LOGP(STR_FROM_CLOSED);
-                } else if (state.v1_astate == VST_MIDDLE) {
+                } else if (state.v1_state == VST_MIDDLE) {
                     LOGP(STR_FROM_MIDDLE);
                     v1_setdir(ACT_CLOSE);
                     STBY_PORT |= _BV(STBY); // Run motor
@@ -122,10 +122,10 @@ eRetCode v_move(eValveMove move) {
                     LOGP(STR_TIMEOUT);
                     t0_timeout_flag = false;
                     state.flags.timeout = true;
-                    state.v1_astate = VST_MIDDLE;
+                    state.v1_state = VST_MIDDLE;
                     return RET_TIMEOUT;
                 } else {
-                    state.v1_astate = VST_OPEN;
+                    state.v1_state = VST_OPEN;
                     LOGP(STR_DONE);
                     return RET_MOVED;
                 }
@@ -136,15 +136,15 @@ eRetCode v_move(eValveMove move) {
         case MV_V1_CLOSE:
             LOG("1");
             LOGP(STR_TO_CLOSED);
-            if (state.v1_astate == VST_CLOSED) {
+            if (state.v1_state == VST_CLOSED) {
                 LOGP(STR_APOS);
                 return RET_ALREADY_POSITIONED;
             }
-            else if (state.v1_astate == VST_OPEN || state.v1_astate == VST_MIDDLE) {
-                if (state.v1_astate == VST_OPEN) {
+            else if (state.v1_state == VST_OPEN || state.v1_state == VST_MIDDLE) {
+                if (state.v1_state == VST_OPEN) {
                     LOGP(STR_FROM_OPEN);
-                    state.v1_astate = VST_MIDDLE;
-                } else if (state.v1_astate == VST_MIDDLE) {
+                    state.v1_state = VST_MIDDLE;
+                } else if (state.v1_state == VST_MIDDLE) {
                     LOGP(STR_FROM_MIDDLE);
                     v1_setdir(ACT_OPEN);
                     STBY_PORT |= _BV(STBY); // Run motor
@@ -163,10 +163,10 @@ eRetCode v_move(eValveMove move) {
                     LOGP(STR_TIMEOUT);
                     t0_timeout_flag = false;
                     state.flags.timeout = true;
-                    state.v1_astate = VST_MIDDLE;
+                    state.v1_state = VST_MIDDLE;
                     return RET_TIMEOUT;
                 } else {
-                    state.v1_astate = VST_CLOSED;
+                    state.v1_state = VST_CLOSED;
                     LOGP(STR_DONE);
                     return RET_MOVED;
                 }
@@ -177,15 +177,15 @@ eRetCode v_move(eValveMove move) {
         case MV_V2_OPEN:
             LOG("2");
             LOGP(STR_TO_OPEN);
-            if (state.v2_astate == VST_OPEN) {
+            if (state.v2_state == VST_OPEN) {
                 LOGP(STR_APOS);
                 return RET_ALREADY_POSITIONED;
             }
-            else if (state.v2_astate == VST_CLOSED || state.v2_astate == VST_MIDDLE) {
-                if (state.v2_astate == VST_CLOSED) {
+            else if (state.v2_state == VST_CLOSED || state.v2_state == VST_MIDDLE) {
+                if (state.v2_state == VST_CLOSED) {
                     LOGP(STR_FROM_CLOSED);
-                    state.v2_astate = VST_MIDDLE;
-                } else if (state.v2_astate == VST_MIDDLE) {
+                    state.v2_state = VST_MIDDLE;
+                } else if (state.v2_state == VST_MIDDLE) {
                     LOGP(STR_FROM_MIDDLE);
                     v2_setdir(ACT_CLOSE);
                     NSLEEP_PORT |= _BV(NSLEEP); // Run motor
@@ -204,10 +204,10 @@ eRetCode v_move(eValveMove move) {
                     LOGP(STR_TIMEOUT);
                     t0_timeout_flag = false;
                     state.flags.timeout = true;
-                    state.v2_astate = VST_MIDDLE;
+                    state.v2_state = VST_MIDDLE;
                     return RET_TIMEOUT;
                 } else {
-                    state.v2_astate = VST_OPEN;
+                    state.v2_state = VST_OPEN;
                     LOGP(STR_DONE);
                     return RET_MOVED;
                 }
@@ -218,15 +218,15 @@ eRetCode v_move(eValveMove move) {
         case MV_V2_CLOSE:
             LOG("2");
             LOGP(STR_TO_CLOSED);
-            if (state.v2_astate == VST_CLOSED) {
+            if (state.v2_state == VST_CLOSED) {
                 return RET_ALREADY_POSITIONED;
                 LOGP(STR_APOS);
             }
-            else if (state.v2_astate == VST_OPEN || state.v2_astate == VST_MIDDLE) {
-                if (state.v2_astate == VST_OPEN) {
-                    state.v2_astate = VST_MIDDLE;
+            else if (state.v2_state == VST_OPEN || state.v2_state == VST_MIDDLE) {
+                if (state.v2_state == VST_OPEN) {
+                    state.v2_state = VST_MIDDLE;
                     LOGP(STR_FROM_OPEN);
-                } else if (state.v2_astate == VST_MIDDLE) {
+                } else if (state.v2_state == VST_MIDDLE) {
                     LOGP(STR_FROM_MIDDLE);
                     v2_setdir(ACT_OPEN);
                     NSLEEP_PORT |= _BV(NSLEEP); // Run motor
@@ -245,10 +245,10 @@ eRetCode v_move(eValveMove move) {
                     LOGP(STR_TIMEOUT);
                     t0_timeout_flag = false;
                     state.flags.timeout = true;
-                    state.v2_astate = VST_MIDDLE;
+                    state.v2_state = VST_MIDDLE;
                     return RET_TIMEOUT;
                 } else {
-                    state.v2_astate = VST_CLOSED;
+                    state.v2_state = VST_CLOSED;
                     LOGP(STR_DONE);
                     return RET_MOVED;
                 }

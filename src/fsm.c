@@ -14,9 +14,10 @@
 #include "valve.h"
 #include "ws2812_config.h"
 #include "light_ws2812.h"
+#include "saveload.h"
 
 eState fsWaterClosed() {
-    if (state.v2_astate == VST_OPEN) {
+    if (state.v2_state == VST_OPEN) {
         v_move(MV_V2_CLOSE);
         EINT_ENABLE();
         SET_LED(VIOLET);
@@ -28,10 +29,10 @@ eState fsWaterClosed() {
 }
 
 eState fsWaterClosedToNormal() {
-    if (state.v2_astate == VST_CLOSED) {
+    if (state.v2_state == VST_CLOSED) {
         SET_LED(VIOLET);
         v_move(MV_V2_OPEN);
-        if (state.v1_astate == VST_OPEN)
+        if (state.v1_state == VST_OPEN)
             v_move(MV_V1_CLOSE);
         EINT_ENABLE();
         SET_LED(GREEN);
@@ -43,7 +44,7 @@ eState fsWaterClosedToNormal() {
 }
 
 eState fsBypassToNormal() {
-    if (state.v1_astate == VST_OPEN) {
+    if (state.v1_state == VST_OPEN) {
         v_move(MV_V1_CLOSE);
         EINT_ENABLE();
         SET_LED(GREEN);
@@ -68,9 +69,9 @@ eState fsReed() {
 }
 
 eState fsToggleBypass() {
-    if (state.v1_astate == VST_CLOSED)
+    if (state.v1_state == VST_CLOSED)
         v_move(MV_V1_OPEN);
-    else if (state.v1_astate == VST_OPEN)
+    else if (state.v1_state == VST_OPEN)
         v_move(MV_V1_CLOSE);
     else {
         LOGP(STR_VALVE_POS_ERROR);
@@ -97,13 +98,13 @@ eState fsRestoration() {
 }
 
 eState fsBackFromRestoration() {
-    if (state.v2_astate == VST_CLOSED) {
+    if (state.v2_state == VST_CLOSED) {
         v_move(MV_V2_OPEN);
         EINT_ENABLE();
-        if (state.v1_astate == VST_OPEN) {
+        if (state.v1_state == VST_OPEN) {
             SET_LED(BLUE);
             return ST_BYPASS;
-        } else if (state.v1_astate == VST_CLOSED) {
+        } else if (state.v1_state == VST_CLOSED) {
             SET_LED(GREEN);
             return ST_NORMAL;
         } else
@@ -194,6 +195,7 @@ eRetCode fsTransition() {
 #endif
             state.cur_state = trans[ST_ANY][state.event]();
         }
+        save_settings();
         return RET_OK;
     }
 #ifdef VERBOSE_LOGS

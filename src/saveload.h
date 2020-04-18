@@ -10,5 +10,11 @@
 // Function prototypes
 void save_settings();
 
+// Structs
+typedef struct {
+    uint16_t crc1;
+    uint16_t crc2;
+} crc_t;
+
 #endif	/* SAVELOAD_H */
 

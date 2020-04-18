@@ -36,7 +36,7 @@
 
 // Globals
 volatile state_t state;
-settings_t settings;
+// settings_t settings;
 const ptr_t bootloader_start = (ptr_t)((FLASHEND - 511) >> 1);
 
 #ifdef LOGS
@@ -94,16 +94,12 @@ void init() {
 
 void calibrate() {
     LOG("Calibration begin.\r\n");
-    update_valve_astates();
+    update_valve_states();
 
-    if (state.v1_astate == VST_CLOSED)
-        state.v1_sstate = state.v1_astate;
-    else
+    if (state.v1_state != VST_CLOSED)
         v_move(MV_V1_CLOSE);
 
-    if (state.v2_astate == VST_OPEN)
-        state.v2_sstate = state.v2_astate;
-    else
+    if (state.v2_state != VST_OPEN)
         v_move(MV_V2_OPEN);
 
     state.cur_state = ST_NORMAL;
@@ -120,6 +116,7 @@ void static inline UART_rx() {
         uart_buf[1] = UDR;
         if (uart_buf[0] == 'B' && uart_buf[1] == 'L') {
             cli();
+            LOG("BL instruction received, jumping to bootloader\r\n");
             bootloader_start();
         }
         else {
@@ -134,9 +131,9 @@ void static inline led_blink() {
 
     cnt++;
     if (cnt == 32768) {
-        if (state.v1_astate == VST_CLOSED) {
+        if (state.v1_state == VST_CLOSED) {
             SET_LED(GREEN);
-        } else if (state.v1_astate == VST_OPEN) {
+        } else if (state.v1_state == VST_OPEN) {
             SET_LED(BLUE);
         }
     } else if (cnt == 0) {
