@@ -35,14 +35,16 @@ ISR(INT0_vect) {
             state.btn_state = BTN_NONE;
         STOP_TIMEOUT();
         t0_timeout_flag = false;
-    } else {
+    } 
 #ifdef VERBOSE_LOGS
-        bool b = (BTN_PIN & (1 << BTN)) ? 1 : 0;
-        LOG("BTN bounce, btn_state = %d, btn status = %d!\r\n", state.btn_state,  b);
-#endif
-//        if (state.btn_state == BTN_PRESSED)
-//            state.btn_state = BTN_NONE;
+    else {
+        LOG("BTN bounce, btn_state = %d, btn status = ");
+        if (BTN_PIN & (1 << BTN))
+            LOG("UNPRESSED.\r\n");
+        else
+            LOG("PRESSED.\r\n");
     }
+#endif
 }
 
 ISR(INT1_vect) {
