@@ -196,6 +196,7 @@ eRetCode fsTransition() {
             state.cur_state = trans[ST_ANY][state.event]();
         }
         save_settings();
+        LOG("Switched to state: %d\r\n", state.cur_state);
         return RET_OK;
     }
 #ifdef VERBOSE_LOGS
