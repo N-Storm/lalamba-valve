@@ -145,7 +145,7 @@ void static inline led_blink() {
                 SET_LED(RED);
                 break;
             case ST_RESTORATION:
-                SET_LED(BLACK)
+                SET_LED(BLACK);
                 break;
             default:
                 break;

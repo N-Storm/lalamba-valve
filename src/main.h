@@ -72,10 +72,15 @@
 #define WHITE {255, 255, 255}
 #define BLACK {0, 0, 0}
 #define RED {0, 255, 0}
+#define RED_HALF {0, 128, 0}
 #define GREEN {255, 0, 0}
+#define GREEN_HALF {128, 0, 0}
 #define BLUE {0, 0, 255}
+#define BLUE_HALF {0, 0, 128}
 #define YELLOW {255, 255, 0}
+#define YELLOW_HALF {128, 128, 0}
 #define VIOLET {0, 165, 255}
+#define VIOLET_HALF {0, 82, 128}
 
 #include "valve.h"
 #include <stdio.h>
@@ -127,12 +132,12 @@ void calibrate();
 
 // Macro "functions"
 // Enable INT0, INT1
-#define EINT_ENABLE() do { GICR = (1 << INT1) | (1 << INT0); } while (0);
+#define EINT_ENABLE() do { GICR = (1 << INT1) | (1 << INT0); } while (0)
 // Disable INT0, INT1 
 #define EINT_DISABLE() do { GICR = 0; } while (0);
 // Check reed sensor reading. Return true if reed is HIGH (normal).
 #define GET_REED() bit_is_set(REED_PIN, REED)
-#define SET_LED(COLOR) do { struct cRGB leda = COLOR; ws2812_setleds(&leda, 1); } while (0);
+#define SET_LED(COLOR) do { struct cRGB leda = COLOR; ws2812_setleds(&leda, 1); } while (0)
 
 // Logging via UART
 #ifdef LOGS

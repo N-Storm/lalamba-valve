@@ -25,7 +25,7 @@ ISR(INT0_vect) {
 #ifdef VERBOSE_LOGS
         LOG("BTN release!\r\n");
 #endif
-        if ((t0_ovf_cnt < BTN_LONG_OVF - 1) && (t0_ovf_cnt > (BTN_LONG_OVF - BTN_SHORT_OVF)) && !t0_timeout_flag) // if at least 1 overflow period has passed & no timeout yet, but less than short period has passed
+        if ((t0_ovf_cnt < BTN_LONG_OVF) && (t0_ovf_cnt > (BTN_LONG_OVF - BTN_SHORT_OVF)) && !t0_timeout_flag) // if at least 1 overflow period has passed & no timeout yet, but less than short period has passed
             state.btn_state = BTN_SHORT;
         else if ((t0_ovf_cnt <= (BTN_LONG_OVF - BTN_SHORT_OVF)) && !t0_timeout_flag)
             state.btn_state = BTN_LONG;

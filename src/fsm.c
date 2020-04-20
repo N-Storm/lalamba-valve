@@ -18,19 +18,24 @@
 
 eState fsWaterClosed() {
     if (state.v2_state == VST_OPEN) {
+        SET_LED(VIOLET_HALF);
         v_move(MV_V2_CLOSE);
         EINT_ENABLE();
-        SET_LED(VIOLET);
-        return ST_WATER_CLOSED;
     } else {
         LOGP(STR_VALVE_POS_ERROR);
         return state.prev_state;
     }
+    if (state.v1_state == VST_OPEN) {
+        v_move(MV_V1_CLOSE);
+        EINT_ENABLE();
+    }
+    SET_LED(VIOLET);
+    return ST_WATER_CLOSED;
 }
 
 eState fsWaterClosedToNormal() {
     if (state.v2_state == VST_CLOSED) {
-        SET_LED(VIOLET);
+        SET_LED(GREEN_HALF);
         v_move(MV_V2_OPEN);
         if (state.v1_state == VST_OPEN)
             v_move(MV_V1_CLOSE);
@@ -45,6 +50,7 @@ eState fsWaterClosedToNormal() {
 
 eState fsBypassToNormal() {
     if (state.v1_state == VST_OPEN) {
+        SET_LED(GREEN_HALF);
         v_move(MV_V1_CLOSE);
         EINT_ENABLE();
         SET_LED(GREEN);
@@ -62,22 +68,30 @@ eState fsTimeout() {
 }
 
 eState fsReed() {
-    fsWaterClosed();
+    if (state.v2_state == VST_OPEN) {
+        SET_LED(RED_HALF);
+        v_move(MV_V2_CLOSE);
+        EINT_ENABLE();
+    } else
+        LOGP(STR_VALVE_POS_ERROR);
     SET_LED(RED);
     state.flags.reed = false;
     return ST_REED_OVERFLOW;
 }
 
 eState fsToggleBypass() {
-    if (state.v1_state == VST_CLOSED)
+    if (state.v1_state == VST_CLOSED) {
+        SET_LED(BLUE_HALF);
         v_move(MV_V1_OPEN);
-    else if (state.v1_state == VST_OPEN)
+    } else if (state.v1_state == VST_OPEN) {
+        SET_LED(GREEN_HALF);
         v_move(MV_V1_CLOSE);
-    else {
+    } else {
         LOGP(STR_VALVE_POS_ERROR);
         return state.prev_state;
     }
     EINT_ENABLE();
+
     switch (state.prev_state) {
         case ST_NORMAL:
             SET_LED(BLUE);
@@ -99,6 +113,10 @@ eState fsRestoration() {
 
 eState fsBackFromRestoration() {
     if (state.v2_state == VST_CLOSED) {
+        if (state.v1_state == VST_OPEN)
+            SET_LED(BLUE_HALF);
+        else if (state.v1_state == VST_CLOSED) 
+            SET_LED(GREEN_HALF);
         v_move(MV_V2_OPEN);
         EINT_ENABLE();
         if (state.v1_state == VST_OPEN) {
