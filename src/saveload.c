@@ -22,7 +22,7 @@ uint8_t crc8(uint8_t *dataptr, size_t sz) {
 uint16_t crc16(uint8_t *dataptr, size_t sz) {
     uint16_t crc = 0;
     uint8_t i;
-    
+
     LOG("Settings dump: ");
     for (i = 0; i < sz; i++) {
         crc = _crc16_update(crc, dataptr[i]);
@@ -36,7 +36,7 @@ uint16_t crc16(uint8_t *dataptr, size_t sz) {
 uint16_t crc16(uint8_t *dataptr, size_t sz) {
     uint16_t crc = 0;
     uint8_t cnt = sz;
-    
+
     LOG("Settings dump: ");
     while(cnt) {
         crc = _crc16_update(crc, *dataptr);
