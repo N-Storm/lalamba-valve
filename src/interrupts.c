@@ -14,12 +14,18 @@
 #include "timers.h"
 
 ISR(INT0_vect) {
-    if (bit_is_clear(BTN_PIN, BTN)) { // Set button state & run timer on button press
+    if (bit_is_clear(BTN_PIN, BTN) && state.btn_state == BTN_NONE) { // Set button state & run timer on button press
+        STOP_TIMEOUT(); // To prevent bounce
         state.btn_state = BTN_PRESSED;
         RUN_TIMEOUT(BTN_LONG_OVF);
+#ifdef VERBOSE_LOGS
         LOG("BTN press\r\n");
+#endif
     } else if (bit_is_set(BTN_PIN, BTN) && state.btn_state == BTN_PRESSED) { // Things to check on button release
-        if ((t0_ovf_cnt < BTN_LONG_OVF) && (t0_ovf_cnt > (BTN_LONG_OVF - BTN_SHORT_OVF)) && !t0_timeout_flag) // if at least 1 overflow period has passed & no timeout yet, but less than short period has passed
+#ifdef VERBOSE_LOGS
+        LOG("BTN release!\r\n");
+#endif
+        if ((t0_ovf_cnt < BTN_LONG_OVF - 1) && (t0_ovf_cnt > (BTN_LONG_OVF - BTN_SHORT_OVF)) && !t0_timeout_flag) // if at least 1 overflow period has passed & no timeout yet, but less than short period has passed
             state.btn_state = BTN_SHORT;
         else if ((t0_ovf_cnt <= (BTN_LONG_OVF - BTN_SHORT_OVF)) && !t0_timeout_flag)
             state.btn_state = BTN_LONG;
@@ -29,8 +35,14 @@ ISR(INT0_vect) {
             state.btn_state = BTN_NONE;
         STOP_TIMEOUT();
         t0_timeout_flag = false;
-    } else
-        state.btn_state = BTN_NONE;
+    } else {
+#ifdef VERBOSE_LOGS
+        bool b = (BTN_PIN & (1 << BTN)) ? 1 : 0;
+        LOG("BTN bounce, btn_state = %d, btn status = %d!\r\n", state.btn_state,  b);
+#endif
+//        if (state.btn_state == BTN_PRESSED)
+//            state.btn_state = BTN_NONE;
+    }
 }
 
 ISR(INT1_vect) {

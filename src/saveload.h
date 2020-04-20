@@ -17,4 +17,3 @@ typedef struct {
 } crc_t;
 
 #endif	/* SAVELOAD_H */
-
