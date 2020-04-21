@@ -161,10 +161,13 @@ eState fsMaintenance() {
     return ST_NORMAL;
 }
 
+// Will set current state to ST_NONE, save settings and reboot MCU via WDT to get re-calibration done on boot
 eState fsReset() {
-    EINT_DISABLE();
     SET_LED(BLACK);
+    state.cur_state = ST_NONE;
+    save_settings(SAVE_FULL);
     wdt_enable(WDTO_250MS);
+    cli();
     while(1);
 
     calibrate(); // Should never get here...

@@ -178,7 +178,7 @@ int main(void)
     load_settings();
     if (state.cur_state == ST_NONE) {
         calibrate();
-        save_settings(SAVE_FULL);
+        // save_settings(SAVE_FULL);
     }
     else
         switch (state.cur_state) {
@@ -186,7 +186,7 @@ int main(void)
                 SET_LED(GREEN);
                 break;
             case ST_BYPASS:
-                SET_LED(GREEN);
+                SET_LED(BLUE);
                 break;
             case ST_VALVE_TIMEOUT:
                 SET_LED(RED);
