@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <avr/wdt.h>
+#include <util/delay.h>
 
 #include "main.h"
 #include "fsm.h"
@@ -15,6 +16,14 @@
 #include "ws2812_config.h"
 #include "light_ws2812.h"
 #include "saveload.h"
+#include "timers.h"
+
+void delay_s(uint8_t s) {
+    while (s) {
+        _delay_ms(1000);
+        s--;        
+    }
+}
 
 // See transition table below for these function descriptions and when they occur
 eState fsWaterClosed() {
@@ -135,14 +144,30 @@ eState fsBackFromRestoration() {
 }
 
 eState fsMaintenance() {
+    EINT_DISABLE();
+    STOP_TIMEOUT();
+    SET_LED(YELLOW);
+    if (state.v1_state != VST_CLOSED || state.v2_state != VST_OPEN) {
+        LOGP(STR_VALVE_POS_ERROR);
+        return state.prev_state;
+    }
+    v_move(MV_V2_CLOSE);
+    v_move(MV_V1_OPEN);
+    delay_s(30);
+    v_move(MV_V1_CLOSE);
+    v_move(MV_V2_OPEN);
+    
+    SET_LED(GREEN); // Back to normal state
     return ST_NORMAL;
 }
 
 eState fsReset() {
+    EINT_DISABLE();
     SET_LED(BLACK);
     wdt_enable(WDTO_250MS);
     while(1);
-    calibrate();
+
+    calibrate(); // Should never get here...
     return ST_NORMAL;
 }
 
