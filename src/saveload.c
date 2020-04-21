@@ -36,24 +36,43 @@ uint16_t crc16(uint8_t *dataptr, size_t sz) {
 
 void load_settings() {
     uint8_t *ptr = 0; // byte pointer in EEPROM
+    uint32_t cur_seq = 0;
     state_t state_buf;
-    EINT_DISABLE();
 
+    EINT_DISABLE();
     LOG("Load settings\r\n");
-    settings.seq = eeprom_read_dword((void *)ptr);
-    ptr += sizeof(settings.seq);
-    eeprom_read_block(&state_buf, (void *)ptr, sizeof(state_buf));
-    ptr += sizeof(state_buf);
-    settings.crc1 = eeprom_read_word((void *)ptr);
-    ptr += sizeof(settings.crc1);
-    settings.crc2 = eeprom_read_word((void *)ptr);
-    ptr += sizeof(settings.crc2);
-    
-    if (settings.crc1 == crc16((void *)&state_buf, sizeof(state_buf))) {
+
+    for (uint8_t i = 0; i <= EEPROM_ENTRIES; i++) {
+#ifdef VERBOSE_LOGS
+        LOG("Reading entry %d\r\n", i);
+#endif
+        settings.seq = eeprom_read_dword((void *) ptr);
+        if (settings.seq <= cur_seq || settings.seq == 0xFFFFFFFF) {
+            settings.seq = cur_seq;
+            break;
+        }
+        cur_seq = settings.seq;
+        ptr += sizeof (settings.seq);
+        eeprom_read_block(&state_buf, (void *) ptr, sizeof (state_buf));
+        ptr += sizeof (state_buf);
+        settings.crc1 = eeprom_read_word((void *) ptr);
+        ptr += sizeof (settings.crc1);
+        settings.crc2 = eeprom_read_word((void *) ptr);
+        ptr += sizeof (settings.crc2);
+
+        if (settings.crc1 != crc16((void *) &state_buf, sizeof (state_buf))) {
+            LOG("CRC1 incorrect\r\n");
+            break;
+        }
+        uint16_t crc2_buf = _crc16_update(settings.crc1, (uint8_t)(settings.crc1 >> 8)); // crc2 = crc of state struct + crc1. 1st byte of CRC1
+        crc2_buf = _crc16_update(crc2_buf, (uint8_t)settings.crc1); // and 2nd byte of CRC1
+        if (crc2_buf != settings.crc2) {
+            LOG("CRC2 incorrect\r\n");
+            break;
+        }
+        // Since we are here, settings are valid, both CRCs are good
         state = state_buf;
-        LOG("CRC1 correct\r\n");
-    } else
-        LOG("CRC1 incorrect\r\n");
+    }
 }
 
 void save_settings(eSaveMode savemode) {

@@ -26,6 +26,7 @@
 #include <avr/cpufunc.h>
 #include <avr/pgmspace.h>
 #include <util/delay.h>
+#include <avr/wdt.h>
 
 #include "main.h"
 #include "ws2812_config.h"
@@ -66,8 +67,18 @@ int uart_putchar(char c, FILE *stream) {
 }
 #endif
 
+void inline WDT_off(void) {
+    /* reset WDT */
+    wdt_reset();
+    /* Write logical one to WDCE and WDE */
+    WDTCR |= (1 << WDCE) | (1 << WDE);
+    /* Turn off WDT */
+    WDTCR = 0x00;
+}
+
 void init() {
     cli();
+    WDT_off();
     // IO settings
     DDRB = _BV(WS2812) | _BV(AIN1_2) | _BV(AIN2_2) | _BV(PWMA);
     DDRC = _BV(AIN1) | _BV(AIN2) | _BV(STBY) | _BV(NSLEEP);
@@ -165,8 +176,10 @@ int main(void)
     LOG("Transition table size = %d, count = %d.\r\n", sizeof(trans), (sizeof(trans)/sizeof(*trans)));
 #endif
     load_settings();
-    calibrate();
-    save_settings(SAVE_FULL);
+    if (state.cur_state == ST_NONE) {
+        calibrate();
+        save_settings(SAVE_FULL);
+    }
     EINT_ENABLE();
 
     while(1)
