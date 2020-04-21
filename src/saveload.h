@@ -11,7 +11,7 @@
 
 // Defines
 #define EEPROM_SIZE 512
-#define EEPROM_ENTRY_SIZE sizeof(settings_t) + sizeof(state_t)
+#define EEPROM_ENTRY_SIZE (sizeof(settings_t) + sizeof(state_t))
 #define EEPROM_ENTRIES (EEPROM_SIZE / EEPROM_ENTRY_SIZE)
 
 // Enums

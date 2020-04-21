@@ -180,6 +180,21 @@ int main(void)
         calibrate();
         save_settings(SAVE_FULL);
     }
+    else
+        switch (state.cur_state) {
+            case ST_NORMAL:
+                SET_LED(GREEN);
+                break;
+            case ST_BYPASS:
+                SET_LED(GREEN);
+                break;
+            case ST_VALVE_TIMEOUT:
+                SET_LED(RED);
+                break;
+            default:
+                break;
+        }
+
     EINT_ENABLE();
 
     while(1)
