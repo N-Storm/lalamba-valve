@@ -114,14 +114,6 @@ typedef struct {
     eValveState v2_state;
 } state_t;
 
-/*
-typedef struct {
-    volatile state_t *state;
-    uint16_t crc16;
-    uint8_t crc8;
-} settings_t;
-*/
-
 // Globals
 extern volatile state_t state;
 // extern settings_t settings;

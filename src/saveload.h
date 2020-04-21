@@ -12,8 +12,9 @@ void save_settings();
 
 // Structs
 typedef struct {
+    uint32_t id;
     uint16_t crc1;
     uint16_t crc2;
-} crc_t;
+} settings_t;
 
 #endif	/* SAVELOAD_H */
