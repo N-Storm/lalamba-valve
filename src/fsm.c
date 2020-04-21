@@ -227,7 +227,7 @@ eRetCode fsTransition() {
     LOG("Transition: st %d, ev %d ", state.cur_state, state.event);
 #endif
 
-// First check if there is function associated with state/event or for ST_ANY special handler
+    // First check if there is function associated with state/event or for ST_ANY special handler
     if ((state.event < EV_ANY) && (trans[state.cur_state][state.event] != NULL || trans[ST_ANY][state.event] != NULL)) {
         state.prev_state = state.cur_state; // save previous state
         if (trans[state.cur_state][state.event] != NULL) {
@@ -242,7 +242,7 @@ eRetCode fsTransition() {
 #endif
             state.cur_state = trans[ST_ANY][state.event](); // Run the transition
         }
-        save_settings();
+        save_settings(SAVE_FULL);
         LOG("Switched to state: %d\r\n", state.cur_state);
         return RET_OK;
     }

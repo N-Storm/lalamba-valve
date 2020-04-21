@@ -158,25 +158,25 @@ int main(void)
     init();
     LOG("Init done.\r\n");
 #ifdef VERBOSE_LOGS
-    LOG("BTN_SHORT_TICKS = %d, BTN_LONG_TICKS = %d.\r\n", BTN_SHORT_TICKS, BTN_LONG_TICKS);
-    LOG("BTN_SHORT_OVF = %d, BTN_LONG_OVF = %d.\r\n", BTN_SHORT_OVF, BTN_LONG_OVF);
+    LOG("BTN_SHORT_TICKS = %d, BTN_LONG_TICKS = %d\r\n", BTN_SHORT_TICKS, BTN_LONG_TICKS);
+    LOG("BTN_SHORT_OVF = %d, BTN_LONG_OVF = %d\r\n", BTN_SHORT_OVF, BTN_LONG_OVF);
+    LOG("Settings size = %d, EEPROM_ENTRIES = %d\r\n", EEPROM_ENTRY_SIZE, EEPROM_ENTRIES);
     LOG("Bootloader start = 0x%X\r\n", bootloader_start);
     LOG("Transition table size = %d, count = %d.\r\n", sizeof(trans), (sizeof(trans)/sizeof(*trans)));
 #endif
+    load_settings();
     calibrate();
-    save_settings();
+    save_settings(SAVE_FULL);
     EINT_ENABLE();
 
     while(1)
     {
         state.event = fsGetEvent();
-        if (state.event != EV_NONE) {
+        if (state.event != EV_NONE)
             fsTransition();
-            // state.event = EV_NONE; // reset event
-        }
-        if (!state.flags.reed && !GET_REED() && (state.cur_state == ST_NORMAL || state.cur_state == ST_BYPASS)) // Poll reed sensor
+        if (!state.flags.reed && !GET_REED() && (state.cur_state == ST_NORMAL || state.cur_state == ST_BYPASS)) // Poll reed sensor for short
             state.flags.reed = true;
-        else if (state.cur_state == ST_REED_OVERFLOW && GET_REED()) // Poll reed sensor
+        else if (state.cur_state == ST_REED_OVERFLOW && GET_REED()) // Poll reed sensor for restoration
             state.flags.restoration = true;
 
         if (bit_is_set(UCSRA, RXC)) // Poll UART for incoming bytes;
@@ -184,28 +184,5 @@ int main(void)
 
         if (state.cur_state == ST_WATER_CLOSED || state.cur_state == ST_REED_OVERFLOW || state.cur_state == ST_RESTORATION) // Work on LED blinking modes
             led_blink();
-/*
-        else {
-            switch (state.cur_state) { // extra led settings. Not requred as LED are set in transition.
-                case ST_NORMAL:
-                    SET_LED(GREEN);
-                    break;
-                case ST_BYPASS:
-                    SET_LED(BLUE);
-                    break;
-                case ST_CALIBRATION:
-                    SET_LED(WHITE);
-                    break;
-                case ST_MAINTENANCE:
-                    SET_LED(YELLOW);
-                    break;
-                case ST_VALVE_TIMEOUT:
-                    SET_LED(RED);
-                    break;
-                default:
-                    break;
-            }
-        }
-*/
     }
 }
