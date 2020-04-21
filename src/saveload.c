@@ -43,7 +43,7 @@ void load_settings() {
     cli();
     LOG("Load settings\r\n");
 
-    while(queue_num <= EEPROM_ENTRIES) {
+    while(queue_num < EEPROM_ENTRIES) {
 #ifdef VERBOSE_LOGS
         LOG("Reading entry %d\r\n", queue_num);
 #endif
@@ -92,7 +92,7 @@ void save_settings(eSaveMode savemode) {
 #endif
     // Save data to EEPROM
     settings.seq++;
-    if (queue_num > EEPROM_ENTRIES) // Reset queue_num once we reach end of EEPROM
+    if (queue_num >= EEPROM_ENTRIES) // Reset queue_num once we reach end of EEPROM
         queue_num = 0;
     uint8_t *ptr = (void *)(queue_num * EEPROM_ENTRY_SIZE); // Get location of next segment in EEPROM
     
