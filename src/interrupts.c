@@ -13,11 +13,12 @@
 #include "main.h"
 #include "timers.h"
 
+// Button handling ISR. Changes btn_state based on timer0 & button release
 ISR(INT0_vect) {
     if (bit_is_clear(BTN_PIN, BTN) && state.btn_state == BTN_NONE) { // Set button state & run timer on button press
         STOP_TIMEOUT(); // To prevent bounce
         state.btn_state = BTN_PRESSED;
-        RUN_TIMEOUT(BTN_LONG_OVF);
+        RUN_TIMEOUT(BTN_LONG_OVF); // Run timeout for LONG overflow period (more than LONG press timing)
 #ifdef VERBOSE_LOGS
         LOG("BTN press\r\n");
 #endif
@@ -27,7 +28,7 @@ ISR(INT0_vect) {
 #endif
         if ((t0_ovf_cnt < BTN_LONG_OVF) && (t0_ovf_cnt > (BTN_LONG_OVF - BTN_SHORT_OVF)) && !t0_timeout_flag) // if at least 1 overflow period has passed & no timeout yet, but less than short period has passed
             state.btn_state = BTN_SHORT;
-        else if ((t0_ovf_cnt <= (BTN_LONG_OVF - BTN_SHORT_OVF)) && !t0_timeout_flag)
+        else if ((t0_ovf_cnt <= (BTN_LONG_OVF - BTN_SHORT_OVF)) && !t0_timeout_flag) // if overflow counter has already counted more than BTN_SHORT_OVF
             state.btn_state = BTN_LONG;
         else if (t0_timeout_flag)
             state.btn_state = BTN_EXTRA_LONG;
@@ -47,6 +48,7 @@ ISR(INT0_vect) {
 #endif
 }
 
+// AC detector handlong. Sets ac_shortage flag on AC shortage & later sets ac_restored flag on restoration
 ISR(INT1_vect) {
     if (bit_is_set(ACDET_PIN, ACDET)) {
         state.flags.ac_shortage = true;

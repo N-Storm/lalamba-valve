@@ -16,6 +16,7 @@
 #include "light_ws2812.h"
 #include "saveload.h"
 
+// See transition table below for these function descriptions and when they occur
 eState fsWaterClosed() {
     if (state.v2_state == VST_OPEN) {
         SET_LED(VIOLET_HALF);
@@ -165,7 +166,7 @@ trans_t trans = {
     [ST_ANY][EV_VALVE_TIMEOUT] = fsTimeout
 };
 
-// Get event in order of priority
+// Return event in order of priority by checking flags
 eEvent fsGetEvent() {
     eEvent ret = EV_NONE;
 
@@ -188,6 +189,7 @@ eEvent fsGetEvent() {
     else if (state.btn_state == BTN_EXTRA_LONG)
         ret = EV_BTN_EXTRA_LONG;
 
+// Reset btn_state if we're handling EV_BTN* event
     if (ret == EV_BTN_SHORT || ret == EV_BTN_LONG || ret == EV_BTN_EXTRA_LONG)
         state.btn_state = BTN_NONE;
 
@@ -199,6 +201,8 @@ eRetCode fsTransition() {
 #ifdef VERBOSE_LOGS
     LOG("Transition: st %d, ev %d ", state.cur_state, state.event);
 #endif
+
+// First check if there is function associated with state/event or for ST_ANY special handler
     if ((state.event < EV_ANY) && (trans[state.cur_state][state.event] != NULL || trans[ST_ANY][state.event] != NULL)) {
         state.prev_state = state.cur_state; // save previous state
         if (trans[state.cur_state][state.event] != NULL) {
@@ -207,11 +211,11 @@ eRetCode fsTransition() {
 #endif
             state.cur_state = trans[state.cur_state][state.event](); // Run the transition
         }
-        else if (trans[ST_ANY][state.event] != NULL) { // Catch on any state handler
+        else if (trans[ST_ANY][state.event] != NULL) { // Catch on any state special handler
 #ifdef VERBOSE_LOGS
             LOG("ST_ANY.\r\n");
 #endif
-            state.cur_state = trans[ST_ANY][state.event]();
+            state.cur_state = trans[ST_ANY][state.event](); // Run the transition
         }
         save_settings();
         LOG("Switched to state: %d\r\n", state.cur_state);

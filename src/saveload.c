@@ -12,6 +12,7 @@
 #include "saveload.h"
 #include "main.h"
 
+// Calculate CRC16 from a buffer dataptr with sz size
 uint16_t crc16(uint8_t *dataptr, size_t sz) {
     uint16_t crc = 0;
     uint8_t cnt = sz;
@@ -32,12 +33,12 @@ uint16_t crc16(uint8_t *dataptr, size_t sz) {
 }
 
 void save_settings() {
-    settings_t crc = {0, 0};
+    settings_t settings = {.crc1 = 0, .crc2 = 0};
     LOG("Saving settings.\r\n");
-    crc.crc1 = crc16((void *)&state, sizeof(state)); // Calculate crc16 of state struct
-    crc.crc2 = _crc16_update(crc.crc1, (uint8_t)(crc.crc1 >> 8)); // crc2 = crc of state struct + crc1
-    crc.crc2 = _crc16_update(crc.crc2, (uint8_t)crc.crc1);
+    settings.crc1 = crc16((void *)&state, sizeof(state)); // Calculate crc16 of state struct
+    settings.crc2 = _crc16_update(settings.crc1, (uint8_t)(settings.crc1 >> 8)); // crc2 = crc of state struct + crc1. 1st byte of CRC1
+    settings.crc2 = _crc16_update(settings.crc2, (uint8_t)settings.crc1); // and 2nd byte of CRC1
 #ifdef VERBOSE_LOGS
-    LOG("Settings size = %d, CRC1 = %X, CRC2 = %X.\r\n", sizeof(state) + sizeof(crc), crc.crc1, crc.crc2);
+    LOG("Settings size = %d, CRC1 = %X, CRC2 = %X.\r\n", sizeof(state) + sizeof(settings), settings.crc1, settings.crc2);
 #endif
 }

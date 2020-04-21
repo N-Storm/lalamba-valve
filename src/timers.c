@@ -23,6 +23,7 @@
 volatile bool t0_timeout_flag = false;
 volatile uint8_t t0_ovf_cnt;
 
+// Simple counter which runs from RUN_TIMEOUT(OVF) macro which sets t0_ovf_cnt.
 ISR(TIMER0_OVF_vect) {
     t0_ovf_cnt--;
     if (t0_ovf_cnt == 0) {

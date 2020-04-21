@@ -184,5 +184,28 @@ int main(void)
 
         if (state.cur_state == ST_WATER_CLOSED || state.cur_state == ST_REED_OVERFLOW || state.cur_state == ST_RESTORATION) // Work on LED blinking modes
             led_blink();
+/*
+        else {
+            switch (state.cur_state) { // extra led settings. Not requred as LED are set in transition.
+                case ST_NORMAL:
+                    SET_LED(GREEN);
+                    break;
+                case ST_BYPASS:
+                    SET_LED(BLUE);
+                    break;
+                case ST_CALIBRATION:
+                    SET_LED(WHITE);
+                    break;
+                case ST_MAINTENANCE:
+                    SET_LED(YELLOW);
+                    break;
+                case ST_VALVE_TIMEOUT:
+                    SET_LED(RED);
+                    break;
+                default:
+                    break;
+            }
+        }
+*/
     }
 }

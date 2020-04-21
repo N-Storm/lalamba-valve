@@ -7,12 +7,16 @@
 #ifndef SAVELOAD_H
 #define	SAVELOAD_H
 
+#include "main.h"
+
+
 // Function prototypes
 void save_settings();
 
 // Structs
 typedef struct {
     uint32_t id;
+    state_t state;
     uint16_t crc1;
     uint16_t crc2;
 } settings_t;

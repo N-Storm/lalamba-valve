@@ -9,24 +9,26 @@
 #ifndef TIMERS_H
 #define	TIMERS_H
 
-// Timeout for full valve rotation in ms
+// Timeout for full valve rotation in ms. Only simple MAX 8 bit overflow are used now.
+/*
 #define V_ROT_TIMEOUT 5000 // 5s
 #define V_ROT_TICKS V_ROT_TIMEOUT/(1.0/(F_CPU/1024.0))/1000.0 // Total timer ticks for rotation with /1024 prescaler
 #define V_ROT_OVF (uint16_t)(V_ROT_TICKS/256) // Total timer overflow count
 #define V_ROT_REM (uint8_t)(V_ROT_TICKS-((uint32_t)V_ROT_OVF*256)) // Timer ticks remaining
-#define V_ROT_OVF_SIMPLE 255
+*/
+#define V_ROT_OVF_SIMPLE 255 // ~4.1s to fit 8 bit var
 
-// Maximum time for short button press
+// MAX time for short button press
 #define BNT_SHORT_MAX 1000 // 1s
 #define BTN_SHORT_TICKS BNT_SHORT_MAX/(1.0/(F_CPU/1024.0))/1000.0 // Total timer ticks for rotation with /1024 prescaler
 #define BTN_SHORT_OVF (uint8_t)(BTN_SHORT_TICKS/256) // Total timer overflow count
-#define BTN_SHORT_REM (uint8_t)(BTN_SHORT_TICKS-((uint32_t)BTN_SHORT_OVF*256)) // Timer ticks remaining
+// #define BTN_SHORT_REM (uint8_t)(BTN_SHORT_TICKS-((uint32_t)BTN_SHORT_OVF*256)) // Timer ticks remaining
 
-// Maximum time for long button press
+// MAX time for long button press
 #define BTN_LONG_MAX 4000 // 4s (total)
 #define BTN_LONG_TICKS BTN_LONG_MAX/(1.0/(F_CPU/1024.0))/1000.0 // Total timer ticks for rotation with /1024 prescaler
 #define BTN_LONG_OVF (uint8_t)(BTN_LONG_TICKS/256) // Total timer overflow count
-#define BTN_LONG_REM (uint8_t)(BTN_LONG_TICKS-((uint32_t)BTN_LONG_OVF*256)) // Timer ticks remaining
+// #define BTN_LONG_REM (uint8_t)(BTN_LONG_TICKS-((uint32_t)BTN_LONG_OVF*256)) // Timer ticks remaining
 
 // Globals
 extern volatile bool t0_timeout_flag;

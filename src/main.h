@@ -9,9 +9,9 @@
 
 // Settings
 // Delay for valve motor short break in ms
-#define V_SHORT_DELAY 100
+#define V_SHORT_DELAY 200
 // Delay for back-and-forth calibration
-#define V_BF_DELAY 200
+#define V_BF_DELAY 300
 
 // Debugging options
 #ifdef DEBUG

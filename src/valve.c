@@ -40,6 +40,7 @@ void update_valve_states() {
         state.v2_state = VST_MIDDLE;
 }
 
+// Helper function for v_move() to prepare ports before actually running the driver for valve1
 void v1_setdir(eValveAction dir) {
     switch (dir) {
         case ACT_CLOSE:
@@ -66,6 +67,7 @@ void v1_setdir(eValveAction dir) {
     }
 }
 
+// Helper function for v_move() to prepare ports before actually running the driver for valve2
 void v2_setdir(eValveAction dir) {
     switch (dir) {
         case ACT_CLOSE:
@@ -88,6 +90,7 @@ void v2_setdir(eValveAction dir) {
     }
 }
 
+// Function which actually moves valve. TODO: Fix a lot of repeative code.
 eRetCode v_move(eValveMove move) {
     LOG("Moving valve");
     EINT_DISABLE();
