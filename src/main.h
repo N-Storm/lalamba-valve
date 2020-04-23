@@ -88,7 +88,7 @@
 #include <stdbool.h>
 
 // Enums
-typedef enum {ST_NONE, ST_CALIBRATION, ST_NORMAL, ST_BYPASS, ST_REED_OVERFLOW, ST_RESTORATION, ST_MAINTENANCE, ST_WATER_CLOSED, ST_VALVE_TIMEOUT, ST_ANY, ST_LAST} eState;
+typedef enum {ST_NONE, ST_CALIBRATION, ST_NORMAL, ST_BYPASS, ST_REED_OVERFLOW, ST_RESTORATION, ST_MAINTENANCE, ST_WATER_CLOSED, ST_VALVE_ERR, ST_ANY, ST_LAST} eState;
 typedef enum {EV_NONE, EV_BTN_SHORT, EV_BTN_LONG, EV_BTN_EXTRA_LONG, EV_REED, EV_REED_RESTORATION, EV_AC_RESTORATION, EV_VALVE_TIMEOUT, EV_ANY, EV_LAST} eEvent;
 typedef enum {BTN_NONE, BTN_PRESSED, BTN_SHORT, BTN_LONG, BTN_EXTRA_LONG} eBtnState;
 
@@ -120,7 +120,7 @@ extern volatile state_t state;
 extern FILE mystdout;
 
 // Function prototypes
-void calibrate();
+void v_calibrate();
 
 // Macro "functions"
 // Enable INT0, INT1

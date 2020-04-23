@@ -138,8 +138,11 @@ void static inline v_log_direction(eValveMove move) {
 }
 
 // Function which actually moves valve. TODO: Fix a lot of repeative code.
+
 eRetCode v_move(eValveMove move) {
-// Check valve position before moving.
+    eRetCode ret = RET_NONE;
+    
+    // Check valve position before moving.
     if (v_check_pos(move) == RET_ALREADY_POSITIONED) {
         LOGP(STR_APOS);
         return RET_ALREADY_POSITIONED;
@@ -153,150 +156,136 @@ eRetCode v_move(eValveMove move) {
 
     switch (move) {
         case MV_V1_OPEN:
-            if (state.v1_state == VST_OPEN) {
-                return RET_ALREADY_POSITIONED;
-            }
-            else if (state.v1_state == VST_CLOSED || state.v1_state == VST_MIDDLE) {
-                if (state.v1_state == VST_CLOSED) {
-                    state.v1_state = VST_MIDDLE;
-                } else if (state.v1_state == VST_MIDDLE) {
-                    v1_setdir(ACT_CLOSE);
-                    STBY_PORT |= _BV(STBY); // Run motor
-                    _delay_ms(V_BF_DELAY);
-                    v1_setdir(ACT_BREAK);
-                }
-                v1_setdir(ACT_OPEN);
-                STBY_PORT |= _BV(STBY); // Run motor
-                RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
-                while (bit_is_set(MSW_PIN, M1SW2) && !t0_timeout_flag); // Wait until SW are hit by motor
-                STOP_TIMEOUT();
-                v1_setdir(ACT_BREAK);
-                v1_setdir(ACT_STOP);
-                STBY_PORT &= ~_BV(STBY); // Go back to STBY
-                if (t0_timeout_flag) {
-                    LOGP(STR_TIMEOUT);
-                    t0_timeout_flag = false;
-                    state.flags.timeout = true;
-                    state.v1_state = VST_MIDDLE;
-                    return RET_TIMEOUT;
-                } else {
-                    state.v1_state = VST_OPEN;
-                    LOGP(STR_DONE);
-                    return RET_MOVED;
-                }
-            }
-            LOGP(STR_ERROR);
-            return RET_ERROR;
-            break;
-        case MV_V1_CLOSE:
             if (state.v1_state == VST_CLOSED) {
-                return RET_ALREADY_POSITIONED;
-            }
-            else if (state.v1_state == VST_OPEN || state.v1_state == VST_MIDDLE) {
-                if (state.v1_state == VST_OPEN) {
-                    state.v1_state = VST_MIDDLE;
-                } else if (state.v1_state == VST_MIDDLE) {
-                    v1_setdir(ACT_OPEN);
-                    STBY_PORT |= _BV(STBY); // Run motor
-                    _delay_ms(V_BF_DELAY);
-                    v1_setdir(ACT_BREAK);
-                }
+                state.v1_state = VST_MIDDLE;
+            } else if (state.v1_state == VST_MIDDLE) {
                 v1_setdir(ACT_CLOSE);
                 STBY_PORT |= _BV(STBY); // Run motor
-                RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
-                while (bit_is_set(MSW_PIN, M1SW1) && !t0_timeout_flag); // Wait until SW are hit by motor
-                STOP_TIMEOUT();
+                _delay_ms(V_BF_DELAY);
                 v1_setdir(ACT_BREAK);
-                v1_setdir(ACT_STOP);
-                STBY_PORT &= ~_BV(STBY); // Go back to STBY
-                if (t0_timeout_flag) {
-                    LOGP(STR_TIMEOUT);
-                    t0_timeout_flag = false;
-                    state.flags.timeout = true;
-                    state.v1_state = VST_MIDDLE;
-                    return RET_TIMEOUT;
-                } else {
-                    state.v1_state = VST_CLOSED;
-                    LOGP(STR_DONE);
-                    return RET_MOVED;
-                }
             }
-            LOGP(STR_ERROR);
-            return RET_ERROR;
+            v1_setdir(ACT_OPEN);
+            STBY_PORT |= _BV(STBY); // Run motor
+            RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
+            while (bit_is_set(MSW_PIN, M1SW2) && !t0_timeout_flag); // Wait until SW are hit by motor
+            STOP_TIMEOUT();
+            v1_setdir(ACT_BREAK);
+            v1_setdir(ACT_STOP);
+            STBY_PORT &= ~_BV(STBY); // Go back to STBY
+            if (t0_timeout_flag) {
+                LOGP(STR_TIMEOUT);
+                t0_timeout_flag = false;
+                state.flags.timeout = true;
+                state.v1_state = VST_MIDDLE;
+                ret = RET_TIMEOUT;
+            } else {
+                state.v1_state = VST_OPEN;
+                LOGP(STR_DONE);
+                ret = RET_MOVED;
+            }
             break;
+        case MV_V1_CLOSE:
+            if (state.v1_state == VST_OPEN) {
+                state.v1_state = VST_MIDDLE;
+            } else if (state.v1_state == VST_MIDDLE) {
+                v1_setdir(ACT_OPEN);
+                STBY_PORT |= _BV(STBY); // Run motor
+                _delay_ms(V_BF_DELAY);
+                v1_setdir(ACT_BREAK);
+            }
+            v1_setdir(ACT_CLOSE);
+            STBY_PORT |= _BV(STBY); // Run motor
+            RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
+            while (bit_is_set(MSW_PIN, M1SW1) && !t0_timeout_flag); // Wait until SW are hit by motor
+            STOP_TIMEOUT();
+            v1_setdir(ACT_BREAK);
+            v1_setdir(ACT_STOP);
+            STBY_PORT &= ~_BV(STBY); // Go back to STBY
+            if (t0_timeout_flag) {
+                LOGP(STR_TIMEOUT);
+                t0_timeout_flag = false;
+                state.flags.timeout = true;
+                state.v1_state = VST_MIDDLE;
+                ret = RET_TIMEOUT;
+            } else {
+                state.v1_state = VST_CLOSED;
+                LOGP(STR_DONE);
+                ret = RET_MOVED;
+            }
+           break;
         case MV_V2_OPEN:
-            if (state.v2_state == VST_OPEN) {
-                return RET_ALREADY_POSITIONED;
-            }
-            else if (state.v2_state == VST_CLOSED || state.v2_state == VST_MIDDLE) {
-                if (state.v2_state == VST_CLOSED) {
-                    state.v2_state = VST_MIDDLE;
-                } else if (state.v2_state == VST_MIDDLE) {
-                    v2_setdir(ACT_CLOSE);
-                    NSLEEP_PORT |= _BV(NSLEEP); // Run motor
-                    _delay_ms(V_BF_DELAY);
-                    v2_setdir(ACT_BREAK);
-                }
-                v2_setdir(ACT_OPEN);
-                NSLEEP_PORT |= _BV(NSLEEP); // Run motor
-                RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
-                while (bit_is_set(MSW_PIN, M2SW2) && !t0_timeout_flag); // Wait until SW are hit by motor
-                STOP_TIMEOUT();
-                v2_setdir(ACT_BREAK);
-                v2_setdir(ACT_STOP);
-                NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
-                if (t0_timeout_flag) {
-                    LOGP(STR_TIMEOUT);
-                    t0_timeout_flag = false;
-                    state.flags.timeout = true;
-                    state.v2_state = VST_MIDDLE;
-                    return RET_TIMEOUT;
-                } else {
-                    state.v2_state = VST_OPEN;
-                    LOGP(STR_DONE);
-                    return RET_MOVED;
-                }
-            }
-            LOGP(STR_ERROR);
-            return RET_ERROR;
-            break;
-        case MV_V2_CLOSE:
             if (state.v2_state == VST_CLOSED) {
-                return RET_ALREADY_POSITIONED;
-            }
-            else if (state.v2_state == VST_OPEN || state.v2_state == VST_MIDDLE) {
-                if (state.v2_state == VST_OPEN) {
-                    state.v2_state = VST_MIDDLE;
-                } else if (state.v2_state == VST_MIDDLE) {
-                    v2_setdir(ACT_OPEN);
-                    NSLEEP_PORT |= _BV(NSLEEP); // Run motor
-                    _delay_ms(V_BF_DELAY);
-                    v2_setdir(ACT_BREAK);
-                }
+                state.v2_state = VST_MIDDLE;
+            } else if (state.v2_state == VST_MIDDLE) {
                 v2_setdir(ACT_CLOSE);
                 NSLEEP_PORT |= _BV(NSLEEP); // Run motor
-                RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
-                while (bit_is_set(MSW_PIN, M2SW1) && !t0_timeout_flag); // Wait until SW are hit by motor
-                STOP_TIMEOUT();
+                _delay_ms(V_BF_DELAY);
                 v2_setdir(ACT_BREAK);
-                v2_setdir(ACT_STOP);
-                NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
-                if (t0_timeout_flag) {
-                    LOGP(STR_TIMEOUT);
-                    t0_timeout_flag = false;
-                    state.flags.timeout = true;
-                    state.v2_state = VST_MIDDLE;
-                    return RET_TIMEOUT;
-                } else {
-                    state.v2_state = VST_CLOSED;
-                    LOGP(STR_DONE);
-                    return RET_MOVED;
-                }
             }
-            LOGP(STR_ERROR);
-            return RET_ERROR;
+            v2_setdir(ACT_OPEN);
+            NSLEEP_PORT |= _BV(NSLEEP); // Run motor
+            RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
+            while (bit_is_set(MSW_PIN, M2SW2) && !t0_timeout_flag); // Wait until SW are hit by motor
+            STOP_TIMEOUT();
+            v2_setdir(ACT_BREAK);
+            v2_setdir(ACT_STOP);
+            NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
+            if (t0_timeout_flag) {
+                LOGP(STR_TIMEOUT);
+                t0_timeout_flag = false;
+                state.flags.timeout = true;
+                state.v2_state = VST_MIDDLE;
+                ret = RET_TIMEOUT;
+            } else {
+                state.v2_state = VST_OPEN;
+                LOGP(STR_DONE);
+                ret = RET_MOVED;
+            }
+            break;
+        case MV_V2_CLOSE:
+            if (state.v2_state == VST_OPEN) {
+                state.v2_state = VST_MIDDLE;
+            } else if (state.v2_state == VST_MIDDLE) {
+                v2_setdir(ACT_OPEN);
+                NSLEEP_PORT |= _BV(NSLEEP); // Run motor
+                _delay_ms(V_BF_DELAY);
+                v2_setdir(ACT_BREAK);
+            }
+            v2_setdir(ACT_CLOSE);
+            NSLEEP_PORT |= _BV(NSLEEP); // Run motor
+            RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
+            while (bit_is_set(MSW_PIN, M2SW1) && !t0_timeout_flag); // Wait until SW are hit by motor
+            STOP_TIMEOUT();
+            v2_setdir(ACT_BREAK);
+            v2_setdir(ACT_STOP);
+            NSLEEP_PORT &= ~_BV(NSLEEP); // Go back to STBY
+            if (t0_timeout_flag) {
+                LOGP(STR_TIMEOUT);
+                t0_timeout_flag = false;
+                state.flags.timeout = true;
+                state.v2_state = VST_MIDDLE;
+                ret = RET_TIMEOUT;
+            } else {
+                state.v2_state = VST_CLOSED;
+                LOGP(STR_DONE);
+                ret = RET_MOVED;
+            }
             break;
     }
     EINT_ENABLE();
-    return RET_NONE;
+    return ret;
+}
+
+void v_calibrate() {
+    LOG("Calibration begin.\r\n");
+    v_update_states();
+
+    if (state.v1_state != VST_CLOSED)
+        v_move(MV_V1_CLOSE);
+
+    if (state.v2_state != VST_OPEN)
+        v_move(MV_V2_OPEN);
+
+    state.cur_state = ST_NORMAL;
+    LOG("Calibration done.\r\n");
 }

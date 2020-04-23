@@ -34,6 +34,7 @@ void v_update_states();
 void v1_setdir(eValveAction dir);
 void v2_setdir(eValveAction dir);
 eRetCode v_move(eValveMove move);
+void v_calibrate();
 
 // Strings for logging
 #ifdef LOGS

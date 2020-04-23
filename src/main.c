@@ -103,20 +103,7 @@ void init() {
     sei();
 }
 
-void calibrate() {
-    LOG("Calibration begin.\r\n");
-    v_update_states();
 
-    if (state.v1_state != VST_CLOSED)
-        v_move(MV_V1_CLOSE);
-
-    if (state.v2_state != VST_OPEN)
-        v_move(MV_V2_OPEN);
-
-    state.cur_state = ST_NORMAL;
-    SET_LED(GREEN);
-    LOG("Calibration done.\r\n");
-}
 
 void static inline UART_rx() {
     static char uart_buf[3];
@@ -177,7 +164,8 @@ int main(void)
 #endif
     load_settings();
     if (state.cur_state == ST_NONE) {
-        calibrate();
+        v_calibrate();
+        SET_LED(GREEN);
         // save_settings(SAVE_FULL);
     }
     else
@@ -188,7 +176,7 @@ int main(void)
             case ST_BYPASS:
                 SET_LED(BLUE);
                 break;
-            case ST_VALVE_TIMEOUT:
+            case ST_VALVE_ERR:
                 SET_LED(RED);
                 break;
             default:
