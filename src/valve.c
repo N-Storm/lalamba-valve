@@ -144,6 +144,7 @@ eRetCode v_move(eValveMove move) {
     
     // Check valve position before moving.
     if (v_check_pos(move) == RET_ALREADY_POSITIONED) {
+        state.flags.error = true;
         LOGP(STR_APOS);
         return RET_ALREADY_POSITIONED;
     }
@@ -175,7 +176,7 @@ eRetCode v_move(eValveMove move) {
             if (t0_timeout_flag) {
                 LOGP(STR_TIMEOUT);
                 t0_timeout_flag = false;
-                state.flags.timeout = true;
+                state.flags.error = true;
                 state.v1_state = VST_MIDDLE;
                 ret = RET_TIMEOUT;
             } else {
@@ -204,7 +205,7 @@ eRetCode v_move(eValveMove move) {
             if (t0_timeout_flag) {
                 LOGP(STR_TIMEOUT);
                 t0_timeout_flag = false;
-                state.flags.timeout = true;
+                state.flags.error = true;
                 state.v1_state = VST_MIDDLE;
                 ret = RET_TIMEOUT;
             } else {
@@ -233,7 +234,7 @@ eRetCode v_move(eValveMove move) {
             if (t0_timeout_flag) {
                 LOGP(STR_TIMEOUT);
                 t0_timeout_flag = false;
-                state.flags.timeout = true;
+                state.flags.error = true;
                 state.v2_state = VST_MIDDLE;
                 ret = RET_TIMEOUT;
             } else {
@@ -262,7 +263,7 @@ eRetCode v_move(eValveMove move) {
             if (t0_timeout_flag) {
                 LOGP(STR_TIMEOUT);
                 t0_timeout_flag = false;
-                state.flags.timeout = true;
+                state.flags.error = true;
                 state.v2_state = VST_MIDDLE;
                 ret = RET_TIMEOUT;
             } else {

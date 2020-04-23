@@ -28,19 +28,19 @@ void delay_s(uint8_t s) {
 // See transition table below for these function descriptions and when they occur
 eState fsError() {
     SET_LED(RED);
-    state.flags.timeout = false;
+    state.flags.error = false;
     return ST_VALVE_ERR;
 }
 
 eState fsWaterClosed() {
-    if (state.v2_state == VST_OPEN) {
+    if (state.v2_state != VST_CLOSED) {
         SET_LED(VIOLET_HALF);
         v_move(MV_V2_CLOSE);
     } else {
         LOGP(STR_VALVE_POS_ERROR);
         return state.prev_state;
     }
-    if (state.v1_state == VST_OPEN) {
+    if (state.v1_state != VST_CLOSED) {
         v_move(MV_V1_CLOSE);
     }
     SET_LED(VIOLET);
@@ -48,17 +48,16 @@ eState fsWaterClosed() {
 }
 
 eState fsWaterClosedToNormal() {
-    if (state.v2_state == VST_CLOSED) {
+    if (state.v2_state != VST_OPEN) {
         SET_LED(GREEN_HALF);
         v_move(MV_V2_OPEN);
         if (state.v1_state == VST_OPEN)
             v_move(MV_V1_CLOSE);
         SET_LED(GREEN);
         return ST_NORMAL;
-    } else {
-        LOGP(STR_VALVE_POS_ERROR);
-        return fsError();
     }
+    LOGP(STR_VALVE_POS_ERROR);
+    return fsError();
 }
 
  eState fsReed() {
@@ -110,10 +109,10 @@ eState fsRestoration() {
 }
 
 eState fsBackFromRestoration() {
-    if (state.v2_state == VST_CLOSED) {
+    if (state.v2_state != VST_OPEN) {
         if (state.v1_state == VST_OPEN)
             SET_LED(BLUE_HALF);
-        else if (state.v1_state == VST_CLOSED) 
+        else if (state.v1_state == VST_CLOSED)
             SET_LED(GREEN_HALF);
         v_move(MV_V2_OPEN);
         if (state.v1_state == VST_OPEN) {
@@ -122,12 +121,10 @@ eState fsBackFromRestoration() {
         } else if (state.v1_state == VST_CLOSED) {
             SET_LED(GREEN);
             return ST_NORMAL;
-        } else
-            return ST_VALVE_ERR;
-    } else {
-        LOGP(STR_VALVE_POS_ERROR);
-        return fsError();
+        }
     }
+    LOGP(STR_VALVE_POS_ERROR);
+    return fsError();
 }
 
 eState fsMaintenance() {
@@ -157,11 +154,6 @@ eState fsReset() {
     wdt_enable(WDTO_250MS);
     cli();
     while(1);
-
-// Should never get here...
-    v_calibrate();
-    SET_LED(GREEN);
-    return ST_NORMAL;
 }
 
 // Transition table
@@ -194,8 +186,8 @@ eEvent fsGetEvent() {
     } else if (state.flags.restoration) {
         state.flags.restoration = false;
         ret = EV_REED_RESTORATION;
-    } else if (state.flags.timeout) {
-        state.flags.timeout = false;
+    } else if (state.flags.error) {
+        state.flags.error = false;
         ret = EV_VALVE_TIMEOUT;
     } else if (state.flags.ac_restored) {
         state.flags.ac_restored = false;

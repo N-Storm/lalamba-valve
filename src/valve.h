@@ -43,8 +43,8 @@ FLASHSTR STR_DONE[] = "done.\r\n";
 FLASHSTR STR_CLOSED[] = "CLOSED";
 FLASHSTR STR_OPEN[] = "OPEN";
 FLASHSTR STR_MIDDLE[] = "MIDDLE";
-FLASHSTR STR_APOS[] = "already positioned!\r\n";
-FLASHSTR STR_TIMEOUT[] = " TIMEOUT hit.\r\n";
+FLASHSTR STR_APOS[] = "Already positioned!\r\n";
+FLASHSTR STR_TIMEOUT[] = "TIMEOUT hit.\r\n";
 #endif
 
 #endif	/* VALVE_H */

@@ -94,7 +94,7 @@ typedef enum {BTN_NONE, BTN_PRESSED, BTN_SHORT, BTN_LONG, BTN_EXTRA_LONG} eBtnSt
 
 // Struct types
 typedef struct {
-    bool timeout : 1;
+    bool error : 1;
     bool reed : 1;
     bool restoration : 1;
     bool ac_shortage : 1;
