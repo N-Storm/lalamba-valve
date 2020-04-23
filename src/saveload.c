@@ -15,23 +15,36 @@
 static settings_t settings = {.seq = 0, .crc1 = 0, .crc2 = 0};
 static uint8_t queue_num = 0;
 
+#ifdef VERBOSE_LOGS
+
+// Dump variable as HEX (0xXX) to LOG
+void dump_var(uint8_t *var, size_t sz) {
+    while (sz) {
+        LOG("0x%X ", *var);
+        var++;
+        sz--;
+    }
+}
+
+// Dump all settings to store as HEX values
+void dump_settings() {
+    LOG("Sett. dump: ");
+    dump_var((uint8_t *)&settings.seq, sizeof(settings.seq));
+    dump_var((uint8_t *)&state, sizeof(state));
+    dump_var((uint8_t *)&settings.crc1, sizeof(settings.crc1));
+    dump_var((uint8_t *)&settings.crc2, sizeof(settings.crc2));
+}
+#endif
+
 // Calculate CRC16 from a buffer dataptr with sz size
 uint16_t crc16(uint8_t *dataptr, size_t sz) {
     uint16_t crc = 0;
-    uint8_t cnt = sz;
 
-#ifdef VERBOSE_LOGS
-    LOG("State dump: ");
-#endif
-    while(cnt) {
-#ifdef VERBOSE_LOGS
-        LOG("0x%X ", *dataptr);
-#endif
+    while(sz) {
         crc = _crc16_update(crc, *dataptr);
         dataptr++;
-        cnt--;
+        sz--;
     }
-    LOG("\r\n");
     return crc;
 }
 
@@ -41,12 +54,9 @@ void load_settings() {
     state_t state_buf;
     
     cli();
-    LOG("Load settings\r\n");
+    LOG("Load settings... ");
 
-    while(queue_num < EEPROM_ENTRIES) {
-#ifdef VERBOSE_LOGS
-        LOG("Reading entry %d\r\n", queue_num);
-#endif
+    while (queue_num < EEPROM_ENTRIES) {
         settings.seq = eeprom_read_dword((void *) ptr);
         if (settings.seq <= cur_seq || settings.seq == 0xFFFFFFFF) {
             settings.seq = cur_seq;
@@ -65,8 +75,8 @@ void load_settings() {
             LOG("CRC1 incorrect\r\n");
             break;
         }
-        uint16_t crc2_buf = _crc16_update(settings.crc1, (uint8_t)(settings.crc1 >> 8)); // crc2 = crc of state struct + crc1. 1st byte of CRC1
-        crc2_buf = _crc16_update(crc2_buf, (uint8_t)settings.crc1); // and 2nd byte of CRC1
+        uint16_t crc2_buf = _crc16_update(settings.crc1, (uint8_t) (settings.crc1 >> 8)); // crc2 = crc of state struct + crc1. 1st byte of CRC1
+        crc2_buf = _crc16_update(crc2_buf, (uint8_t) settings.crc1); // and 2nd byte of CRC1
         if (crc2_buf != settings.crc2) {
             LOG("CRC2 incorrect\r\n");
             break;
@@ -75,6 +85,12 @@ void load_settings() {
         state = state_buf;
         queue_num++;
     }
+    LOG("entry %d read", queue_num - 1);
+#ifdef VERBOSE_LOGS
+    LOG(", seq = %d\r\n", settings.seq);
+    dump_settings();
+#endif
+    LOG("\r\n");
     sei();
 }
 
@@ -88,7 +104,7 @@ void save_settings(eSaveMode savemode) {
         settings.crc2 = _crc16_update(settings.crc2, (uint8_t) settings.crc1); // and 2nd byte of CRC1
     }
 #ifdef VERBOSE_LOGS
-    LOG("Settings size = %d, CRC1 = %X, CRC2 = %X.\r\n", sizeof (state) + sizeof (settings), settings.crc1, settings.crc2);
+    LOG("Settings size = %d, CRC1 = %X, CRC2 = %X\r\n", sizeof (state) + sizeof (settings), settings.crc1, settings.crc2);
 #endif
     // Save data to EEPROM
     settings.seq++;
@@ -111,6 +127,10 @@ void save_settings(eSaveMode savemode) {
 
     // Reset CRCs when save are complete
     if (savemode == SAVE_FULL || savemode == SAVE_CRC2) {
+#ifdef VERBOSE_LOGS
+        dump_settings();
+        LOG("\r\n");
+#endif        
         settings.crc1 = 0;
         settings.crc2 = 0;
     }
