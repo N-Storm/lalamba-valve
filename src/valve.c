@@ -23,7 +23,7 @@
 #include "saveload.h"
 
 // Updates actual (based on switches) valve states
-void update_valve_states() {
+void v_update_states() {
     LOG("Checking valve states.\r\n");
     if (bit_is_clear(MSW_PIN, M1SW1) && bit_is_set(MSW_PIN, M1SW2))
         state.v1_state = VST_CLOSED;
@@ -91,81 +91,11 @@ void v2_setdir(eValveAction dir) {
 }
 
 eRetCode v1_move() {
-    if (state.v1_state == VST_OPEN) {
-        LOGP(STR_APOS);
-        return RET_ALREADY_POSITIONED;
-    } else if (state.v1_state == VST_CLOSED || state.v1_state == VST_MIDDLE) {
-        if (state.v1_state == VST_CLOSED) {
-            state.v1_state = VST_MIDDLE;
-            LOGP(STR_CLOSED);
-        } else if (state.v1_state == VST_MIDDLE) {
-            LOGP(STR_MIDDLE);
-            v1_setdir(ACT_CLOSE);
-            STBY_PORT |= _BV(STBY); // Run motor
-            _delay_ms(V_BF_DELAY);
-            v1_setdir(ACT_BREAK);
-        }
-        v1_setdir(ACT_OPEN);
-        STBY_PORT |= _BV(STBY); // Run motor
-        RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
-        while (bit_is_set(MSW_PIN, M1SW2) && !t0_timeout_flag); // Wait until SW are hit by motor
-        STOP_TIMEOUT();
-        v1_setdir(ACT_BREAK);
-        v1_setdir(ACT_STOP);
-        STBY_PORT &= ~_BV(STBY); // Go back to STBY
-        if (t0_timeout_flag) {
-            LOGP(STR_TIMEOUT);
-            t0_timeout_flag = false;
-            state.flags.timeout = true;
-            state.v1_state = VST_MIDDLE;
-            return RET_TIMEOUT;
-        } else {
-            state.v1_state = VST_OPEN;
-            LOGP(STR_DONE);
-            return RET_MOVED;
-        }
-    }
-    LOGP(STR_ERROR);
     return RET_ERROR;
-
-    //    case MV_V1_CLOSE:
-    if (state.v1_state == VST_CLOSED) {
-        LOGP(STR_APOS);
-        return RET_ALREADY_POSITIONED;
-    } else if (state.v1_state == VST_OPEN || state.v1_state == VST_MIDDLE) {
-        if (state.v1_state == VST_OPEN) {
-            LOGP(STR_OPEN);
-            state.v1_state = VST_MIDDLE;
-        } else if (state.v1_state == VST_MIDDLE) {
-            LOGP(STR_MIDDLE);
-            v1_setdir(ACT_OPEN);
-            STBY_PORT |= _BV(STBY); // Run motor
-            _delay_ms(V_BF_DELAY);
-            v1_setdir(ACT_BREAK);
-        }
-        v1_setdir(ACT_CLOSE);
-        STBY_PORT |= _BV(STBY); // Run motor
-        RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
-        while (bit_is_set(MSW_PIN, M1SW1) && !t0_timeout_flag); // Wait until SW are hit by motor
-        STOP_TIMEOUT();
-        v1_setdir(ACT_BREAK);
-        v1_setdir(ACT_STOP);
-        STBY_PORT &= ~_BV(STBY); // Go back to STBY
-        if (t0_timeout_flag) {
-            LOGP(STR_TIMEOUT);
-            t0_timeout_flag = false;
-            state.flags.timeout = true;
-            state.v1_state = VST_MIDDLE;
-            return RET_TIMEOUT;
-        } else {
-            state.v1_state = VST_CLOSED;
-            LOGP(STR_DONE);
-            return RET_MOVED;
-        }
-    }
 }
 
-eRetCode v_check_state(eValveMove move) {
+eRetCode v_check_pos(eValveMove move) {
+    v_update_states();
     switch (move) {
         case MV_V1_OPEN:
             if (state.v1_state == VST_OPEN)
@@ -209,10 +139,18 @@ void static inline v_log_direction(eValveMove move) {
 
 // Function which actually moves valve. TODO: Fix a lot of repeative code.
 eRetCode v_move(eValveMove move) {
+// Check valve position before moving.
+    if (v_check_pos(move) == RET_ALREADY_POSITIONED) {
+        LOGP(STR_APOS);
+        return RET_ALREADY_POSITIONED;
+    }
+
 #ifdef LOGS
     v_log_direction(move);
 #endif
+
     EINT_DISABLE();
+
     switch (move) {
         case MV_V1_OPEN:
             if (state.v1_state == VST_OPEN) {

@@ -30,7 +30,7 @@ typedef enum {ACT_CLOSE, ACT_OPEN, ACT_BREAK, ACT_STOP} eValveAction;
 typedef enum {RET_NONE, RET_ALREADY_POSITIONED, RET_MOVED, RET_TIMEOUT, RET_OK, RET_ERROR} eRetCode;
 
 // Function prototypes
-void update_valve_states();
+void v_update_states();
 void v1_setdir(eValveAction dir);
 void v2_setdir(eValveAction dir);
 eRetCode v_move(eValveMove move);

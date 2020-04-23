@@ -105,7 +105,7 @@ void init() {
 
 void calibrate() {
     LOG("Calibration begin.\r\n");
-    update_valve_states();
+    v_update_states();
 
     if (state.v1_state != VST_CLOSED)
         v_move(MV_V1_CLOSE);
