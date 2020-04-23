@@ -70,9 +70,6 @@ static int nstorm_open(PROGRAMMER * pgm, char * port)
   }
 
   unsigned char buf[3] = "BL";
-//  buf[0] = 'B';
-//  buf[1] = 'L';
-  serial_send(&pgm->fd, buf, 2);
 
   /* Clear DTR and RTS to unload the RESET capacitor 
    * (for example in nstorm) */
@@ -85,6 +82,10 @@ static int nstorm_open(PROGRAMMER * pgm, char * port)
   /*
    * drain any extraneous input
    */
+  stk500_drain(pgm, 0);
+
+  serial_send(&pgm->fd, buf, 2);
+
   stk500_drain(pgm, 0);
 
   if (stk500_getsync(pgm) < 0)
