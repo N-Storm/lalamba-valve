@@ -57,7 +57,7 @@ void v1_setdir(eValveAction dir) {
             PWMA_PORT &= ~_BV(PWMA);
             AIN1_PORT |= _BV(AIN1);
             AIN2_PORT |= _BV(AIN2);
-            _delay_ms(V_SHORT_DELAY);
+            _delay_ms(V_BREAK_DELAY);
             break;
         case ACT_STOP:
             PWMA_PORT &= ~_BV(PWMA);
@@ -81,7 +81,7 @@ void v2_setdir(eValveAction dir) {
         case ACT_BREAK:
             AIN1_2_PORT |= _BV(AIN1_2);
             AIN2_2_PORT |= _BV(AIN2_2);
-            _delay_ms(V_SHORT_DELAY);
+            _delay_ms(V_BREAK_DELAY);
             break;
         case ACT_STOP:
             AIN1_2_PORT &= ~_BV(AIN1_2);
@@ -94,6 +94,9 @@ eRetCode v1_move() {
     return RET_ERROR;
 }
 
+/* Check current valve pos in accordance with move direction to detect ALREADY_POSITIONED error
+ * Call to v_update_states() at the beggning to read switch actual positions
+*/ 
 eRetCode v_check_pos(eValveMove move) {
     v_update_states();
     switch (move) {
@@ -157,14 +160,13 @@ eRetCode v_move(eValveMove move) {
 
     switch (move) {
         case MV_V1_OPEN:
-            if (state.v1_state == VST_CLOSED) {
-                state.v1_state = VST_MIDDLE;
-            } else if (state.v1_state == VST_MIDDLE) {
+            if (state.v1_state == VST_MIDDLE) {
                 v1_setdir(ACT_CLOSE);
                 STBY_PORT |= _BV(STBY); // Run motor
                 _delay_ms(V_BF_DELAY);
                 v1_setdir(ACT_BREAK);
             }
+            state.v1_state = VST_MIDDLE;
             v1_setdir(ACT_OPEN);
             STBY_PORT |= _BV(STBY); // Run motor
             RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
@@ -186,14 +188,13 @@ eRetCode v_move(eValveMove move) {
             }
             break;
         case MV_V1_CLOSE:
-            if (state.v1_state == VST_OPEN) {
-                state.v1_state = VST_MIDDLE;
-            } else if (state.v1_state == VST_MIDDLE) {
+            if (state.v1_state == VST_MIDDLE) {
                 v1_setdir(ACT_OPEN);
                 STBY_PORT |= _BV(STBY); // Run motor
                 _delay_ms(V_BF_DELAY);
                 v1_setdir(ACT_BREAK);
             }
+            state.v1_state = VST_MIDDLE;
             v1_setdir(ACT_CLOSE);
             STBY_PORT |= _BV(STBY); // Run motor
             RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
@@ -215,14 +216,13 @@ eRetCode v_move(eValveMove move) {
             }
            break;
         case MV_V2_OPEN:
-            if (state.v2_state == VST_CLOSED) {
-                state.v2_state = VST_MIDDLE;
-            } else if (state.v2_state == VST_MIDDLE) {
+            if (state.v2_state == VST_MIDDLE) {
                 v2_setdir(ACT_CLOSE);
                 NSLEEP_PORT |= _BV(NSLEEP); // Run motor
                 _delay_ms(V_BF_DELAY);
                 v2_setdir(ACT_BREAK);
             }
+            state.v2_state = VST_MIDDLE;
             v2_setdir(ACT_OPEN);
             NSLEEP_PORT |= _BV(NSLEEP); // Run motor
             RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
@@ -244,14 +244,13 @@ eRetCode v_move(eValveMove move) {
             }
             break;
         case MV_V2_CLOSE:
-            if (state.v2_state == VST_OPEN) {
-                state.v2_state = VST_MIDDLE;
-            } else if (state.v2_state == VST_MIDDLE) {
+            if (state.v2_state == VST_MIDDLE) {
                 v2_setdir(ACT_OPEN);
                 NSLEEP_PORT |= _BV(NSLEEP); // Run motor
                 _delay_ms(V_BF_DELAY);
                 v2_setdir(ACT_BREAK);
             }
+            state.v2_state = VST_MIDDLE;
             v2_setdir(ACT_CLOSE);
             NSLEEP_PORT |= _BV(NSLEEP); // Run motor
             RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
