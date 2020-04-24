@@ -218,6 +218,7 @@ eRetCode fsTransition() {
 
     // First check if there is function associated with state/event or for ST_ANY special handler
     if ((state.event < EV_ANY) && (trans[state.cur_state][state.event] != NULL || trans[ST_ANY][state.event] != NULL)) {
+        EINT_DISABLE();
         state.prev_state = state.cur_state; // save previous state
         if (trans[state.cur_state][state.event] != NULL) {
 #ifdef VERBOSE_LOGS
@@ -233,6 +234,7 @@ eRetCode fsTransition() {
         }
         save_settings(SAVE_FULL);
         LOG("Switched to state: %d\r\n", state.cur_state);
+        EINT_ENABLE();
         return RET_OK;
     }
 #ifdef VERBOSE_LOGS

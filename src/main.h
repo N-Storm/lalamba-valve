@@ -78,14 +78,14 @@
 #define BLACK {0, 0, 0}
 #define RED {0, 128, 0}
 #define RED_HALF {0, 64, 0}
-#define GREEN {128, 0, 0}
-#define GREEN_HALF {64, 0, 0}
-#define BLUE {0, 0, 128}
-#define BLUE_HALF {0, 0, 64}
+#define GREEN {64, 0, 0}
+#define GREEN_HALF {16, 0, 0}
+#define BLUE {0, 0, 64}
+#define BLUE_HALF {0, 0, 16}
 #define YELLOW {128, 128, 0}
-#define YELLOW_HALF {64, 64, 0}
-#define VIOLET {0, 82, 128}
-#define VIOLET_HALF {0, 41, 64}
+#define YELLOW_HALF {32, 32, 0}
+#define VIOLET {0, 32, 64}
+#define VIOLET_HALF {0, 8, 16}
 
 #include "valve.h"
 #include <stdio.h>
