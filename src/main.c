@@ -180,8 +180,8 @@ int main(void)
         v_calibrate(); // so we run calibrate
         SET_LED(GREEN);
         // save_settings(SAVE_FULL);
-    } else if (state.cur_state == ST_MAINTENANCE) { // or power failure during maintenance so we can restart it
-        state.cur_state = trMaintenance();
+    } else if (state.cur_state == ST_MAINTENANCE) { // or power failure during maintenance we enter error state for manual inspection
+        state.cur_state = trError();
     } else {
         switch (state.cur_state) {
             case ST_NORMAL:

@@ -15,7 +15,6 @@ typedef eState (*trans_t[ST_LAST][EV_LAST])(void);
 extern trans_t trans;
 
 // Function prototypes
-eState trMaintenance();
 eState trError();
 eEvent fsGetEvent();
 eRetCode fsTransition();
