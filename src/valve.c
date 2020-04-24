@@ -192,8 +192,10 @@ eRetCode v_move(eValveMove move) {
     v_parse_move(move, &moves);
 
     EINT_DISABLE();
-
+    RUN_TIMEOUT(V_ROT_OVF_SIMPLE); // Run timeout timer
+    
 // If valve state saved as MIDDLE, when we move it a little backwards before going forward
+BF_START:    
     if (*moves.vstate == VST_MIDDLE) {
         moves.setdir(moves.ract);
         MDRV_SLP_PORT |= _BV(moves.slppin); // Run motor  
@@ -204,11 +206,12 @@ eRetCode v_move(eValveMove move) {
 // Main direction movement block
     *moves.vstate = VST_MIDDLE;
     moves.setdir(moves.fact);
-    MDRV_SLP_PORT |= _BV(moves.slppin); // Run motor    
-    RUN_TIMEOUT(V_ROT_OVF_SIMPLE); // Run timeout timer
+    MDRV_SLP_PORT |= _BV(moves.slppin); // Run motor
     while (bit_is_set(MSW_PIN, moves.pinbit) && !t0_timeout_flag); // Wait until SW are hit by motor or timeout reached
-    if (!t0_timeout_flag) { // Check again if we really hit the end
-        
+    if (!t0_timeout_flag) { // Check again if we really hit the end only we didn't hit the timeout
+        _delay_ms(V_RESTART_DELAY);
+        if (bit_is_set(MSW_PIN, moves.pinbit)) // If motor switch are still not pressed
+            goto BF_START; // we go back to back-and-forth move
     }
     STOP_TIMEOUT();
     moves.setdir(ACT_BREAK);

@@ -12,6 +12,8 @@
 #define V_BREAK_DELAY 200
 // Delay for back-and-forth calibration
 #define V_BF_DELAY 300
+// Delay before rechecking valve switch at the end of forward moving. If it's not hit for some reason after that time (switch bounce), we restart movement from back-and-forth action until timout
+#define V_RESTART_DELAY 10
 // Reset on boot up with button held delay counter (x 4ms), see main())
 #define RCNT_DELAY_CNT 250
 
