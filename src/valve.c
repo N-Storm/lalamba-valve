@@ -205,8 +205,11 @@ eRetCode v_move(eValveMove move) {
     *moves.vstate = VST_MIDDLE;
     moves.setdir(moves.fact);
     MDRV_SLP_PORT |= _BV(moves.slppin); // Run motor    
-    RUN_TIMEOUT(V_ROT_OVF_SIMPLE);
-    while (bit_is_set(MSW_PIN, moves.pinbit) && !t0_timeout_flag); // Wait until SW are hit by motor
+    RUN_TIMEOUT(V_ROT_OVF_SIMPLE); // Run timeout timer
+    while (bit_is_set(MSW_PIN, moves.pinbit) && !t0_timeout_flag); // Wait until SW are hit by motor or timeout reached
+    if (!t0_timeout_flag) { // Check again if we really hit the end
+        
+    }
     STOP_TIMEOUT();
     moves.setdir(ACT_BREAK);
     moves.setdir(ACT_STOP);
@@ -238,5 +241,6 @@ void v_calibrate() {
         v_move(MV_V2_OPEN);
 
     state.cur_state = ST_NORMAL;
+    save_settings(SAVE_FULL);
     LOG("Calibration done.\r\n");
 }

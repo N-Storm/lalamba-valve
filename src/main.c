@@ -163,12 +163,26 @@ int main(void)
     LOG("Transition table size = %d, count = %d.\r\n", sizeof(trans), (sizeof(trans)/sizeof(*trans)));
 #endif
     load_settings();
-    if (state.cur_state == ST_NONE) {
-        v_calibrate();
+    
+// Button are held during boot for manual reset. TODO: Check power-on reason.
+    if (bit_is_clear(BTN_PIN, BTN)) {
+        uint8_t rcnt = 0;
+        while(bit_is_clear(BTN_PIN, BTN) && rcnt < RCNT_DELAY_CNT) {
+            _delay_ms(4);
+            rcnt++;
+        }
+        if (rcnt >= RCNT_DELAY_CNT)
+            state.cur_state = trError();
+    }
+    
+// Handle special states during boot
+    if (state.cur_state == ST_NONE) { // Like ST_NONE which are 1st run or reset from error
+        v_calibrate(); // so we run calibrate
         SET_LED(GREEN);
         // save_settings(SAVE_FULL);
-    }
-    else {
+    } else if (state.cur_state == ST_MAINTENANCE) { // or power failure during maintenance so we can restart it
+        state.cur_state = trMaintenance();
+    } else {
         switch (state.cur_state) {
             case ST_NORMAL:
                 SET_LED(GREEN);

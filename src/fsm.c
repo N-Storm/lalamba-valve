@@ -26,13 +26,13 @@ void delay_s(uint8_t s) {
 }
 
 // See transition table below for these function descriptions and when they occur
-eState fsError() {
+eState trError() {
     SET_LED(RED);
     state.flags.error = false;
     return ST_VALVE_ERR;
 }
 
-eState fsWaterClosed() {
+eState trWaterClosed() {
     if (state.v2_state != VST_CLOSED) {
         SET_LED(VIOLET_HALF);
         v_move(MV_V2_CLOSE);
@@ -47,7 +47,7 @@ eState fsWaterClosed() {
     return ST_WATER_CLOSED;
 }
 
-eState fsWaterClosedToNormal() {
+eState trWaterClosedToNormal() {
     if (state.v2_state != VST_OPEN) {
         SET_LED(GREEN_HALF);
         v_move(MV_V2_OPEN);
@@ -57,10 +57,10 @@ eState fsWaterClosedToNormal() {
         return ST_NORMAL;
     }
     LOGP(STR_VALVE_POS_ERROR);
-    return fsError();
+    return trError();
 }
 
- eState fsReed() {
+ eState trReed() {
     SET_LED(RED_HALF);
     v_move(MV_V2_CLOSE);
     SET_LED(RED);
@@ -68,7 +68,7 @@ eState fsWaterClosedToNormal() {
     return ST_REED_OVERFLOW;
 }
 
-eState fsToggleBypass() {
+eState trToggleBypass() {
     if (state.v1_state == VST_CLOSED) {
         SET_LED(BLUE_HALF);
         v_move(MV_V1_OPEN);
@@ -77,7 +77,7 @@ eState fsToggleBypass() {
         v_move(MV_V1_CLOSE);
     } else {
         LOGP(STR_VALVE_POS_ERROR);
-        return fsError();
+        return trError();
     }
 
     switch (state.prev_state) {
@@ -95,20 +95,20 @@ eState fsToggleBypass() {
     }
 }
 
-eState fsAcRestoration() {
+eState trAcRestoration() {
     state.flags.ac_restored = false;
     
     if (state.v1_state != VST_CLOSED)
-        return fsToggleBypass();
+        return trToggleBypass();
     else
         return ST_NORMAL;
 }
 
-eState fsRestoration() {
+eState trRestoration() {
     return ST_RESTORATION;
 }
 
-eState fsBackFromRestoration() {
+eState trBackFromRestoration() {
     if (state.v2_state != VST_OPEN) {
         if (state.v1_state == VST_OPEN)
             SET_LED(BLUE_HALF);
@@ -124,15 +124,17 @@ eState fsBackFromRestoration() {
         }
     }
     LOGP(STR_VALVE_POS_ERROR);
-    return fsError();
+    return trError();
 }
 
-eState fsMaintenance() {
+eState trMaintenance() {
     STOP_TIMEOUT();
     SET_LED(YELLOW);
+    state.cur_state = ST_MAINTENANCE; // Directly set state as this routine are long
+    save_settings(SAVE_FULL); // Save settings to avoid error on reboot
     if (state.v1_state != VST_CLOSED || state.v2_state != VST_OPEN) {
         LOGP(STR_VALVE_POS_ERROR);
-        return fsError();
+        return trError();
     }
     v_move(MV_V2_CLOSE);
     v_move(MV_V1_OPEN);
@@ -143,11 +145,13 @@ eState fsMaintenance() {
     v_move(MV_V2_OPEN);
 
     SET_LED(GREEN); // Back to normal state
+    state.cur_state = ST_NORMAL; // Directly set state back to normal
+    save_settings(SAVE_FULL); // and save it again
     return ST_NORMAL;
 }
 
 // Will set current state to ST_NONE, save settings and reboot MCU via WDT to get re-calibration done on boot
-eState fsReset() {
+eState trReset() {
     SET_LED(BLACK);
     state.cur_state = ST_NONE;
     save_settings(SAVE_FULL);
@@ -158,22 +162,22 @@ eState fsReset() {
 
 // Transition table
 trans_t trans = { 
-    [ST_NORMAL][EV_BTN_SHORT] = fsToggleBypass,
-    [ST_NORMAL][EV_BTN_LONG] = fsWaterClosed,
-    [ST_NORMAL][EV_BTN_EXTRA_LONG] = fsMaintenance,
-    [ST_NORMAL][EV_REED] = fsReed,
-    [ST_BYPASS][EV_REED] = fsReed,
-    [ST_BYPASS][EV_BTN_SHORT] = fsToggleBypass,
-    [ST_BYPASS][EV_BTN_LONG] = fsWaterClosed,
-    [ST_BYPASS][EV_AC_RESTORATION] = fsAcRestoration,
-    [ST_WATER_CLOSED][EV_BTN_SHORT] = fsToggleBypass,
-    [ST_WATER_CLOSED][EV_BTN_LONG] = fsWaterClosedToNormal,
-    [ST_WATER_CLOSED][EV_BTN_EXTRA_LONG] = fsWaterClosedToNormal,
-    [ST_REED_OVERFLOW][EV_REED_RESTORATION] = fsRestoration,
-    [ST_REED_OVERFLOW][EV_BTN_SHORT] = fsToggleBypass,
-    [ST_RESTORATION][EV_BTN_LONG] = fsBackFromRestoration,
-    [ST_VALVE_ERR][EV_BTN_EXTRA_LONG] = fsReset,
-    [ST_ANY][EV_VALVE_TIMEOUT] = fsError
+    [ST_NORMAL][EV_BTN_SHORT] = trToggleBypass,
+    [ST_NORMAL][EV_BTN_LONG] = trWaterClosed,
+    [ST_NORMAL][EV_BTN_EXTRA_LONG] = trMaintenance,
+    [ST_NORMAL][EV_REED] = trReed,
+    [ST_BYPASS][EV_REED] = trReed,
+    [ST_BYPASS][EV_BTN_SHORT] = trToggleBypass,
+    [ST_BYPASS][EV_BTN_LONG] = trWaterClosed,
+    [ST_BYPASS][EV_AC_RESTORATION] = trAcRestoration,
+    [ST_WATER_CLOSED][EV_BTN_SHORT] = trToggleBypass,
+    [ST_WATER_CLOSED][EV_BTN_LONG] = trWaterClosedToNormal,
+    [ST_WATER_CLOSED][EV_BTN_EXTRA_LONG] = trWaterClosedToNormal,
+    [ST_REED_OVERFLOW][EV_REED_RESTORATION] = trRestoration,
+    [ST_REED_OVERFLOW][EV_BTN_SHORT] = trToggleBypass,
+    [ST_RESTORATION][EV_BTN_LONG] = trBackFromRestoration,
+    [ST_VALVE_ERR][EV_BTN_EXTRA_LONG] = trReset,
+    [ST_ANY][EV_VALVE_TIMEOUT] = trError
 };
 
 // Return event in order of priority by checking flags
