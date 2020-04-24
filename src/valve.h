@@ -29,11 +29,20 @@ typedef enum {ACT_CLOSE, ACT_OPEN, ACT_BREAK, ACT_STOP} eValveAction;
  */
 typedef enum {RET_NONE, RET_ALREADY_POSITIONED, RET_MOVED, RET_TIMEOUT, RET_OK, RET_ERROR} eRetCode;
 
+// Struct for v_move() which stores parsed movements parameters, like directions ACT, etc
+typedef struct {
+    eValveAction fact;
+    eValveAction ract;
+    uint8_t pinbit;
+    uint8_t slppin;
+    void (*setdir)(eValveAction);
+    volatile eValveState *vstate;
+    eValveState endstate;
+} moves_t;
+
 // Function prototypes
-void v_update_states();
-void v1_setdir(eValveAction dir);
-void v2_setdir(eValveAction dir);
 eRetCode v_move(eValveMove move);
+void v_update_states();
 void v_calibrate();
 
 // Strings for logging

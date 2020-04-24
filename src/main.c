@@ -168,7 +168,7 @@ int main(void)
         SET_LED(GREEN);
         // save_settings(SAVE_FULL);
     }
-    else
+    else {
         switch (state.cur_state) {
             case ST_NORMAL:
                 SET_LED(GREEN);
@@ -182,6 +182,7 @@ int main(void)
             default:
                 break;
         }
+    }
 
     EINT_ENABLE();
 

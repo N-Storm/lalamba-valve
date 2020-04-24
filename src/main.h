@@ -41,6 +41,7 @@
 #define AIN1 PC0
 #define AIN2_PORT PORTC
 #define AIN2 PC1
+#define MDRV_SLP_PORT PORTC
 #define STBY_PORT PORTC
 #define STBY PC2
 #define NSLEEP_PORT PORTC
