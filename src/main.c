@@ -40,7 +40,6 @@ volatile state_t state;
 // settings_t settings;
 const ptr_t bootloader_start = (ptr_t)((FLASHEND - 511) >> 1);
 
-#ifdef LOGS
 int uart_putchar(char c, FILE *stream);
 FILE mystdout = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
 
@@ -65,7 +64,6 @@ int uart_putchar(char c, FILE *stream) {
     USART_Transmit((unsigned char)c);
     return 0;
 }
-#endif
 
 void inline WDT_off(void) {
     /* reset WDT */
@@ -90,9 +88,10 @@ void init() {
 
     // Timer interrupt settings
     TIMSK = _BV(TOIE0); // Enable T0 overflow interrupts (timer is still disabled)
+    
+    USART_Init();
 
 #ifdef LOGS
-    USART_Init();
     stdout = &mystdout;
 #endif
 
@@ -102,8 +101,6 @@ void init() {
 
     sei();
 }
-
-
 
 void static inline UART_rx() {
     static char uart_buf[3];
