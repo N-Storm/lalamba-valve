@@ -39,7 +39,7 @@ ISR(INT0_vect) {
     } 
 #ifdef VERBOSE_LOGS
     else {
-        LOG("BTN bounce, btn_state = %d, btn status = ");
+        LOG("BTN bounce, btn_state = %d, btn status = ", state.btn_state);
         if (BTN_PIN & (1 << BTN))
             LOG("UNPRESSED.\r\n");
         else
