@@ -97,8 +97,7 @@ void init() {
 
     _delay_ms(1);
     SET_LED(WHITE); // Turn on white LED
-    _NOP();
-
+    MCUCSR = 0; // Reset power on reason register to avoid tampering with bootloader
     sei();
 }
 
