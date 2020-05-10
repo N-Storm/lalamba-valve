@@ -139,36 +139,36 @@ void static inline v_log_direction(eValveMove move) {
 // Populate moves_t struct values based on eValveMove
 void static inline v_parse_move(eValveMove move, moves_t *moves) {
     if (move == MV_V1_OPEN || move == MV_V2_OPEN) {
-        moves->fact = ACT_OPEN;
-        moves->ract = ACT_CLOSE;
+        moves->d_act = ACT_OPEN;
+        moves->r_act = ACT_CLOSE;
         moves->endstate = VST_OPEN;
     } else {
-        moves->fact = ACT_CLOSE;
-        moves->ract = ACT_OPEN;
+        moves->d_act = ACT_CLOSE;
+        moves->r_act = ACT_OPEN;
         moves->endstate = VST_CLOSED;
     }
     if (move == MV_V1_OPEN || move == MV_V1_CLOSE) {
         moves->setdir = &v1_setdir;
         moves->vstate = &state.v1_state;
-        moves->slppin = STBY;
+        moves->slp_pin_bit = STBY;
     } else {
         moves->setdir = &v2_setdir;
         moves->vstate = &state.v2_state;
-        moves->slppin = NSLEEP;
+        moves->slp_pin_bit = NSLEEP;
     }
     
     switch (move) {
         case MV_V1_OPEN:
-            moves->pinbit = M1SW2;
+            moves->sw_pin_bit = M1SW2;
             break;
         case MV_V1_CLOSE:
-            moves->pinbit = M1SW1;
+            moves->sw_pin_bit = M1SW1;
             break;
         case MV_V2_OPEN:
-            moves->pinbit = M2SW2;
+            moves->sw_pin_bit = M2SW2;
             break;
         case MV_V2_CLOSE:
-            moves->pinbit = M2SW1;
+            moves->sw_pin_bit = M2SW1;
             break;
     }
 }
@@ -197,26 +197,26 @@ eRetCode v_move(eValveMove move) {
 // If valve state saved as MIDDLE, when we move it a little backwards before going forward
 BF_START:    
     if (*moves.vstate == VST_MIDDLE) {
-        moves.setdir(moves.ract);
-        MDRV_SLP_PORT |= _BV(moves.slppin); // Run motor  
+        moves.setdir(moves.r_act);
+        MDRV_SLP_PORT |= _BV(moves.slp_pin_bit); // Run motor  
         _delay_ms(V_BF_DELAY);
         moves.setdir(ACT_BREAK);
     }
 
 // Main direction movement block
     *moves.vstate = VST_MIDDLE;
-    moves.setdir(moves.fact);
-    MDRV_SLP_PORT |= _BV(moves.slppin); // Run motor
-    while (bit_is_set(MSW_PIN, moves.pinbit) && !t0_timeout_flag); // Wait until SW are hit by motor or timeout reached
+    moves.setdir(moves.d_act);
+    MDRV_SLP_PORT |= _BV(moves.slp_pin_bit); // Run motor
+    while (bit_is_set(MSW_PIN, moves.sw_pin_bit) && !t0_timeout_flag); // Wait until SW are hit by motor or timeout reached
     if (!t0_timeout_flag) { // Check again if we really hit the end only we didn't hit the timeout
         _delay_ms(V_RESTART_DELAY);
-        if (bit_is_set(MSW_PIN, moves.pinbit)) // If motor switch are still not pressed
+        if (bit_is_set(MSW_PIN, moves.sw_pin_bit)) // If motor switch are still not pressed
             goto BF_START; // we go back to back-and-forth move
     }
     STOP_TIMEOUT();
     moves.setdir(ACT_BREAK);
     moves.setdir(ACT_STOP);
-    MDRV_SLP_PORT &= ~_BV(moves.slppin); // Go back to STBY
+    MDRV_SLP_PORT &= ~_BV(moves.slp_pin_bit); // Go back to STBY
     if (t0_timeout_flag) { // Valve movement timeout hit
         LOGP(STR_TIMEOUT);
         t0_timeout_flag = false;

@@ -31,13 +31,13 @@ typedef enum {RET_NONE, RET_ALREADY_POSITIONED, RET_MOVED, RET_TIMEOUT, RET_OK, 
 
 // Struct for v_move() which stores parsed movements parameters, like directions ACT, etc
 typedef struct {
-    eValveAction fact;
-    eValveAction ract;
-    uint8_t pinbit;
-    uint8_t slppin;
-    void (*setdir)(eValveAction);
-    volatile eValveState *vstate;
-    eValveState endstate;
+    eValveAction d_act; // Direct (forward) action
+    eValveAction r_act; // Reverse (backwards) action
+    uint8_t sw_pin_bit; // Valve switch pin bit number
+    uint8_t slp_pin_bit; // Sleep pin bit number
+    void (*setdir)(eValveAction); // vX_setdir() function binding
+    volatile eValveState *vstate; // state.vX_state binding
+    eValveState endstate; // resulting state
 } moves_t;
 
 // Function prototypes
