@@ -10,13 +10,13 @@
 #define	TIMERS_H
 
 // Timeout for full valve rotation in ms. Only simple MAX 8 bit overflow are used now.
-/*
-#define V_ROT_TIMEOUT 5000 // 5s
+#define V_ROT_TIMEOUT 6000 // 6s
 #define V_ROT_TICKS V_ROT_TIMEOUT/(1.0/(F_CPU/1024.0))/1000.0 // Total timer ticks for rotation with /1024 prescaler
 #define V_ROT_OVF (uint16_t)(V_ROT_TICKS/256) // Total timer overflow count
 #define V_ROT_REM (uint8_t)(V_ROT_TICKS-((uint32_t)V_ROT_OVF*256)) // Timer ticks remaining
-*/
-#define V_ROT_OVF_SIMPLE 255 // ~4.1s to fit 8 bit var
+#define V_ROT_OVF_SIMPLE V_ROT_OVF
+
+// #define V_ROT_OVF_SIMPLE 255 // ~4.1s to fit 8 bit var
 
 // MAX time for short button press
 #define BNT_SHORT_MAX 1000 // 1s
@@ -32,7 +32,7 @@
 
 // Globals
 extern volatile bool t0_timeout_flag;
-extern volatile uint8_t t0_ovf_cnt;
+extern volatile uint16_t t0_ovf_cnt;
 
 // Run timer with /1024 PS
 #define RUN_TIMEOUT(OVF) do { TCNT0 = 0; t0_ovf_cnt = OVF; SFIOR |= _BV(PSR10); TCCR0 = _BV(CS02) | _BV(CS00); } while (0)

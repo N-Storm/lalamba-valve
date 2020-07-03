@@ -21,7 +21,7 @@
 #include "valve.h"
 
 volatile bool t0_timeout_flag = false;
-volatile uint8_t t0_ovf_cnt;
+volatile uint16_t t0_ovf_cnt;
 
 // Simple counter which runs from RUN_TIMEOUT(OVF) macro which sets t0_ovf_cnt.
 ISR(TIMER0_OVF_vect) {

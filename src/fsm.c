@@ -33,6 +33,7 @@ eState trError() {
 }
 
 eState trWaterClosed() {
+    STOP_TIMEOUT();
     if (state.v2_state != VST_CLOSED) {
         SET_LED(VIOLET_HALF);
         v_move(MV_V2_CLOSE);
