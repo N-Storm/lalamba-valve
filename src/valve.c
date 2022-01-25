@@ -212,6 +212,7 @@ BF_START:
         moves.setdir(ACT_BREAK);
         _delay_ms(V_RESTART_DELAY);
         if (bit_is_set(MSW_PIN, moves.sw_pin_bit)) // If motor switch are still not pressed
+// FIXME! Should avoid endless loop on error. Add a flag to work BF only 1 time
             goto BF_START; // we go back to back-and-forth move
     }
     STOP_TIMEOUT();

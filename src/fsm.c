@@ -61,7 +61,7 @@ eState trWaterClosedToNormal() {
     return trError();
 }
 
- eState trReed() {
+eState trReed() {
     SET_LED(RED_HALF);
     v_move(MV_V2_CLOSE);
     SET_LED(RED);
